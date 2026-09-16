@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Collector Profile | PRAJCRAFT</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "primary": "#735c00",
+                    "primary-fixed-dim": "#e9c349",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "tertiary": "#bb152c",
+                    "inverse-surface": "#313030",
+                    "secondary-fixed": "#e2e2e2",
+                    "on-secondary-fixed-variant": "#474747",
+                    "surface-container": "#f0eded",
+                    "on-primary": "#ffffff",
+                    "surface": "#fcf9f8",
+                    "outline": "#7f7663",
+                    "outline-variant": "#d0c5af",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb3b1",
+                    "on-tertiary-fixed-variant": "#92001c",
+                    "on-tertiary-container": "#8f001b",
+                    "on-surface": "#1c1b1b",
+                    "error-container": "#ffdad6",
+                    "inverse-on-surface": "#f3f0ef",
+                    "primary-container": "#d4af37",
+                    "on-secondary-fixed": "#1b1b1b",
+                    "on-primary-fixed": "#241a00",
+                    "surface-container-high": "#eae7e7",
+                    "on-background": "#1c1b1b",
+                    "on-primary-container": "#554300",
+                    "secondary-fixed-dim": "#c6c6c6",
+                    "secondary-container": "#e2e2e2",
+                    "inverse-primary": "#e9c349",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#646464",
+                    "on-primary-fixed-variant": "#574500",
+                    "background": "#fcf9f8",
+                    "on-surface-variant": "#4d4635",
+                    "surface-tint": "#735c00",
+                    "surface-bright": "#fcf9f8",
+                    "surface-variant": "#e5e2e1",
+                    "surface-container-low": "#f6f3f2",
+                    "tertiary-container": "#ff9594",
+                    "surface-container-highest": "#e5e2e1",
+                    "tertiary-fixed": "#ffdad8",
+                    "surface-dim": "#dcd9d9",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#410007",
+                    "secondary": "#5e5e5e",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#ffe088"
+                },
+                "fontFamily": {
+                    "headline-md": ["Montserrat"],
+                    "display-lg": ["Montserrat"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "headline-lg": ["Montserrat"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+                }
+            },
+        },
+    }
+</script>
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .vault-gradient { background: linear-gradient(135deg, #1c1b1b 0%, #313030 100%); }
+    .gold-border-glow:hover { box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+    body { min-height: max(884px, 100dvh); }
+</style>
+
+<!-- Supabase & JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container min-h-screen">
+
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-4 md:px-8 h-16 w-full shadow-sm">
+    <div class="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform" onclick="window.location.href='index.html'">
+        <img alt="Prajcraft Logo" class="h-8 w-auto object-contain" src="assets/images/logo.png"/>
+        <span class="font-headline-md text-headline-md font-bold text-primary tracking-tighter">PRAJCRAFT</span>
+    </div>
+    <div class="flex items-center gap-6">
+        <span class="material-symbols-outlined text-primary cursor-pointer active:scale-95" onclick="window.location.href='cart.html'">shopping_cart</span>
+    </div>
+</nav>
+
+<main class="pt-24 pb-24 md:pb-12 px-4 md:px-8 max-w-6xl mx-auto">
+    <!-- Header: Elite Collector Status -->
+    <header class="flex flex-col md:flex-row items-center md:items-end justify-between gap-8 mb-12 border-b border-outline-variant pb-8" id="profileHeader">
+        <div class="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+            <div class="relative group">
+                <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-primary-container shadow-md bg-surface flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-6xl">person</span>
+                </div>
+            </div>
+            <div>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface" id="profileName">Loading...</h1>
+                <p class="text-on-surface-variant font-label-md mt-2" id="profileEmail">...</p>
+            </div>
+        </div>
+        <div class="flex gap-4 mt-6 md:mt-0">
+            <button class="px-6 py-2 bg-on-background text-white font-label-md hover:bg-primary transition-all active:scale-95 border border-primary-container shadow-sm flex items-center gap-2" onclick="handleCustomerLogout(event)">
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- Profile Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Sidebar (Navigation) -->
+        <aside class="lg:col-span-3 flex flex-col gap-2">
+            <!-- Account Info Summary -->
+            <div class="bg-surface border border-outline-variant rounded p-4 mb-4 flex items-center gap-4">
+                <div class="w-12 h-12 bg-primary-container rounded-full flex justify-center items-center text-primary-fixed-dim overflow-hidden">
+                    <img id="sidebarAvatar" src="" class="hidden w-full h-full object-cover">
+                    <span class="material-symbols-outlined" id="sidebarAvatarIcon">person</span>
+                </div>
+                <div>
+                    <p class="text-[10px] text-outline uppercase">Hello,</p>
+                    <p class="font-bold text-on-surface" id="sidebarProfileName">Loading...</p>
+                </div>
+            </div>
+
+            <!-- Nav Links -->
+            <div class="bg-surface border border-outline-variant rounded flex flex-col text-sm">
+                
+                <div class="p-4 border-b border-outline-variant flex items-center gap-4 text-on-surface hover:text-[#2874f0] cursor-pointer transition-colors" onclick="switchProfileTab('orders')">
+                    <span class="material-symbols-outlined text-[#2874f0]">inventory_2</span>
+                    <span class="font-bold uppercase text-on-surface">My Orders</span>
+                    <span class="material-symbols-outlined ml-auto text-outline-variant">chevron_right</span>
+                </div>
+                
+                <div class="p-4 border-b border-outline-variant flex items-center gap-4 text-on-surface">
+                    <span class="material-symbols-outlined text-[#2874f0]">person</span>
+                    <span class="font-bold uppercase text-outline">Account Settings</span>
+                </div>
+                <div class="flex flex-col bg-surface-container-low pb-2 border-b border-outline-variant">
+                    <button class="text-left px-12 py-2 text-[#2874f0] font-bold hover:bg-surface-container transition-colors" onclick="switchProfileTab('personal')">Profile Information</button>
+                    <button class="text-left px-12 py-2 text-on-surface-variant hover:bg-surface-container hover:text-[#2874f0] transition-colors" onclick="switchProfileTab('addresses')">Manage Addresses</button>
+                </div>
+                
+                <div class="p-4 border-b border-outline-variant flex items-center gap-4 text-on-surface">
+                    <span class="material-symbols-outlined text-[#2874f0]">folder_special</span>
+                    <span class="font-bold uppercase text-outline">My Stuff</span>
+                </div>
+                <div class="flex flex-col bg-surface-container-low pb-2 border-b border-outline-variant">
+                    <button class="text-left px-12 py-2 text-on-surface-variant hover:bg-surface-container hover:text-[#2874f0] transition-colors" onclick="switchProfileTab('coupons')">My Coupons</button>
+                    <button class="text-left px-12 py-2 text-on-surface-variant hover:bg-surface-container hover:text-[#2874f0] transition-colors" onclick="switchProfileTab('notifications')">All Notifications</button>
+                    <button class="text-left px-12 py-2 text-on-surface-variant hover:bg-surface-container hover:text-[#2874f0] transition-colors" onclick="switchProfileTab('wishlist')">My Wishlist</button>
+                </div>
+
+                <div class="p-4 flex items-center gap-4 text-on-surface hover:text-error cursor-pointer transition-colors" onclick="handleCustomerLogout(event)">
+                    <span class="material-symbols-outlined text-[#2874f0]">power_settings_new</span>
+                    <span class="font-bold uppercase">Logout</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Content Area -->
+        <section class="lg:col-span-9 bg-surface border border-outline-variant rounded p-6 lg:p-8 min-h-[400px]">
+            
+            <!-- Order History Tab -->
+            <div id="tab-orders" class="profile-tab hidden">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-lg font-bold text-on-surface">My Orders</h2>
+                </div>
+                <div id="orderHistoryList" class="space-y-4">
+                    <p class="text-sm text-outline p-4 border border-outline-variant rounded bg-surface-container-low text-center">Loading orders...</p>
+                </div>
+            </div>
+
+            <!-- Personal Information Tab -->
+            <div id="tab-personal" class="profile-tab">
+                <div class="flex items-center gap-4 mb-8">
+                    <h2 class="text-lg font-bold text-on-surface">Personal Information</h2>
+                    <button class="text-sm font-bold text-[#2874f0]" onclick="enableProfileEdit()">Edit</button>
+                </div>
+                
+                <form id="personalInfoForm" class="space-y-6 max-w-lg" onsubmit="saveProfileInfo(event)">
+                    <div class="flex flex-col items-center mb-6 border-b border-outline-variant pb-6">
+                        <div class="relative group cursor-pointer w-24 h-24 mb-4">
+                            <img id="profileAvatar" src="assets/images/placeholder.jpg" class="w-24 h-24 rounded-full object-cover border-2 border-[#2874f0]">
+                            <div class="absolute inset-0 bg-black/50 rounded-full flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity" onclick="document.getElementById('avatarUpload').click()">
+                                <span class="material-symbols-outlined text-xl">photo_camera</span>
+                                <span class="text-[10px] uppercase mt-1">Upload</span>
+                            </div>
+                            <input type="file" id="avatarUpload" class="hidden" accept="image/*" onchange="uploadAvatar(event)">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-outline mb-1">First Name</label>
+                            <input type="text" id="firstName" class="w-full bg-surface-container-low border border-outline-variant rounded p-3 text-sm text-on-surface focus:border-[#2874f0] outline-none transition-colors" disabled>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-outline mb-1">Last Name</label>
+                            <input type="text" id="lastName" class="w-full bg-surface-container-low border border-outline-variant rounded p-3 text-sm text-on-surface focus:border-[#2874f0] outline-none transition-colors" disabled>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-outline mb-1">Gender</label>
+                            <select id="gender" class="w-full bg-surface-container-low border border-outline-variant rounded p-3 text-sm text-on-surface focus:border-[#2874f0] outline-none transition-colors" disabled>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-outline mb-1">Date of Birth</label>
+                            <input type="date" id="dob" class="w-full bg-surface-container-low border border-outline-variant rounded p-3 text-sm text-on-surface focus:border-[#2874f0] outline-none transition-colors" disabled>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-outline mb-1">Email Address</label>
+                        <input type="email" id="emailAddr" class="w-full bg-surface-container-low border border-outline-variant rounded p-3 text-sm text-on-surface focus:border-[#2874f0] outline-none" disabled>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-outline mb-1">Mobile Number</label>
+                        <input type="tel" id="mobileNumber" class="w-full bg-surface-container-low border border-outline-variant rounded p-3 text-sm text-on-surface focus:border-[#2874f0] outline-none transition-colors" disabled>
+                    </div>
+                    
+                    <div class="hidden" id="profileSaveActions">
+                        <button type="submit" class="bg-[#2874f0] text-white px-8 py-3 rounded font-bold text-sm shadow-sm hover:brightness-105">SAVE</button>
+                        <button type="button" class="text-[#2874f0] px-4 py-3 font-bold text-sm ml-4" onclick="cancelProfileEdit()">CANCEL</button>
+                    </div>
+                </form>
+
+                <div class="mt-12 pt-8 border-t border-outline-variant max-w-lg space-y-4">
+                    <h3 class="text-sm font-bold text-on-surface uppercase tracking-widest mb-4">Account Stats</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-surface-container-low p-4 rounded border border-outline-variant">
+                            <p class="text-xs text-outline font-bold">Total Orders</p>
+                            <p class="text-xl text-[#2874f0] font-bold mt-1" id="statOrders">0</p>
+                        </div>
+                        <div class="bg-surface-container-low p-4 rounded border border-outline-variant">
+                            <p class="text-xs text-outline font-bold">Member Since</p>
+                            <p class="text-sm text-on-surface font-bold mt-2" id="statMemberSince">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-outline-variant max-w-lg space-y-4">
+                    <h3 class="text-sm font-bold text-on-surface uppercase tracking-widest mb-4">Account Security</h3>
+                    <button id="showPasswordBtn" class="w-full text-left bg-surface-container-low border border-outline-variant rounded p-4 text-sm text-[#2874f0] font-bold hover:bg-surface-container transition-colors" onclick="togglePasswordForm()">
+                        Change Password
+                    </button>
+                    
+                    <div id="passwordFormContainer" class="hidden bg-surface-container-low p-4 rounded border border-outline-variant">
+                        <h3 class="font-bold text-[#2874f0] text-sm mb-4">CHANGE PASSWORD</h3>
+                        <form id="passwordForm" class="space-y-4" onsubmit="changePassword(event)">
+                            <div id="passwordError" class="hidden text-sm text-error bg-error/10 p-3 rounded font-bold"></div>
+                            <div id="passwordSuccess" class="hidden text-sm text-green-600 bg-green-50 p-3 rounded font-bold"></div>
+                            
+                            <div>
+                                <label class="block text-xs font-bold text-outline mb-1">Current Password</label>
+                                <input type="password" id="currentPassword" required class="w-full bg-white border border-outline-variant rounded p-3 text-sm outline-none focus:border-[#2874f0]">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-outline mb-1">New Password</label>
+                                <input type="password" id="newPassword" required minlength="6" class="w-full bg-white border border-outline-variant rounded p-3 text-sm outline-none focus:border-[#2874f0]">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-outline mb-1">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" required minlength="6" class="w-full bg-white border border-outline-variant rounded p-3 text-sm outline-none focus:border-[#2874f0]">
+                            </div>
+                            <div class="flex gap-4 pt-2">
+                                <button type="submit" id="savePasswordBtn" class="bg-[#fb641b] text-white px-8 py-3 rounded font-bold text-sm shadow-sm hover:brightness-105">UPDATE PASSWORD</button>
+                                <button type="button" class="text-on-surface px-4 py-3 font-bold text-sm" onclick="togglePasswordForm()">CANCEL</button>
+                            </div>
+                        </form>
+                    </div>
+                    <button class="w-full text-left bg-error/10 border border-error/30 rounded p-4 text-sm text-error font-bold hover:bg-error/20 transition-colors" onclick="alert('Account deletion requested. Support will contact you shortly.')">
+                        Delete Account
+                    </button>
+                </div>
+            </div>
+            
+            <!-- My Coupons Tab -->
+            <div id="tab-coupons" class="profile-tab hidden">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-lg font-bold text-on-surface">Available Coupons</h2>
+                </div>
+                <div class="space-y-4" id="couponsList">
+                    <div class="p-6 border border-outline-variant rounded bg-surface-container-low text-center flex flex-col items-center justify-center">
+                        <span class="material-symbols-outlined text-4xl text-outline mb-2">loyalty</span>
+                        <p class="text-sm text-on-surface font-bold">No coupons available right now.</p>
+                        <p class="text-xs text-outline mt-1">Check back later for exciting offers!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Tab -->
+            <div id="tab-notifications" class="profile-tab hidden">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-lg font-bold text-on-surface">All Notifications</h2>
+                </div>
+                <div class="space-y-4" id="notificationsList">
+                    <div class="p-6 border border-outline-variant rounded bg-surface-container-low text-center flex flex-col items-center justify-center">
+                        <span class="material-symbols-outlined text-4xl text-outline mb-2">notifications_off</span>
+                        <p class="text-sm text-on-surface font-bold">No notifications yet.</p>
+                        <p class="text-xs text-outline mt-1">We will notify you when something important happens.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Wishlist Tab -->
+            <div id="tab-wishlist" class="profile-tab hidden">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-lg font-bold text-on-surface">My Wishlist (<span id="wishlistCount">0</span>)</h2>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="wishlistList">
+                    <div class="col-span-2 md:col-span-3 p-6 border border-outline-variant rounded bg-surface-container-low text-center flex flex-col items-center justify-center">
+                        <span class="material-symbols-outlined text-4xl text-outline mb-2">favorite_border</span>
+                        <p class="text-sm text-on-surface font-bold">Empty Wishlist</p>
+                        <p class="text-xs text-outline mt-1">You have no items in your wishlist. Start adding!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Addresses Tab -->
+            <div id="tab-addresses" class="profile-tab hidden">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-lg font-bold text-on-surface">Manage Addresses</h2>
+                </div>
+                
+                <button class="w-full border border-outline-variant text-[#2874f0] font-bold py-3 mb-6 rounded flex items-center justify-center gap-2 hover:bg-blue-50 transition-colors" onclick="openAddressForm()">
+                    <span class="material-symbols-outlined text-[20px]">add</span> ADD A NEW ADDRESS
+                </button>
+                
+                <!-- Address Form (Hidden by default) -->
+                <div id="addressFormContainer" class="hidden bg-surface-container-low p-4 rounded border border-outline-variant mb-6">
+                    <h3 class="font-bold text-[#2874f0] text-sm mb-4">ADD A NEW ADDRESS</h3>
+                    <form id="addressForm" class="space-y-4" onsubmit="saveAddress(event)">
+                        <input type="hidden" id="addressId">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="addrName" placeholder="Name" required class="w-full bg-white border border-outline-variant rounded p-3 text-sm outline-none focus:border-[#2874f0]">
+                            <input type="tel" id="addrPhone" placeholder="10-digit mobile number" required class="w-full bg-white border border-outline-variant rounded p-3 text-sm outline-none focus:border-[#2874f0]">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="addrPincode" placeholder="Pincode" required class="w-full bg-white border border-outline-variant rounded p-3 text-sm outline-none focus:border-[#2874f0]">
+                            <input type="text" id="addrLocality" placeholder="Locality" required class="w-full bg-white border border-outline-variant rounded p-3 text-sm outline-none focus:border-[#2874f0]">
+                        </div>
+                        <textarea id="addrFull" placeholder="Address (Area and Street)" rows="3" required class="w-full bg-white border border-outline-variant rounded p-3 text-sm outline-none focus:border-[#2874f0]"></textarea>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="addrCity" placeholder="City/District/Town" required class="w-full bg-white border border-outline-variant rounded p-3 text-sm outline-none focus:border-[#2874f0]">
+                            <select id="addrState" required class="w-full bg-white border border-outline-variant rounded p-3 text-sm outline-none focus:border-[#2874f0]">
+                                <option value="" disabled selected>--Select State--</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <p class="text-xs text-outline mb-2">Address Type</p>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 text-sm"><input type="radio" name="addrTitle" value="Home" checked class="text-[#2874f0]"> Home</label>
+                                <label class="flex items-center gap-2 text-sm"><input type="radio" name="addrTitle" value="Work" class="text-[#2874f0]"> Work</label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4 pt-2">
+                            <button type="submit" class="bg-[#fb641b] text-white px-8 py-3 rounded font-bold text-sm shadow-sm hover:brightness-105">SAVE</button>
+                            <button type="button" class="text-on-surface px-4 py-3 font-bold text-sm" onclick="closeAddressForm()">CANCEL</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Addresses List -->
+                <div id="addressesList" class="space-y-4">
+                    <p class="text-sm text-outline">Loading addresses...</p>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-surface py-6 border-t border-outline-variant pb-[100px]">
+    <div class="max-w-md mx-auto px-4 text-center">
+        <h4 class="font-headline-md text-primary font-bold text-lg tracking-widest mb-4">PRAJCRAFT</h4>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-6 font-label-md text-[10px] sm:text-xs text-on-surface-variant uppercase tracking-widest mb-4">
+            <a href="about.html" class="hover:text-primary transition-colors">About</a>
+            <a href="terms.html" class="hover:text-primary transition-colors">Terms</a>
+            <a href="privacy-policy.html" class="hover:text-primary transition-colors">Privacy</a>
+            <a href="return-policy.html" class="hover:text-primary transition-colors">Returns</a>
+            <a href="refund-cancellation.html" class="hover:text-primary transition-colors">Refunds</a>
+            <a href="shipping-policy.html" class="hover:text-primary transition-colors">Shipping</a>
+            <a href="contact.html" class="hover:text-primary transition-colors">Contact</a>
+        </div>
+        <p class="text-xs text-outline-variant uppercase tracking-widest">© 2026 PRAJCRAFT. All rights reserved.</p>
+        <div class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-outline-variant uppercase tracking-[0.2em] font-medium">
+            <span class="text-lg">🇮🇳</span> Proudly Made in India
+        </div>
+    </div>
+</footer>
+
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-outline-variant bg-surface px-4 pb-3 pt-2">
+    <div class="flex gap-2 max-w-[480px] mx-auto">
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="index.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">home</span>
+            </div>
+            <p class="text-xs font-medium">Home</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="category.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">grid_view</span>
+            </div>
+            <p class="text-xs font-medium">Categories</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="cart.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">shopping_cart</span>
+            </div>
+            <p class="text-xs font-medium">Cart</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-primary" href="profile.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+            </div>
+            <p class="text-xs font-medium">Profile</p>
+        </a>
+    </div>
+</nav>
+
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+</body></html>
+

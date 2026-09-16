@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Customers | PRAJCRAFT Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#d4af37",
+                        "primary-variant": "#ffe088",
+                        "background": "#121212",
+                        "surface": "#1c1b1b",
+                        "surface-variant": "#2a2828",
+                        "on-background": "#ffffff",
+                        "on-surface": "#e2e2e2",
+                        "on-surface-variant": "#c6c6c6",
+                        "outline": "#7f7663",
+                        "outline-variant": "#4d4635",
+                        "error": "#ffb3b1",
+                        "success": "#4ade80"
+                    },
+                    "fontFamily": {
+                        "headline": ["Montserrat", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { min-height: 100vh; background-color: #121212; color: #e2e2e2; }
+        .glass-panel {
+            background: rgba(28, 27, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin-auth.js"></script>
+</head>
+<body class="font-body overflow-x-hidden flex" style="display: none;">
+
+<aside class="w-64 glass-panel border-r border-outline-variant fixed h-full z-40 hidden md:flex flex-col">
+    <div class="h-20 flex items-center px-6 border-b border-outline-variant">
+        <h2 class="font-headline text-2xl font-extrabold tracking-widest gold-text-gradient">PRAJCRAFT</h2>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+        <a href="admin-orders.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">local_shipping</span>
+            Orders
+        </a>
+        <a href="admin-products.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Products
+        </a>
+        <a href="admin-categories.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">category</span>
+            Categories
+        </a>
+        <a href="admin-customers.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">group</span>
+            Customers
+        </a>
+        <a href="admin-marketing.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">campaign</span>
+            Marketing
+        </a>
+        <a href="admin-settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+        </a>
+    </nav>
+    <div class="p-4 border-t border-outline-variant">
+        <button onclick="adminLogout()" class="flex items-center gap-3 px-4 py-3 w-full text-error hover:bg-error/10 rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">logout</span>
+            Logout
+        </button>
+    </div>
+</aside>
+
+<main class="flex-1 md:ml-64 min-h-screen flex flex-col pb-20">
+        <!-- Header -->
+    <header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant py-4 px-8 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-4">
+            <button class="md:hidden text-primary" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-headline text-xl font-semibold text-on-background">Customers</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            
+            <button class="bg-surface-variant p-2 rounded-full border border-outline-variant text-primary hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center text-primary font-headline font-bold">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-8 space-y-8">
+        <div class="glass-panel rounded-2xl p-6 flex flex-wrap gap-4 items-center justify-between">
+            <div class="relative flex-1 max-w-sm">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+                <input type="text" id="searchInput" placeholder="Search by name, phone..." class="w-full bg-surface border border-outline-variant rounded-lg py-2 pl-10 pr-4 text-sm focus:border-primary outline-none text-on-background placeholder:text-outline transition-colors">
+            </div>
+        </div>
+
+        <div class="glass-panel rounded-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-surface-variant/50 text-outline border-b border-outline-variant">
+                        <tr>
+                            <th class="p-4 font-medium">Customer Name</th>
+                            <th class="p-4 font-medium">Phone Number</th>
+                            <th class="p-4 font-medium text-center">Total Orders</th>
+                            <th class="p-4 font-medium text-right">Lifetime Value (LTV)</th>
+                            <th class="p-4 font-medium text-center">Status</th>
+                            <th class="p-4 font-medium text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersBody" class="divide-y divide-outline-variant/50">
+                        <tr><td colspan="6" class="p-8 text-center text-outline">Loading customers...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+let customers = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const user = await requireAdminAuth();
+    if (!user) return;
+    
+    fetchCustomers();
+    document.getElementById('searchInput').addEventListener('input', renderCustomers);
+});
+
+async function fetchCustomers() {
+    try {
+        // Fetch all users
+        const { data: usersData, error: usersErr } = await supabase
+            .from('users')
+            .select('id, full_name, phone, role, created_at')
+            .eq('role', 'customer');
+            
+        if (usersErr) throw usersErr;
+
+        // Fetch all confirmed/delivered orders to compute LTV
+        const { data: ordersData, error: ordersErr } = await supabase
+            .from('orders')
+            .select('user_id, final_total')
+            .not('status', 'eq', 'Cancelled')
+            .not('status', 'eq', 'Refunded');
+            
+        if (ordersErr) throw ordersErr;
+
+        // Map data
+        customers = usersData.map(u => {
+            const userOrders = ordersData.filter(o => o.user_id === u.id);
+            const ltv = userOrders.reduce((sum, o) => sum + parseFloat(o.final_total), 0);
+            return {
+                ...u,
+                total_orders: userOrders.length,
+                ltv: ltv
+            };
+        });
+
+        // Sort by LTV highest first
+        customers.sort((a, b) => b.ltv - a.ltv);
+
+        renderCustomers();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load customers.");
+    }
+}
+
+function renderCustomers() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    
+    let filtered = customers;
+    if (search) {
+        filtered = filtered.filter(c => 
+            (c.full_name && c.full_name.toLowerCase().includes(search)) || 
+            (c.phone && c.phone.toLowerCase().includes(search))
+        );
+    }
+
+    const tbody = document.getElementById('customersBody');
+    if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-outline">No customers found.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(c => {
+        const isBlocked = c.is_blocked || false;
+        const statusBadge = isBlocked 
+            ? `<span class="px-2 py-1 rounded text-[10px] font-bold bg-error/10 text-error border border-error/20 uppercase tracking-widest">Blocked</span>`
+            : `<span class="px-2 py-1 rounded text-[10px] font-bold bg-success/10 text-success border border-success/20 uppercase tracking-widest">Active</span>`;
+            
+        const actionBtn = isBlocked
+            ? `<button onclick="toggleBlock('${c.id}', false)" class="text-success hover:text-success/80 transition-colors p-2 text-xs font-bold bg-surface-variant rounded border border-outline-variant">Unblock</button>`
+            : `<button onclick="toggleBlock('${c.id}', true)" class="text-error hover:text-error/80 transition-colors p-2 text-xs font-bold bg-error/10 rounded border border-error/20">Block</button>`;
+
+        return `
+        <tr class="hover:bg-surface-variant/30 transition-colors">
+            <td class="p-4 text-on-surface font-medium flex items-center gap-3">
+                <div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs uppercase">${c.full_name ? c.full_name.charAt(0) : 'G'}</div>
+                ${c.full_name || 'Guest User'}
+            </td>
+            <td class="p-4 text-on-surface-variant font-mono text-sm">${c.phone || 'N/A'}</td>
+            <td class="p-4 text-center text-on-surface">${c.total_orders}</td>
+            <td class="p-4 text-right text-primary font-semibold">₹${c.ltv.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+            <td class="p-4 text-center">${statusBadge}</td>
+            <td class="p-4 text-right">${actionBtn}</td>
+        </tr>
+        `;
+    }).join('');
+}
+
+async function toggleBlock(userId, blockStatus) {
+    if(!confirm(`Are you sure you want to ${blockStatus ? 'block' : 'unblock'} this customer?`)) return;
+    try {
+        const { error } = await supabase.from('users').update({ is_blocked: blockStatus }).eq('id', userId);
+        if (error) throw error;
+        fetchCustomers();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to update status.");
+    }
+}
+</script>
+</body>
+</html>
+
+
+
+

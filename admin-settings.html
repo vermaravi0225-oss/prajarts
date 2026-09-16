@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Global Settings | PRAJCRAFT Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#d4af37",
+                        "primary-variant": "#ffe088",
+                        "background": "#121212",
+                        "surface": "#1c1b1b",
+                        "surface-variant": "#2a2828",
+                        "on-background": "#ffffff",
+                        "on-surface": "#e2e2e2",
+                        "on-surface-variant": "#c6c6c6",
+                        "outline": "#7f7663",
+                        "outline-variant": "#4d4635",
+                        "error": "#ffb3b1",
+                        "success": "#4ade80"
+                    },
+                    "fontFamily": {
+                        "headline": ["Montserrat", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .gold-text-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #aa8529 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .luxury-shadow {
+            box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.5), 0 0 1px 1px rgba(255,255,255,0.05);
+        }
+        input, select, textarea {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--outline-variant);
+            color: #fff;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(255,255,255,0.05);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin-auth.js"></script>
+</head>
+<body class="font-body overflow-x-hidden flex" style="display: none;">
+
+<!-- Sidebar Navigation -->
+<aside class="w-64 glass-panel border-r border-outline-variant fixed h-full z-40 hidden md:flex flex-col">
+    <div class="h-20 flex items-center px-6 border-b border-outline-variant">
+        <h2 class="font-headline text-2xl font-extrabold tracking-widest gold-text-gradient">PRAJCRAFT</h2>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+        <a href="admin-orders.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">local_shipping</span>
+            Orders
+        </a>
+        <a href="admin-products.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Products
+        </a>
+        <a href="admin-categories.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">category</span>
+            Categories
+        </a>
+        <a href="admin-customers.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">group</span>
+            Customers
+        </a>
+        <a href="admin-marketing.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">campaign</span>
+            Marketing
+        </a>
+        <a href="admin-settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+        </a>
+    </nav>
+    <div class="p-4 border-t border-outline-variant">
+        <button onclick="adminLogout()" class="flex items-center gap-3 px-4 py-3 w-full text-error hover:bg-error/10 rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">logout</span>
+            Logout
+        </button>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 bg-background min-h-screen">
+        <!-- Header -->
+    <header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant py-4 px-8 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-4">
+            <button class="md:hidden text-primary" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-headline text-xl font-semibold text-on-background">Global Settings</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="bg-primary hover:bg-primary-variant text-background px-6 py-2 rounded-lg font-bold transition-colors flex items-center gap-2 shadow-lg shadow-primary/20" onclick="saveSettings()" id="saveBtn">Save Settings</button>
+            <button class="bg-surface-variant p-2 rounded-full border border-outline-variant text-primary hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center text-primary font-headline font-bold">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-8 space-y-8">
+        <div class="glass-panel rounded-2xl p-6 border border-outline-variant mb-8 space-y-6">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">storefront</span>
+                <h2 class="text-xl font-headline text-on-surface">Store Configuration</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1 uppercase tracking-wider">Store Logo</label>
+                        <input type="file" accept="image/*" id="set_logo" class="w-full px-4 py-3 bg-surface-variant text-on-surface rounded-xl border border-outline-variant transition-colors focus:border-primary">
+                        <img id="logo_preview" class="h-12 mt-2 hidden rounded object-contain bg-background p-1 border border-outline-variant">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1 uppercase tracking-wider">Company Name</label>
+                        <input type="text" id="set_name" class="w-full px-4 py-3 rounded-xl transition-colors focus:ring-1 focus:ring-primary" placeholder="PrajCraft">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1 uppercase tracking-wider">Support Email</label>
+                        <input type="email" id="set_email" class="w-full px-4 py-3 rounded-xl transition-colors focus:ring-1 focus:ring-primary" placeholder="support@prajcraft.in">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1 uppercase tracking-wider">WhatsApp Number</label>
+                        <input type="text" id="set_whatsapp" class="w-full px-4 py-3 rounded-xl transition-colors focus:ring-1 focus:ring-primary" placeholder="+91 9999999999">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1 uppercase tracking-wider">Standard Shipping Charges (₹)</label>
+                        <input type="number" id="set_shipping" class="w-full px-4 py-3 rounded-xl transition-colors focus:ring-1 focus:ring-primary" placeholder="50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1 uppercase tracking-wider">Free Shipping Threshold (₹)</label>
+                        <input type="number" id="set_free_limit" class="w-full px-4 py-3 rounded-xl transition-colors focus:ring-1 focus:ring-primary" placeholder="1000">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    let settingsId = null;
+    let existingLogoUrl = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        await requireAdminAuth();
+        loadSettings();
+    });
+
+    async function loadSettings() {
+        const { data } = await supabase.from('settings').select('*').maybeSingle();
+        if (data) {
+            settingsId = data.id;
+            document.getElementById('set_name').value = data.company_name || '';
+            document.getElementById('set_email').value = data.support_email || '';
+            document.getElementById('set_whatsapp').value = data.whatsapp_number || '';
+            document.getElementById('set_shipping').value = data.shipping_charges || 0;
+            document.getElementById('set_free_limit').value = data.free_shipping_limit || 0;
+            
+            if(data.logo_url) {
+                existingLogoUrl = data.logo_url;
+                const p = document.getElementById('logo_preview');
+                p.src = existingLogoUrl;
+                p.classList.remove('hidden');
+            }
+        }
+    }
+
+    async function saveSettings() {
+        const btn = document.getElementById('saveBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Saving...'; btn.disabled = true;
+
+        try {
+            // Upload Logo if selected
+            let finalLogoUrl = existingLogoUrl;
+            const logoFile = document.getElementById('set_logo').files[0];
+            if (logoFile) {
+                btn.innerHTML = 'Uploading Media...';
+                finalLogoUrl = await uploadMedia(logoFile);
+            }
+
+            const payload = {
+                company_name: document.getElementById('set_name').value,
+                logo_url: finalLogoUrl,
+                support_email: document.getElementById('set_email').value,
+                whatsapp_number: document.getElementById('set_whatsapp').value,
+                shipping_charges: parseFloat(document.getElementById('set_shipping').value) || 0,
+                free_shipping_limit: parseFloat(document.getElementById('set_free_limit').value) || 0
+            };
+
+            let result;
+            if (settingsId) {
+                result = await supabase.from('settings').update(payload).eq('id', settingsId);
+            } else {
+                result = await supabase.from('settings').insert([payload]);
+            }
+
+            if (result.error) throw result.error;
+
+            btn.innerHTML = 'Saved Successfully!';
+            btn.classList.replace('bg-primary', 'bg-success');
+            setTimeout(() => { 
+                btn.innerHTML = originalText; 
+                btn.disabled = false; 
+                btn.classList.replace('bg-success', 'bg-primary');
+            }, 2000);
+        } catch (err) {
+            console.error(err);
+            alert('Failed to save settings: ' + err.message);
+            btn.innerHTML = originalText; btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
+
+
+
+

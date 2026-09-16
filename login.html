@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <title>Prajcraft | Collector Authentication</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .vault-gradient {
+            background: linear-gradient(135deg, #1c1b1b 0%, #313030 100%);
+        }
+        .gold-shimmer {
+            background: linear-gradient(90deg, #735c00 0%, #d4af37 50%, #735c00 100%);
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+        body { min-height: max(884px, 100dvh); }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#735c00",
+                        "primary-fixed-dim": "#e9c349",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#bb152c",
+                        "inverse-surface": "#313030",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-secondary-fixed-variant": "#474747",
+                        "surface-container": "#f0eded",
+                        "on-primary": "#ffffff",
+                        "surface": "#fcf9f8",
+                        "outline": "#7f7663",
+                        "outline-variant": "#d0c5af",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "on-tertiary-fixed-variant": "#92001c",
+                        "on-tertiary-container": "#8f001b",
+                        "on-surface": "#1c1b1b",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f3f0ef",
+                        "primary-container": "#d4af37",
+                        "on-secondary-fixed": "#1b1b1b",
+                        "on-primary-fixed": "#241a00",
+                        "surface-container-high": "#eae7e7",
+                        "on-background": "#1c1b1b",
+                        "on-primary-container": "#554300",
+                        "secondary-fixed-dim": "#c6c6c6",
+                        "secondary-container": "#e2e2e2",
+                        "inverse-primary": "#e9c349",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#646464",
+                        "on-primary-fixed-variant": "#574500",
+                        "background": "#fcf9f8",
+                        "on-surface-variant": "#4d4635",
+                        "surface-tint": "#735c00",
+                        "surface-bright": "#fcf9f8",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary-container": "#ff9594",
+                        "surface-container-highest": "#e5e2e1",
+                        "tertiary-fixed": "#ffdad8",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#410007",
+                        "secondary": "#5e5e5e",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#ffe088"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Montserrat"],
+                        "display-lg": ["Montserrat"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col selection:bg-primary selection:text-white">
+
+    <header class="w-full z-50 bg-background/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-4 md:px-8 h-16 shadow-sm absolute top-0 left-0 right-0">
+        <div class="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform" onclick="window.location.href='index.html'">
+            <img alt="Prajcraft Logo" class="h-8 w-auto object-contain" src="assets/images/logo.png"/>
+            <span class="font-headline-md text-headline-md font-bold text-primary tracking-tighter">PRAJCRAFT</span>
+        </div>
+    </header>
+
+    <div class="flex-1 flex w-full pt-16">
+        <!-- Image/Brand Section (Hidden on very small screens, 50% on large) -->
+        <div class="hidden lg:flex w-1/2 bg-on-background relative overflow-hidden flex-col justify-end p-12">
+            <!-- Background Image with Overlay -->
+            <div class="absolute inset-0">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAdClDz6nBL8klX3MxXngSAwzxPdS0yplTY2mCbBWsjBQceMjJlZRe0BI-JTLW7YqkFpGBXrW9pqtckAPQmZzx5QWqo7mBJWMwGOC5GLGTMSvyi70XDLsE3StcDx-pUbHKIDoxYKETnVVQIjTb2anDN3BaKCYI9ww0BQk0TEhjrob8AmU6SL2CEVAQDOXeiTC2g2v4C3KjE4T7IK6ZNTs_ryZx1_IyXhuqt0UmyN98Zo-YLknmTdopUnqt88s9bmbn_aMaZLi7IH4" onerror="this.src='assets/images/logo.png'" alt="Premium Collectibles" class="w-full h-full object-cover opacity-40 mix-blend-luminosity">
+                <div class="absolute inset-0 bg-gradient-to-t from-on-background via-on-background/50 to-transparent"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10 text-white max-w-lg">
+                <span class="px-3 py-1 bg-primary-container text-on-primary-container text-xs font-bold uppercase tracking-widest rounded mb-6 inline-block">Collector's Vault</span>
+                <h1 class="font-display-lg text-5xl font-extrabold mb-4 uppercase tracking-tight">The Art of Collection</h1>
+                <p class="font-body-lg text-secondary-fixed-dim">Access your private vault, track secured acquisitions, and discover exclusive artifacts.</p>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="w-full lg:w-1/2 flex flex-col justify-center bg-surface relative overflow-y-auto">
+            <div class="max-w-md w-full mx-auto p-6 md:p-12 pb-32">
+                
+                <div class="text-center mb-10">
+                    <div class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center mx-auto mb-4 border border-outline-variant shadow-sm">
+                        <span class="material-symbols-outlined text-3xl text-primary">admin_panel_settings</span>
+                    </div>
+                    <h2 class="font-headline-lg text-3xl text-on-surface uppercase mb-2 tracking-tight">Authentication</h2>
+                    <p class="font-body-md text-on-surface-variant">Enter your credentials to access the vault.</p>
+                </div>
+
+                <div id="loginError" class="bg-error-container text-error p-4 rounded text-sm mb-6 font-bold border border-error/20 hidden"></div>
+
+                <div class="space-y-5">
+                    <button type="button" onclick="window.handleGoogleLogin()" id="googleLoginBtn" class="w-full bg-white border border-outline-variant group relative h-14 overflow-hidden rounded shadow-sm active:scale-[0.98] transition-transform hover:bg-surface-container flex items-center justify-center gap-3">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" class="w-6 h-6" />
+                        <span class="text-on-surface font-label-md font-bold uppercase tracking-widest">Sign in with Google</span>
+                    </button>
+                </div>
+
+                <div class="mt-8 flex items-center gap-4">
+                    <div class="h-px bg-outline-variant flex-1"></div>
+                    <span class="font-label-md text-xs text-on-surface-variant uppercase tracking-widest">Secure Gateway</span>
+                    <div class="h-px bg-outline-variant flex-1"></div>
+                </div>
+
+                <div class="mt-8 flex justify-center gap-8 opacity-70">
+                    <div class="flex flex-col items-center gap-1">
+                        <span class="material-symbols-outlined text-primary">verified_user</span>
+                        <span class="font-label-md text-[9px] uppercase tracking-widest text-on-surface-variant">Verified</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-1">
+                        <span class="material-symbols-outlined text-primary">encrypted</span>
+                        <span class="font-label-md text-[9px] uppercase tracking-widest text-on-surface-variant">Encrypted</span>
+                    </div>
+                </div>
+
+                <div class="mt-12 text-center">
+                    <div class="flex justify-center gap-6 font-label-md text-xs text-on-surface-variant uppercase tracking-widest">
+                        <a href="policies.html#terms" class="hover:text-primary transition-colors">Terms</a>
+                        <a href="policies.html#privacy" class="hover:text-primary transition-colors">Privacy</a>
+                        <a href="policies.html#contact" class="hover:text-primary transition-colors">Contact</a>
+                    </div>
+                    <div class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-outline-variant uppercase tracking-[0.2em] font-medium">
+                        <span class="text-lg">🇮🇳</span> Proudly Made in India
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div> <!-- Closing the flex-1 div properly -->
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-outline-variant bg-surface px-4 pb-3 pt-2">
+        <div class="flex gap-2 max-w-[480px] mx-auto">
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="index.html">
+                <div class="flex h-8 items-center justify-center">
+                    <span class="material-symbols-outlined">home</span>
+                </div>
+                <p class="text-xs font-medium">Home</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="category.html">
+                <div class="flex h-8 items-center justify-center">
+                    <span class="material-symbols-outlined">grid_view</span>
+                </div>
+                <p class="text-xs font-medium">Categories</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="cart.html">
+                <div class="flex h-8 items-center justify-center">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                </div>
+                <p class="text-xs font-medium">Cart</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-primary" href="profile.html">
+                <div class="flex h-8 items-center justify-center">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+                </div>
+                <p class="text-xs font-medium">Profile</p>
+            </a>
+        </div>
+    </nav>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Store previous URL if coming from the same site (excluding login page itself)
+        if (document.referrer && document.referrer.includes(window.location.host) && !document.referrer.includes('login.html')) {
+            sessionStorage.setItem('returnUrl', document.referrer);
+        }
+
+        // Intercept display of error to handle hidden class
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === "style") {
+                    const el = document.getElementById('loginError');
+                    if (el.style.display !== 'none' && el.style.display !== '') {
+                        el.classList.remove('hidden');
+                        el.style.display = ''; 
+                    } else if (el.style.display === 'none') {
+                        el.classList.add('hidden');
+                    }
+                }
+            });
+        });
+        observer.observe(document.getElementById('loginError'), { attributes: true });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Marketing | PRAJCRAFT Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#d4af37",
+                        "primary-variant": "#ffe088",
+                        "background": "#121212",
+                        "surface": "#1c1b1b",
+                        "surface-variant": "#2a2828",
+                        "on-background": "#ffffff",
+                        "on-surface": "#e2e2e2",
+                        "on-surface-variant": "#c6c6c6",
+                        "outline": "#7f7663",
+                        "outline-variant": "#4d4635",
+                        "error": "#ffb3b1",
+                        "success": "#4ade80"
+                    },
+                    "fontFamily": {
+                        "headline": ["Montserrat", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { min-height: 100vh; background-color: #121212; color: #e2e2e2; }
+        .glass-panel {
+            background: rgba(28, 27, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .tab-btn.active { border-bottom-color: #d4af37; color: #d4af37; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin-auth.js"></script>
+</head>
+<body class="font-body overflow-x-hidden flex" style="display: none;">
+
+<aside class="w-64 glass-panel border-r border-outline-variant fixed h-full z-40 hidden md:flex flex-col">
+    <div class="h-20 flex items-center px-6 border-b border-outline-variant">
+        <h2 class="font-headline text-2xl font-extrabold tracking-widest gold-text-gradient">PRAJCRAFT</h2>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+        <a href="admin-orders.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">local_shipping</span>
+            Orders
+        </a>
+        <a href="admin-products.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Products
+        </a>
+        <a href="admin-categories.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">category</span>
+            Categories
+        </a>
+        <a href="admin-customers.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">group</span>
+            Customers
+        </a>
+        <a href="admin-marketing.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">campaign</span>
+            Marketing
+        </a>
+        <a href="admin-settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+        </a>
+    </nav>
+    <div class="p-4 border-t border-outline-variant">
+        <button onclick="adminLogout()" class="flex items-center gap-3 px-4 py-3 w-full text-error hover:bg-error/10 rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">logout</span>
+            Logout
+        </button>
+    </div>
+</aside>
+
+<main class="flex-1 md:ml-64 min-h-screen flex flex-col pb-20">
+        <!-- Header -->
+    <header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant py-4 px-8 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-4">
+            <button class="md:hidden text-primary" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-headline text-xl font-semibold text-on-background">Marketing</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            
+            <button class="bg-surface-variant p-2 rounded-full border border-outline-variant text-primary hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center text-primary font-headline font-bold">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-8 space-y-8">
+        <!-- Tabs -->
+        <div class="flex border-b border-outline-variant mb-6">
+            <button class="tab-btn active px-6 py-3 font-medium text-sm text-on-surface-variant border-b-2 border-transparent hover:text-primary" onclick="switchTab('banners')">Banners & Announcements</button>
+            <button class="tab-btn px-6 py-3 font-medium text-sm text-on-surface-variant border-b-2 border-transparent hover:text-primary" onclick="switchTab('coupons')">Discount Coupons</button>
+        </div>
+
+        <!-- Banners Tab -->
+        <div id="tab-banners" class="tab-content block space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="font-headline text-lg font-medium text-on-surface">Store Banners</h2>
+                <button onclick="openBannerModal()" class="bg-primary hover:bg-primary-variant text-background px-4 py-2 rounded-lg font-bold transition-colors flex items-center gap-2 text-sm">
+                    <span class="material-symbols-outlined text-sm">add</span> Add Banner
+                </button>
+            </div>
+            <div class="glass-panel rounded-2xl overflow-hidden">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-surface-variant/50 text-outline border-b border-outline-variant">
+                        <tr>
+                            <th class="p-4">Preview</th>
+                            <th class="p-4">Position</th>
+                            <th class="p-4">Link URL</th>
+                            <th class="p-4">Status</th>
+                            <th class="p-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bannersBody" class="divide-y divide-outline-variant/50"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Coupons Tab -->
+        <div id="tab-coupons" class="tab-content hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="font-headline text-lg font-medium text-on-surface">Discount Coupons</h2>
+                <button onclick="openCouponModal()" class="bg-primary hover:bg-primary-variant text-background px-4 py-2 rounded-lg font-bold transition-colors flex items-center gap-2 text-sm">
+                    <span class="material-symbols-outlined text-sm">add</span> Create Coupon
+                </button>
+            </div>
+            <div class="glass-panel rounded-2xl overflow-hidden">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-surface-variant/50 text-outline border-b border-outline-variant">
+                        <tr>
+                            <th class="p-4">Code</th>
+                            <th class="p-4">Discount</th>
+                            <th class="p-4">Min Order</th>
+                            <th class="p-4">Usage Limits</th>
+                            <th class="p-4">Expiry</th>
+                            <th class="p-4">Status</th>
+                            <th class="p-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="couponsBody" class="divide-y divide-outline-variant/50"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Banner Modal -->
+<div id="bannerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-lg rounded-2xl p-6 shadow-2xl">
+        <h2 class="font-headline text-xl font-bold text-on-surface mb-6" id="bannerModalTitle">Add Banner / Announcement</h2>
+        <form id="bannerForm" class="space-y-4" onsubmit="saveBanner(event)">
+            <input type="hidden" id="ban_id">
+            
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-1">Position / Type *</label>
+                <select id="ban_position" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    <option value="hero">Hero Carousel (Home)</option>
+                    <option value="announcement_bar">Announcement Bar (Top text)</option>
+                    <option value="category_header">Category Header</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-1">Content (Text for Announcement, or Upload Image) *</label>
+                <input type="text" id="ban_image" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none mb-2" placeholder="'Free Shipping on Orders over 999!'">
+                <input type="file" accept="image/*" id="ban_image_file" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                <img id="ban_image_preview" class="h-24 mt-2 hidden rounded object-cover border border-outline-variant w-full">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-1">Link URL</label>
+                <input type="text" id="ban_link" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none" placeholder="/shop">
+            </div>
+
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Sort Order</label>
+                    <input type="number" id="ban_sort" value="0" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                </div>
+                <div class="flex items-center gap-2 pt-6">
+                    <input type="checkbox" id="ban_active" checked class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-5 w-5">
+                    <label for="ban_active" class="text-sm font-medium text-on-surface-variant">Is Active</label>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-outline-variant">
+                <button type="button" onclick="closeBannerModal()" class="px-4 py-2 rounded-lg font-medium text-on-surface-variant hover:text-on-surface transition-colors">Cancel</button>
+                <button type="submit" class="bg-primary hover:bg-primary-variant text-background px-6 py-2 rounded-lg font-bold transition-colors">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Coupon Modal -->
+<div id="couponModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-lg rounded-2xl p-6 shadow-2xl">
+        <h2 class="font-headline text-xl font-bold text-on-surface mb-6" id="couponModalTitle">Create Coupon</h2>
+        <form id="couponForm" class="space-y-4" onsubmit="saveCoupon(event)">
+            <input type="hidden" id="coup_id">
+            
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-1">Coupon Code *</label>
+                <input type="text" id="coup_code" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none uppercase font-mono" placeholder="SUMMER50">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Discount Type *</label>
+                    <select id="coup_type" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                        <option value="percentage">Percentage (%)</option>
+                        <option value="flat">Flat Amount (₹)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Value *</label>
+                    <input type="number" step="0.01" id="coup_val" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none" placeholder="10">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Min Order Amount (₹)</label>
+                    <input type="number" step="0.01" id="coup_min" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none" placeholder="0.00">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Max Uses Total</label>
+                    <input type="number" id="coup_limit" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none" placeholder="Leave blank for ∞">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-1">Expiry Date</label>
+                <input type="date" id="coup_exp" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+            </div>
+
+            <div class="flex items-center gap-2 pt-2">
+                <input type="checkbox" id="coup_active" checked class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-5 w-5">
+                <label for="coup_active" class="text-sm font-medium text-on-surface-variant">Is Active</label>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-outline-variant">
+                <button type="button" onclick="closeCouponModal()" class="px-4 py-2 rounded-lg font-medium text-on-surface-variant hover:text-on-surface transition-colors">Cancel</button>
+                <button type="submit" class="bg-primary hover:bg-primary-variant text-background px-6 py-2 rounded-lg font-bold transition-colors">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+let banners = [];
+let coupons = [];
+
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+    
+    event.currentTarget.classList.add('active');
+    document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const user = await requireAdminAuth();
+    if (!user) return;
+    
+    fetchBanners();
+    fetchCoupons();
+});
+
+// BANNERS LOGIC
+async function fetchBanners() {
+    try {
+        const { data, error } = await supabase.from('marketing_banners').select('*').order('sort_order');
+        if (error) throw error;
+        banners = data || [];
+        renderBanners();
+    } catch (e) { console.error(e); }
+}
+
+function renderBanners() {
+    const tbody = document.getElementById('bannersBody');
+    if (banners.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-outline">No banners found.</td></tr>`;
+        return;
+    }
+    
+    tbody.innerHTML = banners.map(b => {
+        let contentPreview = b.position === 'announcement_bar' 
+            ? `<span class="italic">Text:</span> ${b.image_url}`
+            : `<img src="${b.image_url}" class="h-10 rounded border border-outline-variant max-w-[150px] object-cover">`;
+            
+        let activeBadge = b.is_active 
+            ? `<span class="px-2 py-1 rounded text-[10px] font-bold bg-success/10 text-success border border-success/20 uppercase">Active</span>`
+            : `<span class="px-2 py-1 rounded text-[10px] font-bold bg-error/10 text-error border border-error/20 uppercase">Inactive</span>`;
+
+        return `
+        <tr class="hover:bg-surface-variant/30">
+            <td class="p-4">${contentPreview}</td>
+            <td class="p-4 text-on-surface font-medium capitalize">${b.position.replace('_', ' ')}</td>
+            <td class="p-4 text-primary">${b.link_url || '-'}</td>
+            <td class="p-4">${activeBadge}</td>
+            <td class="p-4 text-right">
+                <button onclick="editBanner('${b.id}')" class="text-outline hover:text-primary p-2"><span class="material-symbols-outlined text-sm">edit</span></button>
+                <button onclick="deleteBanner('${b.id}')" class="text-error/60 hover:text-error p-2"><span class="material-symbols-outlined text-sm">delete</span></button>
+            </td>
+        </tr>
+        `;
+    }).join('');
+}
+
+let existingBannerImage = null;
+
+function openBannerModal() {
+    document.getElementById('bannerForm').reset();
+    document.getElementById('ban_id').value = '';
+    
+    existingBannerImage = null;
+    document.getElementById('ban_image_preview').classList.add('hidden');
+
+    document.getElementById('bannerModalTitle').textContent = 'Add Banner';
+    document.getElementById('bannerModal').classList.remove('hidden');
+}
+
+function closeBannerModal() { document.getElementById('bannerModal').classList.add('hidden'); }
+
+function editBanner(id) {
+    const b = banners.find(x => x.id === id);
+    if(!b) return;
+    document.getElementById('ban_id').value = b.id;
+    document.getElementById('ban_position').value = b.position;
+    
+    existingBannerImage = b.image_url;
+    if(b.image_url && b.image_url.startsWith('http')) {
+        document.getElementById('ban_image_preview').src = b.image_url;
+        document.getElementById('ban_image_preview').classList.remove('hidden');
+        document.getElementById('ban_image').value = '';
+    } else {
+        document.getElementById('ban_image_preview').classList.add('hidden');
+        document.getElementById('ban_image').value = b.image_url;
+    }
+
+    document.getElementById('ban_link').value = b.link_url || '';
+    document.getElementById('ban_sort').value = b.sort_order || 0;
+    document.getElementById('ban_active').checked = b.is_active;
+    
+    document.getElementById('bannerModalTitle').textContent = 'Edit Banner';
+    document.getElementById('bannerModal').classList.remove('hidden');
+}
+
+async function saveBanner(e) {
+    e.preventDefault();
+    const id = document.getElementById('ban_id').value;
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Saving...'; btn.disabled = true;
+
+    try {
+        let finalImage = existingBannerImage;
+        const file = document.getElementById('ban_image_file').files[0];
+        if (file) {
+            btn.innerHTML = 'Uploading Media...';
+            finalImage = await uploadMedia(file);
+        } else if (document.getElementById('ban_image').value.trim() !== '') {
+            finalImage = document.getElementById('ban_image').value.trim();
+        }
+
+        const payload = {
+            position: document.getElementById('ban_position').value,
+            image_url: finalImage,
+            link_url: document.getElementById('ban_link').value,
+            sort_order: parseInt(document.getElementById('ban_sort').value) || 0,
+            is_active: document.getElementById('ban_active').checked
+        };
+
+        if(id) await supabase.from('marketing_banners').update(payload).eq('id', id);
+        else await supabase.from('marketing_banners').insert([payload]);
+        
+        closeBannerModal();
+        fetchBanners();
+    } catch(e) { 
+        alert("Failed to save banner."); 
+    } finally {
+        btn.innerHTML = originalText; btn.disabled = false;
+    }
+}
+
+async function deleteBanner(id) {
+    if(!confirm("Delete banner?")) return;
+    await supabase.from('marketing_banners').delete().eq('id', id);
+    fetchBanners();
+}
+
+// COUPONS LOGIC
+async function fetchCoupons() {
+    try {
+        const { data, error } = await supabase.from('coupons').select('*').order('created_at', {ascending: false});
+        if (error) throw error;
+        coupons = data || [];
+        renderCoupons();
+    } catch (e) { console.error(e); }
+}
+
+function renderCoupons() {
+    const tbody = document.getElementById('couponsBody');
+    if (coupons.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-outline">No coupons found.</td></tr>`;
+        return;
+    }
+    
+    tbody.innerHTML = coupons.map(c => {
+        let val = c.discount_type === 'percentage' ? `${c.discount_value}%` : `₹${c.discount_value}`;
+        
+        let activeBadge = c.is_active 
+            ? `<span class="px-2 py-1 rounded text-[10px] font-bold bg-success/10 text-success border border-success/20 uppercase">Active</span>`
+            : `<span class="px-2 py-1 rounded text-[10px] font-bold bg-error/10 text-error border border-error/20 uppercase">Inactive</span>`;
+
+        let usage = `${c.used_count || 0} / ${c.usage_limit ? c.usage_limit : '∞'}`;
+
+        return `
+        <tr class="hover:bg-surface-variant/30">
+            <td class="p-4 font-mono font-bold text-primary">${c.code}</td>
+            <td class="p-4 text-on-surface">${val}</td>
+            <td class="p-4 text-on-surface-variant">${c.min_order_amount ? '₹'+c.min_order_amount : 'None'}</td>
+            <td class="p-4 text-on-surface-variant">${usage}</td>
+            <td class="p-4 text-on-surface-variant">${c.valid_until ? new Date(c.valid_until).toLocaleDateString() : 'Never'}</td>
+            <td class="p-4">${activeBadge}</td>
+            <td class="p-4 text-right">
+                <button onclick="editCoupon('${c.id}')" class="text-outline hover:text-primary p-2"><span class="material-symbols-outlined text-sm">edit</span></button>
+                <button onclick="deleteCoupon('${c.id}')" class="text-error/60 hover:text-error p-2"><span class="material-symbols-outlined text-sm">delete</span></button>
+            </td>
+        </tr>
+        `;
+    }).join('');
+}
+
+function openCouponModal() {
+    document.getElementById('couponForm').reset();
+    document.getElementById('coup_id').value = '';
+    document.getElementById('couponModalTitle').textContent = 'Create Coupon';
+    document.getElementById('couponModal').classList.remove('hidden');
+}
+
+function closeCouponModal() { document.getElementById('couponModal').classList.add('hidden'); }
+
+function editCoupon(id) {
+    const c = coupons.find(x => x.id === id);
+    if(!c) return;
+    document.getElementById('coup_id').value = c.id;
+    document.getElementById('coup_code').value = c.code;
+    document.getElementById('coup_type').value = c.discount_type;
+    document.getElementById('coup_val').value = c.discount_value;
+    document.getElementById('coup_min').value = c.min_order_amount || '';
+    document.getElementById('coup_limit').value = c.usage_limit || '';
+    document.getElementById('coup_exp').value = c.valid_until ? c.valid_until.split('T')[0] : '';
+    document.getElementById('coup_active').checked = c.is_active;
+    
+    document.getElementById('couponModalTitle').textContent = 'Edit Coupon';
+    document.getElementById('couponModal').classList.remove('hidden');
+}
+
+async function saveCoupon(e) {
+    e.preventDefault();
+    const id = document.getElementById('coup_id').value;
+    
+    let validUntil = document.getElementById('coup_exp').value;
+    
+    const payload = {
+        code: document.getElementById('coup_code').value.toUpperCase(),
+        discount_type: document.getElementById('coup_type').value,
+        discount_value: parseFloat(document.getElementById('coup_val').value),
+        min_order_amount: document.getElementById('coup_min').value ? parseFloat(document.getElementById('coup_min').value) : null,
+        usage_limit: document.getElementById('coup_limit').value ? parseInt(document.getElementById('coup_limit').value) : null,
+        valid_until: validUntil ? new Date(validUntil).toISOString() : null,
+        is_active: document.getElementById('coup_active').checked
+    };
+
+    try {
+        if(id) await supabase.from('coupons').update(payload).eq('id', id);
+        else await supabase.from('coupons').insert([payload]);
+        closeCouponModal();
+        fetchCoupons();
+    } catch(err) { alert("Failed to save coupon. Code must be unique."); }
+}
+
+async function deleteCoupon(id) {
+    if(!confirm("Delete coupon?")) return;
+    await supabase.from('coupons').delete().eq('id', id);
+    fetchCoupons();
+}
+</script>
+</body>
+</html>
+
+
+
+

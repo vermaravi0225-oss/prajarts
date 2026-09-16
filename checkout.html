@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PRAJCRAFT | Secure Checkout</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#ffe088",
+                        "secondary-container": "#e2e2e2",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-low": "#f6f3f2",
+                        "surface": "#fcf9f8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "secondary": "#5e5e5e",
+                        "surface-container": "#f0eded",
+                        "primary-fixed-dim": "#e9c349",
+                        "surface-dim": "#dcd9d9",
+                        "primary-container": "#d4af37",
+                        "background": "#fcf9f8",
+                        "outline-variant": "#d0c5af",
+                        "tertiary": "#bb152c",
+                        "on-background": "#1c1b1b",
+                        "outline": "#7f7663",
+                        "error": "#ba1a1a",
+                        "primary": "#735c00",
+                        "surface-tint": "#735c00"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    }
+                },
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+        }
+
+        .gold-glow:hover {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            border-color: #d4af37;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+            background-color: #fcf9f8;
+        }
+    </style>
+
+    <!-- Supabase & JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body
+    class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container">
+    <div class="relative flex min-h-screen w-full flex-col bg-surface overflow-x-hidden">
+
+        <!-- Dynamic UPI Overlay -->
+        <div id="upiPaymentOverlay"
+            class="fixed inset-0 bg-black/60 z-[100] hidden items-end sm:items-center justify-center sm:p-4 backdrop-blur-sm transition-opacity">
+            <div
+                class="bg-surface rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[95vh] relative animate-[slideUp_0.3s_ease-out]">
+                <!-- Header -->
+                <div class="p-6 text-center border-b border-surface-variant relative">
+                    <button onclick="closeUpiOverlay()"
+                        class="absolute right-4 top-4 text-on-surface-variant hover:bg-surface-variant rounded-full p-2 transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                    <h3 class="text-on-surface font-headline-md font-bold text-xl uppercase tracking-wider">Complete
+                        Payment</h3>
+                    <p class="text-on-surface-variant text-sm mt-1">Amount to pay: <span id="qrAmountDisplay"
+                            class="font-bold text-on-surface text-lg">₹0</span></p>
+                </div>
+
+                <div class="p-6 overflow-y-auto space-y-8 flex-1">
+                    <!-- QR Code (Primary Display) -->
+                    <div class="flex flex-col items-center">
+                        <div
+                            class="p-4 bg-white rounded-2xl shadow-sm border border-surface-variant transition-transform hover:scale-105">
+                            <div id="qrcode" class="w-48 h-48"></div>
+                        </div>
+                        <div
+                            class="text-center text-on-surface-variant text-xs mt-4 bg-surface-variant/30 px-4 py-2 rounded-lg">
+                            <p>Merchant: <strong class="text-on-surface">PrajCraft</strong></p>
+                            <p class="text-primary font-bold">Scan QR code to pay</p>
+                        </div>
+                    </div>
+
+                    <!-- Native UPI App Launcher (Secondary Option) -->
+                    <div class="text-center md:hidden flex flex-col items-center">
+                        <div class="flex flex-col items-center justify-center mb-6 w-full">
+                            <div class="flex items-center justify-center gap-4 w-full mb-2">
+                                <div class="h-px bg-surface-variant flex-1"></div>
+                                <span class="text-outline text-xs uppercase tracking-widest font-bold">OR</span>
+                                <div class="h-px bg-surface-variant flex-1"></div>
+                            </div>
+                            <p class="text-xs text-on-surface-variant font-medium">Pay directly using apps</p>
+                        </div>
+
+                        <button id="payWithUpiAppsBtn" onclick="payWithUpiApps()"
+                            class="w-full py-4 bg-[#22c55e] text-white rounded-2xl font-bold hover:bg-[#16a34a] transition-all shadow-[0_8px_30px_rgb(34,197,94,0.3)] active:scale-95 flex items-center justify-center gap-2 border border-[#16a34a]">
+                            <span class="text-xl">Pay Now with UPI Apps</span>
+                        </button>
+
+                        <div
+                            class="flex items-center justify-center gap-4 mt-4 mb-2 bg-surface-variant/30 py-2 px-4 rounded-xl border border-surface-variant">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png"
+                                alt="GPay" class="h-4 object-contain"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='inline';">
+                            <span style="display:none;" class="text-xs font-bold text-on-surface">GPay</span>
+
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/PhonePe_Logo.svg/512px-PhonePe_Logo.svg.png"
+                                alt="PhonePe" class="h-5 object-contain"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='inline';">
+                            <span style="display:none;" class="text-xs font-bold text-indigo-600">PhonePe</span>
+
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/512px-Paytm_Logo_%28standalone%29.svg.png"
+                                alt="Paytm" class="h-3 object-contain"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='inline';">
+                            <span style="display:none;" class="text-xs font-bold text-blue-500">Paytm</span>
+
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/BHIM_SVG_Logo.svg/512px-BHIM_SVG_Logo.svg.png"
+                                alt="BHIM" class="h-4 object-contain"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='inline';">
+                            <span style="display:none;" class="text-xs font-bold text-orange-500">BHIM</span>
+                        </div>
+
+                        <p class="text-xs text-on-surface-variant font-medium mt-1">🔒 Secure payment • No extra charges
+                        </p>
+
+                        <div id="upiAppFallbackMsg"
+                            class="hidden w-full mt-4 p-3 bg-error-container text-on-error-container text-xs rounded-xl border border-error font-medium">
+                            If the app doesn't open, tap the 3 dots and select 'Open in Browser'.
+                        </div>
+                    </div>
+
+                    <!-- UTR Input Form -->
+                    <div
+                        class="space-y-4 bg-surface-container-lowest p-5 rounded-2xl border border-surface-variant shadow-sm">
+                        <div>
+                            <label
+                                class="text-label-sm uppercase font-bold text-on-surface-variant block mb-1.5">Transaction
+                                ID (UTR) <span class="text-error">*</span></label>
+                            <input id="utrInput"
+                                class="w-full bg-surface border-surface-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-xl p-3.5 text-on-surface font-medium placeholder:text-outline transition-all"
+                                placeholder="Enter 12-digit UTR number" type="text" />
+                        </div>
+                        <div>
+                            <label
+                                class="text-label-sm uppercase font-bold text-on-surface-variant block mb-1.5">Payment
+                                Screenshot (Optional)</label>
+                            <input id="screenshotInput" type="file" accept="image/*"
+                                class="w-full text-sm text-on-surface-variant file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-surface-variant file:text-on-surface hover:file:bg-primary-container hover:file:text-on-primary-container transition-colors cursor-pointer" />
+                        </div>
+                        <button id="submitUpiBtn"
+                            class="w-full mt-2 py-3.5 px-4 bg-primary text-on-primary rounded-xl font-bold hover:bg-primary-container hover:text-on-primary-container transition-all shadow-md active:scale-95 uppercase text-sm tracking-widest flex justify-center items-center gap-2"
+                            onclick="submitUpiPayment()">
+                            Confirm Payment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            @keyframes slideUp {
+                from {
+                    transform: translateY(100%);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+        </style>
+
+        <!-- Header -->
+        <div class="flex items-center bg-surface p-4 border-b border-surface-variant justify-between">
+            <a class="text-on-surface flex size-10 shrink-0 items-center justify-center hover:bg-surface-container-low rounded-full transition-colors"
+                href="cart.html">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </a>
+            <h2
+                class="text-on-surface text-headline-md font-headline-md flex-1 text-center pr-10 uppercase tracking-widest">
+                Secure Checkout</h2>
+        </div>
+
+        <main class="flex-1 max-w-6xl mx-auto w-full p-4 lg:p-8 grid grid-cols-1 md:grid-cols-12 gap-8 pb-32 md:pb-8">
+
+            <!-- Left Column: Shipping & Security -->
+            <div class="md:col-span-7 space-y-8">
+
+                <!-- Shipping Destination -->
+                <section>
+                    <div class="flex justify-between items-center pb-4 border-b border-surface-variant mb-6">
+                        <h3 class="text-on-surface text-headline-md font-headline-md">Shipping Address</h3>
+                        <button id="editAddressBtn" class="hidden text-sm text-primary font-bold hover:underline"
+                            onclick="toggleAddressForm()">Edit Address</button>
+                    </div>
+
+                    <div id="savedAddressContainer"
+                        class="hidden group relative overflow-hidden rounded-xl border border-primary bg-primary-container/10 p-6 transition-all hover:shadow-lg mb-6">
+                        <div class="flex items-start gap-4">
+                            <span class="material-symbols-outlined text-primary text-3xl">home_pin</span>
+                            <div>
+                                <p class="font-bold text-on-surface text-lg mb-1" id="savedName">John Doe</p>
+                                <p class="text-sm text-on-surface-variant mb-1" id="savedAddressText">123 Street, City,
+                                    State, 123456</p>
+                                <p class="text-sm font-medium text-on-surface" id="savedPhone">Phone: +91 9876543210</p>
+                            </div>
+                        </div>
+                        <input type="hidden" id="savedAddressId" value="">
+                    </div>
+
+                    <div id="addressFormContainer"
+                        class="group relative overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest p-6 transition-all hover:shadow-lg space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-1">
+                                <label class="text-label-sm uppercase font-bold text-on-surface-variant">Full
+                                    Name</label>
+                                <input id="shipName"
+                                    class="bg-surface border-outline-variant focus:border-primary focus:ring-0 rounded-lg p-3 text-on-surface font-medium placeholder:text-outline"
+                                    placeholder="John Doe" type="text" />
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label class="text-label-sm uppercase font-bold text-on-surface-variant">Phone
+                                    Number</label>
+                                <input id="shipPhone"
+                                    class="bg-surface border-outline-variant focus:border-primary focus:ring-0 rounded-lg p-3 text-on-surface font-medium placeholder:text-outline"
+                                    placeholder="+91 9876543210" type="tel" />
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-label-sm uppercase font-bold text-on-surface-variant">Address Line
+                                1</label>
+                            <input id="shipAddress"
+                                class="bg-surface border-outline-variant focus:border-primary focus:ring-0 rounded-lg p-3 text-on-surface font-medium placeholder:text-outline"
+                                placeholder="123 Elite Avenue" type="text" />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="flex flex-col gap-1">
+                                <label class="text-label-sm uppercase font-bold text-on-surface-variant">Country</label>
+                                <select id="shipCountry"
+                                    class="bg-surface border-outline-variant focus:border-primary focus:ring-0 rounded-lg p-3 text-on-surface font-medium"
+                                    onchange="window.handleCountryChange && window.handleCountryChange()">
+                                    <option value="India" selected>India</option>
+                                    <option value="United States">United States</option>
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="Other">Other (International)</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label class="text-label-sm uppercase font-bold text-on-surface-variant">City</label>
+                                <input id="shipCity"
+                                    class="bg-surface border-outline-variant focus:border-primary focus:ring-0 rounded-lg p-3 text-on-surface font-medium placeholder:text-outline text-center"
+                                    placeholder="Jaipur" type="text" />
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label class="text-label-sm uppercase font-bold text-on-surface-variant">PIN
+                                    Code</label>
+                                <input id="shipZip"
+                                    class="bg-surface border-outline-variant focus:border-primary focus:ring-0 rounded-lg p-3 text-on-surface font-medium placeholder:text-outline text-center"
+                                    placeholder="302001" type="text" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Vault Security: Payment -->
+                <section>
+                    <h3
+                        class="text-on-surface text-headline-md font-headline-md pb-4 border-b border-surface-variant mb-6">
+                        Payment Method</h3>
+                    <div id="paymentOptionsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+                        <!-- UPI Option -->
+                        <label class="relative cursor-pointer" id="upiOptionWrapper" onclick="selectPayment('upi')">
+                            <div id="upiOption"
+                                class="h-full border-2 border-primary rounded-xl p-6 bg-primary-container/5 transition-all gold-glow shadow-md">
+                                <div class="flex justify-between items-start mb-6">
+                                    <span class="material-symbols-outlined text-primary text-3xl">qr_code_scanner</span>
+                                    <div
+                                        class="w-8 h-8 rounded-full border-2 border-primary flex items-center justify-center bg-primary-container">
+                                        <div id="upiRadio" class="w-3 h-3 bg-primary rounded-full block"></div>
+                                    </div>
+                                </div>
+                                <p class="font-bold text-on-surface uppercase tracking-widest text-label-md">Manual UPI
+                                </p>
+                                <p class="text-on-surface-variant text-label-sm mt-1">GPay, PhonePe, Paytm</p>
+                            </div>
+                        </label>
+
+                        <!-- COD Option -->
+                        <label class="relative cursor-pointer" id="codOptionWrapper" onclick="selectPayment('cod')">
+                            <div id="codOption"
+                                class="h-full border-2 border-outline-variant rounded-xl p-6 transition-all opacity-60 cursor-not-allowed">
+                                <div class="flex justify-between items-start mb-6">
+                                    <span class="material-symbols-outlined text-primary text-3xl">local_shipping</span>
+                                    <div
+                                        class="w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center">
+                                        <div id="codRadio" class="w-3 h-3 bg-primary rounded-full hidden"></div>
+                                    </div>
+                                </div>
+                                <p class="font-bold text-on-surface uppercase tracking-widest text-label-md">Cash on
+                                    Delivery</p>
+                                <p class="text-error text-label-sm mt-1 font-bold" id="codStatusMsg">Checking
+                                    eligibility...</p>
+                            </div>
+                        </label>
+
+
+                    </div>
+
+                    <!-- Secure Payment Trust Badges -->
+                    <div
+                        class="mt-6 flex flex-col items-center justify-center gap-3 p-4 bg-surface-variant/30 rounded-xl border border-outline-variant/50">
+                        <div class="flex items-center gap-2 text-primary">
+                            <span class="material-symbols-outlined text-lg"
+                                style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                            <span
+                                class="font-headline-md text-sm tracking-wider uppercase font-bold text-on-surface">100%
+                                Secure Payments</span>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-4 text-on-surface-variant">
+                            <div class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-lg">account_balance</span>
+                                <span class="text-xs font-medium">UPI / NetBanking</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-lg">credit_card</span>
+                                <span class="text-xs font-medium">Credit / Debit Cards</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-lg">shield</span>
+                                <span class="text-xs font-medium">Secured by Prajcraft</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Order Summary -->
+            <div class="md:col-span-5">
+                <div class="sticky top-8 space-y-6">
+                    <section
+                        class="rounded-xl bg-inverse-surface text-inverse-on-surface p-8 shadow-2xl relative overflow-hidden">
+                        <div
+                            class="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#e9c349_1px,transparent_1px)] [background-size:20px_20px]">
+                        </div>
+                        <h3
+                            class="text-headline-md font-headline-md border-b border-on-surface-variant/30 pb-4 mb-6 relative">
+                            Order Summary</h3>
+
+                        <div class="space-y-4 mb-8 relative">
+                            <div class="pt-4 space-y-2">
+                                <div class="flex justify-between text-label-sm">
+                                    <span class="text-on-surface-variant">Subtotal MRP</span>
+                                    <span id="summarySubtotal">₹0</span>
+                                </div>
+                                <div id="checkoutDiscountContainer"
+                                    class="flex justify-between text-label-sm hidden text-green-600 font-bold">
+                                    <span>Multi-Product Discount</span>
+                                    <span>- ₹1,000</span>
+                                </div>
+                                <div id="discountMessage"
+                                    class="hidden text-xs text-green-600 bg-green-50 p-2 rounded text-center">
+                                    🎉 Congratulations! You unlocked the ₹1000 Multi-Product Discount!
+                                </div>
+                                <div class="flex justify-between text-label-sm">
+                                    <span class="text-on-surface-variant" id="shippingLabel">Domestic Shipping</span>
+                                    <span class="text-primary-fixed" id="summaryShipping">FREE</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t-2 border-primary pt-6 relative">
+                            <div class="flex justify-between items-baseline">
+                                <p class="text-label-sm uppercase font-bold tracking-[0.2em]">Total Amount</p>
+                                <p class="text-3xl font-display-lg text-primary-fixed" id="summaryTotal">₹0</p>
+                            </div>
+                        </div>
+
+                        <!-- We keep bottomTotal here hidden for backward compat with JS if needed -->
+                        <p id="bottomTotal" style="display:none;">₹0</p>
+
+                        <div
+                            class="fixed bottom-0 left-0 right-0 p-4 bg-surface md:bg-transparent z-50 md:static md:p-0 border-t border-outline-variant md:border-none shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)] md:shadow-none">
+                            <button id="checkoutBtn"
+                                class="w-full py-4 md:mt-8 bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-all duration-300 rounded-lg font-bold uppercase tracking-[0.25em] text-label-md flex items-center justify-center gap-3 shadow-[0_10px_20px_-5px_rgba(115,92,0,0.5)] active:scale-95 group">
+                                Place Order
+                                <span
+                                    class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+                            </button>
+
+                        </div>
+                        <p
+                            class="mt-6 text-[10px] text-center text-on-surface-variant uppercase tracking-widest leading-relaxed hidden md:block">
+                            By proceeding, you agree to the Terms of Service and Privacy Policy.
+                        </p>
+                    </section>
+
+                    <!-- Trust Indicators -->
+                    <div class="flex justify-center items-center gap-8 text-outline">
+                        <div class="flex flex-col items-center gap-1 group cursor-default">
+                            <span
+                                class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">verified_user</span>
+                            <span class="text-[10px] font-bold uppercase tracking-tighter">Verified</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 group cursor-default">
+                            <span
+                                class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">encrypted</span>
+                            <span class="text-[10px] font-bold uppercase tracking-tighter">End-to-End</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-surface py-6 border-t border-outline-variant">
+            <div class="max-w-md mx-auto px-4 text-center">
+                <h4 class="font-headline-md text-primary font-bold text-lg tracking-widest mb-4">PRAJCRAFT</h4>
+                <div
+                    class="flex flex-wrap justify-center gap-4 md:gap-6 font-label-md text-[10px] sm:text-xs text-on-surface-variant uppercase tracking-widest mb-4">
+                    <a href="about.html" class="hover:text-primary transition-colors">About</a>
+                    <a href="terms.html" class="hover:text-primary transition-colors">Terms</a>
+                    <a href="privacy-policy.html" class="hover:text-primary transition-colors">Privacy</a>
+                    <a href="return-policy.html" class="hover:text-primary transition-colors">Returns</a>
+                    <a href="refund-cancellation.html" class="hover:text-primary transition-colors">Refunds</a>
+                    <a href="shipping-policy.html" class="hover:text-primary transition-colors">Shipping</a>
+                    <a href="contact.html" class="hover:text-primary transition-colors">Contact</a>
+                </div>
+                <p class="text-xs text-outline-variant uppercase tracking-widest">© 2026 PRAJCRAFT. All rights reserved.
+                </p>
+                <div
+                    class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-outline-variant uppercase tracking-[0.2em] font-medium">
+                    <span class="text-lg">🇮🇳</span> Proudly Made in India
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/main.js?v=2"></script>
+    <script>
+        window.selectedPaymentMethod = 'upi';
+
+        function selectPayment(method) {
+            if (method === 'cod' && document.getElementById('codOption').classList.contains('cursor-not-allowed')) {
+                return; // Disabled
+            }
+
+            window.selectedPaymentMethod = method;
+
+            const options = ['upi', 'cod'];
+
+            options.forEach(opt => {
+                const optEl = document.getElementById(opt + 'Option');
+                const radEl = document.getElementById(opt + 'Radio');
+                if (!optEl || !radEl) return;
+
+                if (opt === method) {
+                    optEl.classList.add('border-primary', 'bg-primary-container/5', 'shadow-md', 'gold-glow');
+                    optEl.classList.remove('border-outline-variant');
+                    radEl.classList.remove('hidden');
+                    radEl.parentElement.classList.add('bg-primary-container', 'border-primary');
+                    radEl.parentElement.classList.remove('border-outline-variant');
+                } else {
+                    optEl.classList.remove('border-primary', 'bg-primary-container/5', 'shadow-md', 'gold-glow');
+                    optEl.classList.add('border-outline-variant');
+                    radEl.classList.add('hidden');
+                    radEl.parentElement.classList.remove('bg-primary-container', 'border-primary');
+                    radEl.parentElement.classList.add('border-outline-variant');
+                }
+            });
+
+            // Toggle button visibility
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            checkoutBtn.classList.remove('hidden');
+        }
+
+        // Initialize summary amounts in checkout from localStorage cart
+        window.onload = async function () {
+            const session = await window.supabase.auth.getSession();
+            if (!session.data || !session.data.session) {
+                window.location.href = 'profile.html';
+                return;
+            }
+
+            const storedCart = JSON.parse(localStorage.getItem('prajcraft_cart') || '[]');
+            if (storedCart.length === 0) {
+                window.location.href = 'cart.html';
+                return;
+            }
+
+            // Fetch REAL prices from database
+            const productIds = storedCart.map(item => String(item.id).substring(0, 36));
+            const { data: realProducts } = await window.supabase
+                .from('products')
+                .select('id, price, discount_price, description')
+                .in('id', productIds);
+
+            let totalAmount = 0;
+            let totalQuantity = 0;
+
+            for (const item of storedCart) {
+                const baseId = String(item.id).substring(0, 36);
+                const realProduct = realProducts?.find(p => p.id === baseId);
+                if (!realProduct) continue;
+
+                let priceToCharge = realProduct.discount_price || realProduct.price;
+
+                // Check for variant price
+                const variantName = String(item.id).length > 36 ? String(item.id).substring(37) : null;
+                if (variantName && realProduct.description) {
+                    const variantsMatch = realProduct.description.match(/<div id="product-variants-data"[^>]*>(.*?)<\/div>/);
+                    if (variantsMatch) {
+                        try {
+                            const variants = JSON.parse(variantsMatch[1]);
+                            const v = variants.find(x => x.size === variantName);
+                            if (v) priceToCharge = v.price;
+                        } catch (e) { }
+                    }
+                }
+                totalAmount += priceToCharge * item.quantity;
+                totalQuantity += parseInt(item.quantity) || 1;
+            }
+
+            const subtotal = totalAmount;
+            let discountAmount = 0;
+
+            const discContainer = document.getElementById('checkoutDiscountContainer');
+            const discMsg = document.getElementById('discountMessage');
+
+            if (totalQuantity > 1) {
+                discountAmount = 1000;
+                if (discContainer) discContainer.classList.remove('hidden');
+                if (discMsg) discMsg.classList.remove('hidden');
+            } else {
+                if (discContainer) discContainer.classList.add('hidden');
+                if (discMsg) discMsg.classList.add('hidden');
+            }
+
+            let finalTotal = subtotal - discountAmount;
+            if (finalTotal < 0) finalTotal = 0;
+
+            window.baseFinalTotal = finalTotal;
+            document.getElementById('summarySubtotal').textContent = window.formatPrice ? window.formatPrice(subtotal) : '₹' + subtotal;
+
+            // Trigger country change to update final total and shipping
+            if (window.handleCountryChange) {
+                window.handleCountryChange();
+            } else {
+                document.getElementById('summaryTotal').textContent = window.formatPrice ? window.formatPrice(finalTotal) : '₹' + finalTotal;
+                document.getElementById('bottomTotal').textContent = window.formatPrice ? window.formatPrice(finalTotal) : '₹' + finalTotal;
+            }
+
+            const btn = document.getElementById('checkoutBtn');
+            if (btn) btn.onclick = placeOrder; // Bind from main.js
+
+            // Auto-fill user name/phone if available
+            const user = session.data.session.user;
+            const { data: userData } = await window.supabase.from('users').select('*').eq('id', user.id).maybeSingle();
+            if (userData) {
+                if (userData.full_name) document.getElementById('shipName').value = userData.full_name;
+                if (userData.phone) document.getElementById('shipPhone').value = userData.phone;
+            }
+
+            // Check COD Eligibility
+            const userId = session.data.session.user.id;
+            const { data: deliveredOrders, error } = await window.supabase
+                .from('orders')
+                .select('id')
+                .eq('user_id', userId)
+                .eq('status', 'Delivered');
+
+            const codOpt = document.getElementById('codOption');
+            const codMsg = document.getElementById('codStatusMsg');
+
+            if (!error && deliveredOrders && deliveredOrders.length >= 5) {
+                codOpt.classList.remove('opacity-60', 'cursor-not-allowed');
+                codOpt.classList.add('cursor-pointer');
+                codMsg.textContent = 'Eligible for Cash on Delivery';
+                codMsg.classList.remove('text-error');
+                codMsg.classList.add('text-primary');
+            } else {
+                let count = deliveredOrders ? deliveredOrders.length : 0;
+                codMsg.textContent = `Not eligible. Complete ${5 - count} more orders to unlock COD.`;
+            }
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Reviews | PRAJCRAFT Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#d4af37",
+                        "primary-variant": "#ffe088",
+                        "background": "#121212",
+                        "surface": "#1c1b1b",
+                        "surface-variant": "#2a2828",
+                        "on-background": "#ffffff",
+                        "on-surface": "#e2e2e2",
+                        "on-surface-variant": "#c6c6c6",
+                        "outline": "#7f7663",
+                        "outline-variant": "#4d4635",
+                        "error": "#ffb3b1",
+                        "success": "#4ade80",
+                        "star": "#f59e0b"
+                    },
+                    "fontFamily": {
+                        "headline": ["Montserrat", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { min-height: 100vh; background-color: #121212; color: #e2e2e2; }
+        .glass-panel {
+            background: rgba(28, 27, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .star-filled { font-variation-settings: 'FILL' 1; color: #f59e0b; }
+        .star-empty { color: #4d4635; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin-auth.js"></script>
+</head>
+<body class="font-body overflow-x-hidden flex" style="display: none;">
+
+<aside class="w-64 glass-panel border-r border-outline-variant fixed h-full z-40 hidden md:flex flex-col">
+    <div class="h-20 flex items-center px-6 border-b border-outline-variant">
+        <h2 class="font-headline text-2xl font-extrabold tracking-widest gold-text-gradient">PRAJCRAFT</h2>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+        <a href="admin-orders.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">local_shipping</span>
+            Orders
+        </a>
+        <a href="admin-products.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Products
+        </a>
+        <a href="admin-categories.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">category</span>
+            Categories
+        </a>
+        <a href="admin-customers.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">group</span>
+            Customers
+        </a>
+        <a href="admin-marketing.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">campaign</span>
+            Marketing
+        </a>
+        <a href="admin-settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+        </a>
+    </nav>
+    <div class="p-4 border-t border-outline-variant">
+        <button onclick="adminLogout()" class="flex items-center gap-3 px-4 py-3 w-full text-error hover:bg-error/10 rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">logout</span>
+            Logout
+        </button>
+    </div>
+</aside>
+
+<main class="flex-1 md:ml-64 min-h-screen flex flex-col pb-20">
+        <!-- Header -->
+    <header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant py-4 px-8 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-4">
+            <button class="md:hidden text-primary" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-headline text-xl font-semibold text-on-background">Reviews</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            
+            <button class="bg-surface-variant p-2 rounded-full border border-outline-variant text-primary hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center text-primary font-headline font-bold">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-8 space-y-8">
+        <!-- Controls -->
+        <div class="glass-panel rounded-2xl p-6 flex flex-wrap gap-4 items-center justify-between">
+            <div class="flex gap-4 flex-1 min-w-[300px]">
+                <div class="relative flex-1">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+                    <input type="text" id="searchInput" placeholder="Search by product, text, author..." class="w-full bg-surface border border-outline-variant rounded-lg py-2 pl-10 pr-4 text-sm focus:border-primary outline-none text-on-background placeholder:text-outline transition-colors">
+                </div>
+                <select id="statusFilter" class="bg-surface border border-outline-variant rounded-lg py-2 px-4 text-sm text-on-background outline-none focus:border-primary w-40 transition-colors">
+                    <option value="">All Statuses</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="bulkAction('Approved')" class="text-xs bg-surface-variant hover:bg-success/20 text-success px-3 py-1.5 rounded border border-outline-variant transition-colors disabled:opacity-50" id="btnApproveSelected" disabled>Approve</button>
+                <button onclick="bulkAction('Rejected')" class="text-xs bg-surface-variant hover:bg-error/20 text-error px-3 py-1.5 rounded border border-outline-variant transition-colors disabled:opacity-50" id="btnRejectSelected" disabled>Reject</button>
+                <button onclick="bulkAction('Delete')" class="text-xs bg-error/10 hover:bg-error/30 text-error px-3 py-1.5 rounded border border-error/50 transition-colors disabled:opacity-50" id="btnDeleteSelected" disabled>Delete</button>
+            </div>
+        </div>
+
+        <div class="glass-panel rounded-2xl overflow-hidden">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-surface-variant/50 text-outline border-b border-outline-variant">
+                    <tr>
+                        <th class="p-4 w-10"><input type="checkbox" id="selectAll" class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-4 w-4"></th>
+                        <th class="p-4 font-medium">Customer</th>
+                        <th class="p-4 font-medium">Product</th>
+                        <th class="p-4 font-medium">Rating</th>
+                        <th class="p-4 font-medium">Date</th>
+                        <th class="p-4 font-medium">Status</th>
+                        <th class="p-4 font-medium text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="reviewsBody" class="divide-y divide-outline-variant/50">
+                    <tr><td colspan="7" class="p-8 text-center text-outline">Loading reviews...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<!-- Modal for Adding/Editing Review -->
+<div id="reviewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="glass-panel w-full max-w-2xl rounded-2xl p-6 shadow-2xl my-8">
+        <h2 class="font-headline text-xl font-bold text-on-surface mb-6" id="modalTitle">Manually Add Review</h2>
+        <form id="reviewForm" class="space-y-5" onsubmit="saveReview(event)">
+            <input type="hidden" id="rev_id">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Product *</label>
+                    <select id="rev_product_id" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                        <option value="">Select Product...</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Customer Name *</label>
+                    <input type="text" id="rev_author" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Rating (1-5) *</label>
+                    <input type="number" id="rev_rating" min="1" max="5" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                </div>
+
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Review Text *</label>
+                    <textarea id="rev_text" required rows="4" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none"></textarea>
+                </div>
+
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Feedback Image Upload (Optional)</label>
+                    <div class="flex items-center gap-4">
+                        <input type="file" id="rev_photo_file" accept="image/*" class="w-full bg-surface border border-outline-variant rounded-lg p-2 text-sm text-on-background focus:border-primary outline-none">
+                        <input type="hidden" id="rev_photo">
+                        <img id="rev_photo_preview" src="" class="hidden h-12 w-12 object-cover rounded border border-outline-variant">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Review Date</label>
+                    <input type="date" id="rev_date" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Helpful Count</label>
+                    <input type="number" id="rev_helpful" value="0" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 pt-4 border-t border-outline-variant">
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="rev_verified" checked class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-5 w-5">
+                    <label for="rev_verified" class="text-sm font-medium text-on-surface-variant">Verified Purchase</label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="rev_pinned" class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-5 w-5">
+                    <label for="rev_pinned" class="text-sm font-medium text-on-surface-variant">Pin Review</label>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-outline-variant">
+                <button type="button" onclick="closeReviewModal()" class="px-4 py-2 rounded-lg font-medium text-on-surface-variant hover:text-on-surface transition-colors">Cancel</button>
+                <button type="submit" class="bg-primary hover:bg-primary-variant text-background px-6 py-2 rounded-lg font-bold transition-colors">Save Review</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+let allReviews = [];
+let allProducts = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const user = await requireAdminAuth();
+    if (!user) return;
+    
+    await loadProducts();
+    fetchReviews();
+
+    document.getElementById('searchInput').addEventListener('input', renderReviews);
+    document.getElementById('statusFilter').addEventListener('change', renderReviews);
+    document.getElementById('selectAll').addEventListener('change', (e) => {
+        document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = e.target.checked);
+        updateBulkButtons();
+    });
+});
+
+async function loadProducts() {
+    const { data, error } = await supabase.from('products').select('id, name').order('name');
+    if (data) {
+        allProducts = data;
+        const select = document.getElementById('rev_product_id');
+        data.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.id;
+            opt.textContent = p.name;
+            select.appendChild(opt);
+        });
+    }
+}
+
+async function fetchReviews() {
+    try {
+        const { data, error } = await supabase
+            .from('reviews')
+            .select(`
+                *,
+                products (name)
+            `)
+            .order('created_at', { ascending: false });
+            
+        if (error) throw error;
+        allReviews = data || [];
+        renderReviews();
+    } catch (err) {
+        console.error("Error fetching reviews", err);
+    }
+}
+
+function renderReviews() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const status = document.getElementById('statusFilter').value;
+    
+    let filtered = allReviews;
+    if (search) {
+        filtered = filtered.filter(r => 
+            (r.author_name && r.author_name.toLowerCase().includes(search)) || 
+            (r.review_text && r.review_text.toLowerCase().includes(search)) ||
+            (r.products?.name && r.products.name.toLowerCase().includes(search))
+        );
+    }
+    if (status) {
+        filtered = filtered.filter(r => r.status === status);
+    }
+
+    const tbody = document.getElementById('reviewsBody');
+    if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-outline">No reviews found.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(r => {
+        let stars = '';
+        for(let i=1; i<=5; i++) {
+            stars += `<span class="material-symbols-outlined text-[14px] ${i <= r.rating ? 'star-filled' : 'star-empty'}">star</span>`;
+        }
+
+        let statusBadge = '';
+        if (r.status === 'Approved') statusBadge = `<span class="px-2 py-1 rounded text-[10px] font-bold bg-success/10 text-success border border-success/20 uppercase tracking-widest">Approved</span>`;
+        else if (r.status === 'Pending') statusBadge = `<span class="px-2 py-1 rounded text-[10px] font-bold bg-outline-variant/20 text-on-surface-variant border border-outline-variant uppercase tracking-widest">Pending</span>`;
+        else statusBadge = `<span class="px-2 py-1 rounded text-[10px] font-bold bg-error/10 text-error border border-error/20 uppercase tracking-widest">${r.status}</span>`;
+
+        let pinnedIcon = r.is_pinned ? `<span class="material-symbols-outlined text-sm text-primary" title="Pinned">push_pin</span>` : '';
+        let verifiedIcon = r.is_verified_purchase ? `<span class="material-symbols-outlined text-sm text-success" title="Verified Purchase" style="font-variation-settings: 'FILL' 1;">verified</span>` : '';
+
+        const date = new Date(r.created_at).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'});
+
+        return `
+        <tr class="hover:bg-surface-variant/30 transition-colors">
+            <td class="p-4"><input type="checkbox" value="${r.id}" class="row-checkbox rounded border-outline-variant bg-surface text-primary focus:ring-primary h-4 w-4" onchange="updateBulkButtons()"></td>
+            <td class="p-4">
+                <div class="flex items-center gap-3">
+                    <img src="${r.customer_photo_url || 'https://via.placeholder.com/40'}" class="size-8 rounded-full object-cover bg-surface border border-outline-variant">
+                    <div>
+                        <p class="text-on-surface font-medium flex items-center gap-1">${r.author_name || 'Anonymous'} ${verifiedIcon}</p>
+                        <p class="text-outline text-xs mt-0.5 max-w-[200px] truncate">${r.review_text}</p>
+                    </div>
+                </div>
+            </td>
+            <td class="p-4 text-on-surface-variant max-w-[200px] truncate flex items-center gap-2">
+                ${pinnedIcon} ${r.products?.name || 'Unknown Product'}
+            </td>
+            <td class="p-4"><div class="flex items-center gap-0.5">${stars}</div></td>
+            <td class="p-4 text-on-surface-variant">${date}</td>
+            <td class="p-4">${statusBadge}</td>
+            <td class="p-4 text-right">
+                <button onclick="editReview('${r.id}')" class="text-outline hover:text-primary transition-colors p-2" title="Edit">
+                    <span class="material-symbols-outlined text-sm">edit</span>
+                </button>
+            </td>
+        </tr>
+        `;
+    }).join('');
+    
+    document.getElementById('selectAll').checked = false;
+    updateBulkButtons();
+}
+
+function updateBulkButtons() {
+    const checked = document.querySelectorAll('.row-checkbox:checked').length;
+    document.getElementById('btnApproveSelected').disabled = checked === 0;
+    document.getElementById('btnRejectSelected').disabled = checked === 0;
+    document.getElementById('btnDeleteSelected').disabled = checked === 0;
+}
+
+async function bulkAction(action) {
+    const checked = Array.from(document.querySelectorAll('.row-checkbox:checked')).map(cb => cb.value);
+    if (checked.length === 0) return;
+
+    if (action === 'Delete') {
+        if (!confirm(`Delete ${checked.length} reviews forever?`)) return;
+        try {
+            const { error } = await supabase.from('reviews').delete().in('id', checked);
+            if (error) throw error;
+            fetchReviews();
+        } catch (err) { alert("Delete failed."); }
+    } else {
+        try {
+            const { error } = await supabase.from('reviews').update({ status: action }).in('id', checked);
+            if (error) throw error;
+            fetchReviews();
+        } catch (err) { alert("Update failed."); }
+    }
+}
+
+function openReviewModal() {
+    document.getElementById('reviewForm').reset();
+    document.getElementById('rev_id').value = '';
+    document.getElementById('rev_photo').value = '';
+    document.getElementById('rev_photo_file').value = '';
+    document.getElementById('rev_photo_preview').classList.add('hidden');
+    document.getElementById('rev_date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('modalTitle').textContent = 'Manually Add Review';
+    document.getElementById('reviewModal').classList.remove('hidden');
+}
+
+function closeReviewModal() {
+    document.getElementById('reviewModal').classList.add('hidden');
+}
+
+function editReview(id) {
+    const r = allReviews.find(x => x.id === id);
+    if(!r) return;
+    
+    document.getElementById('rev_id').value = r.id;
+    document.getElementById('rev_product_id').value = r.product_id || '';
+    document.getElementById('rev_author').value = r.author_name || '';
+    document.getElementById('rev_rating').value = r.rating || 5;
+    document.getElementById('rev_text').value = r.review_text || '';
+    
+    let photoUrl = '';
+    if (r.images && r.images.length > 0) {
+        photoUrl = r.images[0];
+    } else if (r.customer_photo_url) {
+        photoUrl = r.customer_photo_url;
+    }
+    document.getElementById('rev_photo').value = photoUrl;
+    
+    document.getElementById('rev_photo_file').value = '';
+    const preview = document.getElementById('rev_photo_preview');
+    if (photoUrl) {
+        preview.src = photoUrl;
+        preview.classList.remove('hidden');
+    } else {
+        preview.src = '';
+        preview.classList.add('hidden');
+    }
+    
+    document.getElementById('rev_helpful').value = r.helpful_count || 0;
+    document.getElementById('rev_verified').checked = r.is_verified_purchase || false;
+    document.getElementById('rev_pinned').checked = r.is_pinned || false;
+    
+    if(r.created_at) {
+        document.getElementById('rev_date').value = r.created_at.split('T')[0];
+    }
+    
+    document.getElementById('modalTitle').textContent = 'Edit Review';
+    document.getElementById('reviewModal').classList.remove('hidden');
+}
+
+async function saveReview(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Saving...';
+    btn.disabled = true;
+
+    try {
+        const id = document.getElementById('rev_id').value;
+        const dStr = document.getElementById('rev_date').value;
+        const createdAt = dStr ? new Date(dStr).toISOString() : new Date().toISOString();
+
+        let photoUrl = document.getElementById('rev_photo').value;
+        const fileInput = document.getElementById('rev_photo_file');
+        
+        // Handle file upload
+        if (fileInput.files && fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `review-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+            const filePath = `reviews/${fileName}`;
+
+            const { error: uploadError } = await window.supabase.storage.from('media').upload(filePath, file);
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = window.supabase.storage.from('media').getPublicUrl(filePath);
+            photoUrl = publicUrl;
+        }
+
+        const imagesArray = photoUrl ? [photoUrl] : [];
+
+        const payload = {
+            product_id: document.getElementById('rev_product_id').value,
+            rating: parseInt(document.getElementById('rev_rating').value),
+            review_text: document.getElementById('rev_text').value,
+            images: imagesArray,
+            verified_purchase: document.getElementById('rev_verified').checked,
+            status: 'Approved', // Auto approve manual edits
+            created_at: createdAt
+        };
+
+        if (id) {
+            const { error } = await supabase.from('reviews').update(payload).eq('id', id);
+            if (error) throw error;
+        } else {
+            const { error } = await supabase.from('reviews').insert([payload]);
+            if (error) throw error;
+        }
+        closeReviewModal();
+        fetchReviews();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to save review: " + err.message);
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+</script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PRAJCRAFT | Artifacts in Transit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "surface-container": "#f0eded",
+                    "tertiary-container": "#ff9594",
+                    "on-tertiary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed": "#ffdad8",
+                    "secondary-fixed": "#e2e2e2",
+                    "primary-container": "#d4af37",
+                    "on-primary-container": "#554300",
+                    "on-background": "#1c1b1b",
+                    "inverse-surface": "#313030",
+                    "primary-fixed": "#ffe088",
+                    "error": "#ba1a1a",
+                    "surface-container-high": "#eae7e7",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#e9c349",
+                    "error-container": "#ffdad6",
+                    "inverse-on-surface": "#f3f0ef",
+                    "surface": "#fcf9f8",
+                    "surface-tint": "#735c00",
+                    "primary": "#735c00",
+                    "surface-bright": "#fcf9f8",
+                    "tertiary": "#bb152c",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb3b1",
+                    "secondary": "#5e5e5e",
+                    "surface-variant": "#e5e2e1",
+                    "on-surface-variant": "#4d4635",
+                    "on-secondary-container": "#646464",
+                    "on-tertiary-container": "#8f001b",
+                    "surface-dim": "#dcd9d9",
+                    "outline-variant": "#d0c5af",
+                    "on-surface": "#1c1b1b",
+                    "on-primary-fixed-variant": "#574500",
+                    "on-secondary": "#ffffff",
+                    "surface-container-low": "#f6f3f2",
+                    "primary-fixed-dim": "#e9c349",
+                    "secondary-fixed-dim": "#c6c6c6",
+                    "on-secondary-fixed": "#1b1b1b",
+                    "on-error-container": "#93000a",
+                    "outline": "#7f7663",
+                    "secondary-container": "#e2e2e2",
+                    "background": "#fcf9f8",
+                    "on-secondary-fixed-variant": "#474747",
+                    "on-tertiary-fixed": "#410007",
+                    "surface-container-highest": "#e5e2e1",
+                    "on-primary-fixed": "#241a00",
+                    "on-tertiary-fixed-variant": "#92001c"
+                },
+                "fontFamily": {
+                    "headline-md": ["Montserrat"],
+                    "headline-lg": ["Montserrat"],
+                    "display-lg": ["Montserrat"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "label-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; }
+    body { background-color: #fcf9f8; color: #1c1b1b; min-height: max(884px, 100dvh); }
+    .luxury-shadow { box-shadow: 0 4px 20px -2px rgba(115, 92, 0, 0.08); }
+</style>
+
+<!-- Supabase & Main JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+</head>
+<body class="font-body-md overflow-x-hidden">
+<div class="relative flex min-h-screen w-full max-w-[480px] mx-auto flex-col bg-background">
+
+<!-- Header -->
+<header class="flex items-center bg-surface p-4 pb-2 justify-between sticky top-0 z-20 border-b border-outline-variant/30">
+    <div class="text-on-surface flex size-12 shrink-0 items-center cursor-pointer" onclick="window.history.back()">
+        <span class="material-symbols-outlined">arrow_back</span>
+    </div>
+    <h2 class="text-on-surface font-headline-md text-lg flex-1 text-center uppercase tracking-widest">
+        Cart <span id="cartHeaderCount"></span>
+    </h2>
+    <div class="flex w-12 items-center justify-end">
+        <button class="flex items-center justify-center h-12 bg-transparent text-on-surface p-0" onclick="clearCart()">
+            <span class="material-symbols-outlined text-sm">delete_sweep</span>
+        </button>
+    </div>
+</header>
+
+<main class="flex-1 px-4 pt-6 pb-32">
+    <!-- Items Section -->
+    <div class="space-y-4" id="cartItemsContainer">
+        <p style="text-align:center; padding:24px; color:var(--text-muted);">Loading cart...</p>
+    </div>
+
+    <!-- Vault Protection / Summary Section -->
+    <div id="orderSummarySection">
+        <section class="mt-10">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                <h3 class="text-on-surface font-headline-md text-lg tracking-tight">Vault Protection</h3>
+            </div>
+            <div class="bg-surface-container-high/50 border border-outline-variant p-4 rounded-xl space-y-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-outline">security</span>
+                        <span class="text-on-surface font-body-md">White Glove Delivery</span>
+                    </div>
+                    <span class="text-on-surface font-medium">Included</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-outline">ambulance</span>
+                        <span class="text-on-surface font-body-md">Loss & Damage Insurance</span>
+                    </div>
+                    <span class="text-on-surface font-medium">Full Coverage</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Summary -->
+        <section class="mt-8 pt-8 border-t border-outline-variant">
+            <div class="space-y-3">
+                <div class="flex justify-between">
+                    <p class="text-outline font-body-md">Subtotal</p>
+                    <p class="text-on-surface font-body-md font-semibold" id="summarySubtotal">₹0</p>
+                </div>
+                <div class="flex justify-between" id="summaryDiscountRow" style="display:none;">
+                    <p class="text-tertiary font-body-md">Discount</p>
+                    <p class="text-tertiary font-body-md font-semibold" id="summaryDiscount">- ₹0</p>
+                </div>
+                <div class="flex justify-between">
+                    <p class="text-outline font-body-md">Vault Shipping</p>
+                    <p class="text-on-surface font-body-md font-semibold">FREE</p>
+                </div>
+                <div class="flex justify-between pt-4">
+                    <p class="text-on-surface font-headline-md text-xl">Total Payable</p>
+                    <p class="text-primary font-headline-md text-xl" id="summaryTotal">₹0</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- You May Also Like Section -->
+    <section class="py-6 mt-6 bg-surface border-t border-outline-variant/30" data-rec-type="ymal" data-rec-container="cartYmalGrid">
+        <div class="px-4 flex justify-between items-center mb-4 max-w-md mx-auto">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">recommend</span>
+                <h3 class="text-on-surface font-headline-md text-lg">You May Also Like</h3>
+            </div>
+        </div>
+        <div class="flex gap-4 overflow-x-auto px-4 no-scrollbar pb-4 max-w-md mx-auto" id="cartYmalGrid">
+            <!-- Dynamic Products -->
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="bg-surface py-6 border-t border-outline-variant pb-[180px]">
+    <div class="max-w-md mx-auto px-4 text-center">
+        <h4 class="font-headline-md text-primary font-bold text-lg tracking-widest mb-4">PRAJCRAFT</h4>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-6 font-label-md text-[10px] sm:text-xs text-on-surface-variant uppercase tracking-widest mb-4">
+            <a href="about.html" class="hover:text-primary transition-colors">About</a>
+            <a href="terms.html" class="hover:text-primary transition-colors">Terms</a>
+            <a href="privacy-policy.html" class="hover:text-primary transition-colors">Privacy</a>
+            <a href="return-policy.html" class="hover:text-primary transition-colors">Returns</a>
+            <a href="refund-cancellation.html" class="hover:text-primary transition-colors">Refunds</a>
+            <a href="shipping-policy.html" class="hover:text-primary transition-colors">Shipping</a>
+            <a href="contact.html" class="hover:text-primary transition-colors">Contact</a>
+        </div>
+        <p class="text-xs text-outline-variant uppercase tracking-widest">© 2026 PRAJCRAFT. All rights reserved.</p>
+        <div class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-outline-variant uppercase tracking-[0.2em] font-medium">
+            <span class="text-lg">🇮🇳</span> Proudly Made in India
+        </div>
+    </div>
+</footer>
+
+<!-- Persistent Checkout Action -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-surface p-4 pb-[88px] border-t border-outline-variant/30 z-30">
+    <button class="w-full bg-primary-container hover:bg-primary py-4 px-6 rounded-full flex items-center justify-center transition-colors shadow-lg active:scale-[0.99]" onclick="proceedToCheckout()">
+        <span class="text-on-primary-container font-headline-md text-base uppercase tracking-widest">Proceed to Checkout</span>
+        <div class="flex items-center gap-2 ml-4">
+            <span class="material-symbols-outlined text-on-primary-container">arrow_forward</span>
+        </div>
+    </button>
+    <p class="text-center text-[10px] text-outline mt-3 uppercase tracking-[0.2em]">Secured by PRAJCRAFT Vault Protocol</p>
+</div>
+
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-outline-variant bg-surface px-4 pb-3 pt-2">
+    <div class="flex gap-2 max-w-[480px] mx-auto">
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="index.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">home</span>
+            </div>
+            <p class="text-xs font-medium">Home</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="category.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">grid_view</span>
+            </div>
+            <p class="text-xs font-medium">Categories</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-primary" href="cart.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+            </div>
+            <p class="text-xs font-medium">Cart</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="profile.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">person</span>
+            </div>
+            <p class="text-xs font-medium">Profile</p>
+        </a>
+    </div>
+</nav>
+
+</div>
+<script src="js/recommendations.js"></script>
+<script src="js/main.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof window.initRecommendations === 'function') {
+            window.initRecommendations();
+        }
+    });
+</script>
+</body></html>
+

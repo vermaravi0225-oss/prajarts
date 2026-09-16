@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Categories | PRAJCRAFT Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#d4af37",
+                        "primary-variant": "#ffe088",
+                        "background": "#121212",
+                        "surface": "#1c1b1b",
+                        "surface-variant": "#2a2828",
+                        "on-background": "#ffffff",
+                        "on-surface": "#e2e2e2",
+                        "on-surface-variant": "#c6c6c6",
+                        "outline": "#7f7663",
+                        "outline-variant": "#4d4635",
+                        "error": "#ffb3b1",
+                        "success": "#4ade80"
+                    },
+                    "fontFamily": {
+                        "headline": ["Montserrat", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { min-height: 100vh; background-color: #121212; color: #e2e2e2; }
+        .glass-panel {
+            background: rgba(28, 27, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin-auth.js"></script>
+</head>
+<body class="font-body overflow-x-hidden flex" style="display: none;">
+
+<!-- Sidebar -->
+<aside class="w-64 glass-panel border-r border-outline-variant fixed h-full z-40 hidden md:flex flex-col">
+    <div class="h-20 flex items-center px-6 border-b border-outline-variant">
+        <h2 class="font-headline text-2xl font-extrabold tracking-widest gold-text-gradient">PRAJCRAFT</h2>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+        <a href="admin-orders.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">local_shipping</span>
+            Orders
+        </a>
+        <a href="admin-products.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Products
+        </a>
+        <a href="admin-categories.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">category</span>
+            Categories
+        </a>
+        <a href="admin-customers.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">group</span>
+            Customers
+        </a>
+        <a href="admin-marketing.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">campaign</span>
+            Marketing
+        </a>
+        <a href="admin-settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+        </a>
+    </nav>
+    <div class="p-4 border-t border-outline-variant">
+        <button onclick="adminLogout()" class="flex items-center gap-3 px-4 py-3 w-full text-error hover:bg-error/10 rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">logout</span>
+            Logout
+        </button>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 min-h-screen flex flex-col">
+        <!-- Header -->
+    <header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant py-4 px-8 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-4">
+            <button class="md:hidden text-primary" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-headline text-xl font-semibold text-on-background">Categories</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="openCategoryModal()" class="bg-primary hover:bg-primary-variant text-background px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors">
+                <span class="material-symbols-outlined text-sm">add</span> Add Category
+            </button>
+            <button class="bg-surface-variant p-2 rounded-full border border-outline-variant text-primary hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center text-primary font-headline font-bold">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-8 space-y-8">
+        <div class="glass-panel rounded-2xl overflow-hidden">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-surface-variant/50 text-outline border-b border-outline-variant">
+                    <tr>
+                        <th class="p-4 w-16">Icon</th>
+                        <th class="p-4 font-medium">Category Name</th>
+                        <th class="p-4 font-medium">Slug</th>
+                        <th class="p-4 font-medium">Sort Order</th>
+                        <th class="p-4 font-medium">Status</th>
+                        <th class="p-4 font-medium text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="categoriesBody" class="divide-y divide-outline-variant/50">
+                    <tr><td colspan="6" class="p-8 text-center text-outline">Loading categories...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<!-- Modal -->
+<div id="categoryModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+    <div class="glass-panel w-full max-w-lg rounded-2xl p-6 shadow-2xl mx-4">
+        <h2 class="font-headline text-xl font-bold text-on-surface mb-6" id="modalTitle">Add Category</h2>
+        <form id="categoryForm" class="space-y-4" onsubmit="saveCategory(event)">
+            <input type="hidden" id="cat_id">
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-1">Name *</label>
+                <input type="text" id="cat_name" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none" onblur="autoSlug()">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-1">Slug *</label>
+                <input type="text" id="cat_slug" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none font-mono">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-1">Icon/Image</label>
+                <input type="file" accept="image/*" id="cat_image_file" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                <img id="cat_image_preview" class="h-12 mt-2 hidden rounded object-cover border border-outline-variant">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-on-surface-variant mb-1">Banner</label>
+                <input type="file" accept="image/*" id="cat_banner_file" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                <img id="cat_banner_preview" class="h-16 mt-2 hidden rounded object-cover border border-outline-variant w-full">
+            </div>
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-on-surface-variant mb-1">Sort Order</label>
+                    <input type="number" id="cat_sort" value="0" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                </div>
+                <div class="flex items-center gap-2 pt-6">
+                    <input type="checkbox" id="cat_hidden" class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-5 w-5">
+                    <label for="cat_hidden" class="text-sm font-medium text-on-surface-variant">Hidden</label>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-outline-variant">
+                <button type="button" onclick="closeCategoryModal()" class="px-4 py-2 rounded-lg font-medium text-on-surface-variant hover:text-on-surface transition-colors">Cancel</button>
+                <button type="submit" class="bg-primary hover:bg-primary-variant text-background px-6 py-2 rounded-lg font-bold transition-colors">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+let categories = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const user = await requireAdminAuth();
+    if (!user) return;
+    fetchCategories();
+});
+
+function autoSlug() {
+    const name = document.getElementById('cat_name').value;
+    const slug = document.getElementById('cat_slug');
+    if(name && !slug.value) {
+        slug.value = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    }
+}
+
+async function fetchCategories() {
+    try {
+        const { data, error } = await supabase.from('categories').select('*').order('created_at', { ascending: true });
+        if (error) throw error;
+        categories = data || [];
+        renderCategories();
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function renderCategories() {
+    const tbody = document.getElementById('categoriesBody');
+    if (categories.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-outline">No categories found.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = categories.map(c => {
+        const statusBadge = c.is_hidden 
+            ? `<span class="px-2 py-1 rounded text-[10px] font-bold bg-outline-variant/20 text-on-surface-variant border border-outline-variant uppercase tracking-widest">Hidden</span>`
+            : `<span class="px-2 py-1 rounded text-[10px] font-bold bg-success/10 text-success border border-success/20 uppercase tracking-widest">Active</span>`;
+            
+        return `
+        <tr class="hover:bg-surface-variant/30 transition-colors">
+            <td class="p-4">
+                <img src="${c.image_url || 'https://via.placeholder.com/40'}" onerror="this.src='https://via.placeholder.com/40'" class="size-10 rounded-full object-cover border border-outline-variant">
+            </td>
+            <td class="p-4 text-on-surface font-medium">${c.name}</td>
+            <td class="p-4 text-outline font-mono text-xs">${c.slug}</td>
+            <td class="p-4 text-on-surface">${c.sort_order || 0}</td>
+            <td class="p-4">${statusBadge}</td>
+            <td class="p-4 text-right">
+                <button onclick="editCategory('${c.id}')" class="text-outline hover:text-primary transition-colors p-2" title="Edit">
+                    <span class="material-symbols-outlined text-sm">edit</span>
+                </button>
+                <button onclick="deleteCategory('${c.id}')" class="text-error/60 hover:text-error transition-colors p-2" title="Delete">
+                    <span class="material-symbols-outlined text-sm">delete</span>
+                </button>
+            </td>
+        </tr>
+        `;
+    }).join('');
+}
+
+let existingCatImage = null;
+let existingCatBanner = null;
+
+function openCategoryModal() {
+    document.getElementById('categoryForm').reset();
+    document.getElementById('cat_id').value = '';
+    
+    document.getElementById('cat_image_preview').classList.add('hidden');
+    document.getElementById('cat_banner_preview').classList.add('hidden');
+    existingCatImage = null;
+    existingCatBanner = null;
+
+    document.getElementById('modalTitle').textContent = 'Add Category';
+    document.getElementById('categoryModal').classList.remove('hidden');
+}
+
+function closeCategoryModal() {
+    document.getElementById('categoryModal').classList.add('hidden');
+}
+
+function editCategory(id) {
+    const c = categories.find(x => x.id === id);
+    if(!c) return;
+    
+    document.getElementById('cat_id').value = c.id;
+    document.getElementById('cat_name').value = c.name;
+    document.getElementById('cat_slug').value = c.slug;
+    document.getElementById('cat_sort').value = c.sort_order || 0;
+    document.getElementById('cat_hidden').checked = c.is_hidden || false;
+    
+    existingCatImage = c.image_url;
+    if(existingCatImage) {
+        document.getElementById('cat_image_preview').src = existingCatImage;
+        document.getElementById('cat_image_preview').classList.remove('hidden');
+    } else {
+        document.getElementById('cat_image_preview').classList.add('hidden');
+    }
+
+    existingCatBanner = c.banner_url;
+    if(existingCatBanner) {
+        document.getElementById('cat_banner_preview').src = existingCatBanner;
+        document.getElementById('cat_banner_preview').classList.remove('hidden');
+    } else {
+        document.getElementById('cat_banner_preview').classList.add('hidden');
+    }
+
+    document.getElementById('modalTitle').textContent = 'Edit Category';
+    document.getElementById('categoryModal').classList.remove('hidden');
+}
+
+async function saveCategory(e) {
+    e.preventDefault();
+    const id = document.getElementById('cat_id').value;
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Saving...'; btn.disabled = true;
+    
+    try {
+        let finalImage = existingCatImage;
+        const imgFile = document.getElementById('cat_image_file').files[0];
+        if (imgFile) {
+            btn.innerHTML = 'Uploading Image...';
+            finalImage = await uploadMedia(imgFile);
+        }
+
+        let finalBanner = existingCatBanner;
+        const bannerFile = document.getElementById('cat_banner_file').files[0];
+        if (bannerFile) {
+            btn.innerHTML = 'Uploading Banner...';
+            finalBanner = await uploadMedia(bannerFile);
+        }
+
+        const payload = {
+            name: document.getElementById('cat_name').value,
+            slug: document.getElementById('cat_slug').value,
+            image_url: finalImage
+        };
+
+        if (id) {
+            const { error } = await supabase.from('categories').update(payload).eq('id', id);
+            if (error) throw error;
+        } else {
+            const { error } = await supabase.from('categories').insert([payload]);
+            if (error) throw error;
+        }
+        
+        closeCategoryModal();
+        fetchCategories();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to save category: " + (err.message || "Slugs must be unique"));
+    } finally {
+        btn.innerHTML = originalText; btn.disabled = false;
+    }
+}
+
+async function deleteCategory(id) {
+    if(!confirm("Are you sure you want to delete this category? Products in this category might be affected.")) return;
+    try {
+        const { error } = await supabase.from('categories').delete().eq('id', id);
+        if (error) {
+            if (error.code === '23503') {
+                alert("Cannot delete this category because there are active products attached to it. Please delete or reassign those products first.");
+                return;
+            }
+            throw error;
+        }
+        fetchCategories();
+    } catch (err) {
+        console.error(err);
+        alert("Delete failed: " + (err.message || "Unknown error"));
+    }
+}
+</script>
+</body>
+</html>
+
+
+
+

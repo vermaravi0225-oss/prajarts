@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <title>Prajcraft - Categories</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tap-highlight-transparent {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+        <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f6f3f2",
+                        "surface": "#fcf9f8",
+                        "secondary-fixed": "#e2e2e2",
+                        "secondary": "#5e5e5e",
+                        "primary-container": "#d4af37",
+                        "surface-variant": "#e5e2e1",
+                        "primary-fixed": "#ffe088",
+                        "on-primary-fixed-variant": "#574500",
+                        "surface-container": "#f0eded",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "tertiary-container": "#ff9594",
+                        "outline-variant": "#d0c5af",
+                        "primary-fixed-dim": "#e9c349",
+                        "on-surface-variant": "#4d4635",
+                        "background": "#fcf9f8",
+                        "on-background": "#1c1b1b",
+                        "tertiary": "#bb152c",
+                        "primary": "#735c00",
+                        "outline": "#7f7663",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1c1b1b"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Montserrat"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "display-lg": ["Montserrat"]
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-32">
+
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 glass-header shadow-[0_8px_30px_rgba(16,185,129,0.08)] flex items-center justify-between px-margin-mobile h-16">
+    <div class="flex items-center gap-2" onclick="window.location.href='index.html'" style="cursor:pointer;">
+        <button class="text-primary hover:opacity-80 transition-opacity active:scale-90 flex items-center mr-2" onclick="event.stopPropagation(); window.history.back()">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+        <img alt="Prajcraft Logo" class="h-8 w-auto object-contain" src="assets/images/logo.png"/>
+        <h1 class="font-extrabold text-2xl text-primary tracking-tight">Prajcraft</h1>
+    </div>
+    <div class="flex items-center gap-4 relative" onclick="window.location.href='cart.html'" style="cursor:pointer;">
+        <button class="text-primary hover:opacity-80 transition-opacity active:scale-90 flex items-center">
+            <span class="material-symbols-outlined">shopping_cart</span>
+        </button>
+        <span class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full" id="topNavCartBadge" style="display:none;">0</span>
+    </div>
+</header>
+
+<main class="mt-20 max-w-container-max-width mx-auto mb-10">
+    <div class="px-margin-mobile mb-6">
+        <h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background" id="catTitle">All Products</h2>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 px-margin-mobile" id="categoryProductsGrid">
+        <div style="text-align: center; padding: 40px; color: var(--on-surface-variant); grid-column: 1 / -1;">
+            Loading Collections...
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-surface py-6 border-t border-outline-variant pb-[100px]">
+    <div class="max-w-md mx-auto px-4 text-center">
+        <h4 class="font-headline-md text-primary font-bold text-lg tracking-widest mb-4">PRAJCRAFT</h4>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-6 font-label-md text-[10px] sm:text-xs text-on-surface-variant uppercase tracking-widest mb-4">
+            <a href="about.html" class="hover:text-primary transition-colors">About</a>
+            <a href="terms.html" class="hover:text-primary transition-colors">Terms</a>
+            <a href="privacy-policy.html" class="hover:text-primary transition-colors">Privacy</a>
+            <a href="return-policy.html" class="hover:text-primary transition-colors">Returns</a>
+            <a href="refund-cancellation.html" class="hover:text-primary transition-colors">Refunds</a>
+            <a href="shipping-policy.html" class="hover:text-primary transition-colors">Shipping</a>
+            <a href="contact.html" class="hover:text-primary transition-colors">Contact</a>
+        </div>
+        <p class="text-xs text-outline-variant uppercase tracking-widest">© 2026 PRAJCRAFT. All rights reserved.</p>
+        <div class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-outline-variant uppercase tracking-[0.2em] font-medium">
+            <span class="text-lg">🇮🇳</span> Proudly Made in India
+        </div>
+    </div>
+</footer>
+
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-outline-variant bg-surface px-4 pb-3 pt-2">
+    <div class="flex gap-2 max-w-[480px] mx-auto">
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="index.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">home</span>
+            </div>
+            <p class="text-xs font-medium">Home</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-primary" href="category.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+            </div>
+            <p class="text-xs font-medium">Categories</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="cart.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">shopping_cart</span>
+            </div>
+            <p class="text-xs font-medium">Cart</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary hover:text-primary" href="profile.html">
+            <div class="flex h-8 items-center justify-center">
+                <span class="material-symbols-outlined">person</span>
+            </div>
+            <p class="text-xs font-medium">Profile</p>
+        </a>
+    </div>
+</nav>
+
+<script src="js/main.js"></script>
+</body>
+</html>
+
+

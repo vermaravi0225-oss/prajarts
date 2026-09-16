@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PRAJCRAFT | Premium Hindu Deity Action Figures & Divine Collectibles India</title>
+    <meta name="description"
+        content="Shop premium Hindu deity action figures including Lord Shiva, Shri Ram, Krishna, Hanuman, Ganesh and Devi collectibles. High-quality spiritual action figures with secure delivery across India.">
+    <meta name="keywords"
+        content="Hindu action figures, Shiva action figure, Krishna collectible, Hanuman figure, Ram action figure, spiritual gifts, divine collectibles, Prajcraft India">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#16A34A">
+    <meta name="author" content="PRAJCRAFT">
+    <link rel="canonical" href="https://prajcraft.in/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="PRAJCRAFT">
+    <meta property="og:description" content="Premium Hindu Deity Action Figures & Divine Collectibles">
+    <meta property="og:url" content="https://prajcraft.in/">
+    <meta property="og:image" content="https://prajcraft.in/assets/images/logo.png">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Be+Vietnam+Pro:wght@400;500;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f6f3f2",
+                        "surface": "#fcf9f8",
+                        "secondary-fixed": "#e2e2e2",
+                        "secondary": "#5e5e5e",
+                        "primary-container": "#d4af37",
+                        "surface-variant": "#e5e2e1",
+                        "primary-fixed": "#ffe088",
+                        "on-primary-fixed-variant": "#574500",
+                        "surface-container": "#f0eded",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "tertiary-container": "#ff9594",
+                        "outline-variant": "#d0c5af",
+                        "primary-fixed-dim": "#e9c349",
+                        "on-surface-variant": "#4d4635",
+                        "background": "#fcf9f8",
+                        "on-background": "#1c1b1b",
+                        "tertiary": "#bb152c",
+                        "primary": "#735c00",
+                        "outline": "#7f7663",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1c1b1b"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Montserrat"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "display-lg": ["Montserrat"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            min-height: max(884px, 100dvh);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+
+    <!-- Supabase & Main JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+</head>
+
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+    <!-- Top Bar -->
+    <header class="sticky top-0 z-50 bg-black text-primary-container shadow-md">
+        <div class="flex items-center p-4 justify-between max-w-container-max mx-auto">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="flex items-center gap-2">
+                    <img src="assets/images/logo.png" alt="PRAJCRAFT Logo - Premium Hindu Action Figures" class="h-8">
+                    <h2
+                        class="text-primary-container font-headline-lg text-xl tracking-widest font-extrabold uppercase">
+                        PRAJCRAFT</h2>
+                </a>
+            </div>
+            <div class="flex gap-4 items-center">
+                <button onclick="window.location.href='profile.html?tab=notifications'"
+                    class="relative flex items-center justify-center rounded-full size-10 bg-on-primary-fixed-variant/20 hover:bg-on-primary-fixed-variant/40 transition-colors">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <button onclick="window.location.href='cart.html'"
+                    class="relative flex items-center justify-center rounded-full size-10 bg-on-primary-fixed-variant/20 hover:bg-on-primary-fixed-variant/40 transition-colors">
+                    <span class="material-symbols-outlined">shopping_bag</span>
+                    <span
+                        class="absolute -top-1 -right-1 bg-tertiary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+                        id="topNavCartBadge" style="display:none;">0</span>
+                </button>
+                <button onclick="window.location.href='profile.html'"
+                    class="flex items-center justify-center rounded-full size-10 bg-on-primary-fixed-variant/20 hover:bg-on-primary-fixed-variant/40 transition-colors"
+                    id="loginBtn">
+                    <span class="material-symbols-outlined">person</span>
+                </button>
+            </div>
+        </div>
+        <!-- Search Bar -->
+        <div class="px-4 pb-4">
+            <label class="flex flex-col w-full">
+                <div
+                    class="flex w-full items-stretch rounded-lg h-10 bg-white/10 overflow-hidden border border-primary/30">
+                    <div class="text-primary-container flex items-center justify-center px-3 cursor-pointer"
+                        onclick="const s = document.getElementById('globalSearchInput').value.trim(); if(s) window.location.href='category.html?search='+encodeURIComponent(s);">
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <input id="globalSearchInput"
+                        class="w-full bg-transparent border-none focus:ring-0 text-white placeholder:text-primary/50 text-sm font-label-md"
+                        placeholder="Search premium collectibles..."
+                        onkeypress="if(event.key==='Enter' && this.value.trim()) { window.location.href='category.html?search=' + encodeURIComponent(this.value.trim()); }" />
+                </div>
+            </label>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Banner (Dynamic via JS or Static if preferred, using static from theme for now) -->
+        <div id="heroBannerContainer">
+            <section class="relative w-full @container">
+                <div class="px-0 @[480px]:px-margin-mobile @[480px]:py-4">
+                    <a href="category.html" class="block relative w-full overflow-hidden @[480px]:rounded-xl shadow-2xl bg-black">
+                        <img src="assets/images/banner.png" alt="Prajcraft Action Figures Banner" class="w-full h-auto object-cover max-h-[500px]">
+                    </a>
+                </div>
+            </section>
+        </div>
+
+        <!-- Recently Viewed Section -->
+        <section class="py-6 bg-surface-container-low" data-rec-type="recently-viewed"
+            data-rec-container="recentViewGrid">
+            <div class="px-4 flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary"
+                        style="font-variation-settings: 'FILL' 1;">history</span>
+                    <h3 class="text-on-surface font-headline-md text-lg">Recently Viewed</h3>
+                </div>
+            </div>
+            <div class="flex gap-4 overflow-x-auto px-4 no-scrollbar pb-4" id="recentViewGrid">
+                <!-- Dynamic Products -->
+            </div>
+        </section>
+
+        <!-- Categories Filter Section -->
+        <section
+            class="py-4 space-y-3 sticky top-[72px] z-40 bg-surface/95 backdrop-blur-sm border-b border-outline-variant">
+            <div class="flex gap-3 px-4 overflow-x-auto no-scrollbar pb-2 items-center" id="categoriesFilterGrid">
+                <button onclick="filterHomeProducts('all')" id="cat-btn-all"
+                    class="cat-filter-btn active flex-shrink-0 px-5 py-2 rounded-full border border-primary bg-primary text-on-primary font-label-md text-sm transition-colors">
+                    All
+                </button>
+                <!-- Dynamic Categories -->
+                <p class="text-sm px-2">Loading...</p>
+            </div>
+        </section>
+
+        <!-- Hot Deals Section -->
+        <section class="py-6 bg-surface-container-low">
+            <div class="px-4 flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-tertiary"
+                        style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                    <h3 class="text-on-surface font-headline-md text-lg">Hot Deals</h3>
+                </div>
+                <div class="bg-tertiary text-white px-2 py-1 rounded text-[10px] font-bold">ENDS SOON</div>
+            </div>
+            <div class="flex gap-4 overflow-x-auto px-4 no-scrollbar pb-4" id="bestsellersGrid">
+                <!-- Dynamic Products -->
+                <p class="px-4 text-sm">Loading deals...</p>
+            </div>
+        </section>
+
+        <!-- New Arrivals Section -->
+        <section class="py-6" data-rec-type="new-arrivals" data-rec-container="newArrivalsGrid">
+            <div class="px-4 flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary"
+                        style="font-variation-settings: 'FILL' 1;">new_releases</span>
+                    <h3 class="text-on-surface font-headline-md text-lg">New Arrivals</h3>
+                </div>
+            </div>
+            <div class="flex gap-4 overflow-x-auto px-4 no-scrollbar pb-4" id="newArrivalsGrid">
+                <!-- Dynamic Products -->
+                <p class="px-4 text-sm text-outline-variant">Loading new arrivals...</p>
+            </div>
+        </section>
+
+        <!-- You May Also Like Section -->
+        <section class="py-6 bg-surface-container-low" data-rec-type="ymal" data-rec-container="ymalGrid">
+            <div class="px-4 flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary"
+                        style="font-variation-settings: 'FILL' 1;">recommend</span>
+                    <h3 class="text-on-surface font-headline-md text-lg">You May Also Like</h3>
+                </div>
+            </div>
+            <div class="flex gap-4 overflow-x-auto px-4 no-scrollbar pb-4" id="ymalGrid">
+                <!-- Dynamic Products -->
+                <p class="px-4 text-sm text-outline-variant">Loading recommendations...</p>
+            </div>
+        </section>
+
+        <!-- Trending Products Section -->
+        <section class="py-6" data-rec-type="trending" data-rec-container="trendingGrid">
+            <div class="px-4 flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary"
+                        style="font-variation-settings: 'FILL' 1;">trending_up</span>
+                    <h3 class="text-on-surface font-headline-md text-lg">Trending Now</h3>
+                </div>
+            </div>
+            <div class="flex gap-4 overflow-x-auto px-4 no-scrollbar pb-4" id="trendingGrid">
+                <!-- Dynamic Products -->
+                <p class="px-4 text-sm text-outline-variant">Loading trending...</p>
+            </div>
+        </section>
+
+        <!-- All Products Section -->
+        <section class="py-6 mb-20">
+            <div class="px-4 flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary"
+                        style="font-variation-settings: 'FILL' 1;">grid_view</span>
+                    <h3 class="text-on-surface font-headline-md text-lg" id="homeProductsTitle">All Products</h3>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 px-4" id="homeProductsGrid">
+                <!-- Dynamic Products -->
+                <div class="col-span-2 text-center py-8 text-sm text-outline-variant">Loading products...</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface py-6 border-t border-outline-variant pb-[100px]">
+        <div class="max-w-md mx-auto px-4 text-center">
+            <h4 class="font-headline-md text-primary font-bold text-lg tracking-widest mb-4">PRAJCRAFT</h4>
+            <div
+                class="flex flex-wrap justify-center gap-4 md:gap-6 font-label-md text-[10px] sm:text-xs text-on-surface-variant uppercase tracking-widest mb-4">
+                <a href="about.html" class="hover:text-primary transition-colors">About</a>
+            <a href="terms.html" class="hover:text-primary transition-colors">Terms</a>
+                <a href="privacy-policy.html" class="hover:text-primary transition-colors">Privacy</a>
+                <a href="return-policy.html" class="hover:text-primary transition-colors">Returns</a>
+                <a href="refund-cancellation.html" class="hover:text-primary transition-colors">Refunds</a>
+                <a href="shipping-policy.html" class="hover:text-primary transition-colors">Shipping</a>
+                <a href="contact.html" class="hover:text-primary transition-colors">Contact</a>
+            </div>
+            <p class="text-xs text-outline-variant uppercase tracking-widest">© 2026 PRAJCRAFT. All rights reserved.</p>
+            <div
+                class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-outline-variant uppercase tracking-[0.2em] font-medium">
+                <span class="text-lg">🇮🇳</span> Proudly Made in India
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-outline-variant bg-surface px-4 pb-3 pt-2">
+        <div class="flex gap-2 max-w-md mx-auto">
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-primary" href="index.html">
+                <div class="flex h-8 items-center justify-center">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+                </div>
+                <p class="text-xs font-medium">Home</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary" href="category.html">
+                <div class="flex h-8 items-center justify-center">
+                    <span class="material-symbols-outlined">grid_view</span>
+                </div>
+                <p class="text-xs font-medium">Categories</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary" href="cart.html">
+                <div class="flex h-8 items-center justify-center">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                </div>
+                <p class="text-xs font-medium">Cart</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-secondary" href="profile.html">
+                <div class="flex h-8 items-center justify-center">
+                    <span class="material-symbols-outlined">person</span>
+                </div>
+                <p class="text-xs font-medium">Profile</p>
+            </a>
+        </div>
+    </nav>
+
+    <script src="js/recommendations.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof window.initRecommendations === 'function') {
+                window.initRecommendations();
+            }
+        });
+    </script>
+</body>
+
+</html>

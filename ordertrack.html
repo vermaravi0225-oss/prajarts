@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Track Order | PRAJCRAFT</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "primary": "#735c00",
+                    "primary-fixed-dim": "#e9c349",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "tertiary": "#bb152c",
+                    "inverse-surface": "#313030",
+                    "secondary-fixed": "#e2e2e2",
+                    "on-secondary-fixed-variant": "#474747",
+                    "surface-container": "#f0eded",
+                    "on-primary": "#ffffff",
+                    "surface": "#fcf9f8",
+                    "outline": "#7f7663",
+                    "outline-variant": "#d0c5af",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb3b1",
+                    "on-tertiary-fixed-variant": "#92001c",
+                    "on-tertiary-container": "#8f001b",
+                    "on-surface": "#1c1b1b",
+                    "error-container": "#ffdad6",
+                    "inverse-on-surface": "#f3f0ef",
+                    "primary-container": "#d4af37",
+                    "on-secondary-fixed": "#1b1b1b",
+                    "on-primary-fixed": "#241a00",
+                    "surface-container-high": "#eae7e7",
+                    "on-background": "#1c1b1b",
+                    "on-primary-container": "#554300",
+                    "secondary-fixed-dim": "#c6c6c6",
+                    "secondary-container": "#e2e2e2",
+                    "inverse-primary": "#e9c349",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#646464",
+                    "on-primary-fixed-variant": "#574500",
+                    "background": "#fcf9f8",
+                    "on-surface-variant": "#4d4635",
+                    "surface-tint": "#735c00",
+                    "surface-bright": "#fcf9f8",
+                    "surface-variant": "#e5e2e1",
+                    "surface-container-low": "#f6f3f2",
+                    "tertiary-container": "#ff9594",
+                    "surface-container-highest": "#e5e2e1",
+                    "tertiary-fixed": "#ffdad8",
+                    "surface-dim": "#dcd9d9",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#410007",
+                    "secondary": "#5e5e5e",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#ffe088"
+                },
+                "fontFamily": {
+                    "headline-md": ["Montserrat"],
+                    "display-lg": ["Montserrat"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "headline-lg": ["Montserrat"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .vault-gradient { background: linear-gradient(135deg, #1c1b1b 0%, #313030 100%); }
+    .gold-shimmer { background: linear-gradient(90deg, #735c00 0%, #d4af37 50%, #735c00 100%); background-size: 200% auto; animation: shimmer 3s linear infinite; }
+    @keyframes shimmer { to { background-position: 200% center; } }
+    body { min-height: max(884px, 100dvh); }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen selection:bg-primary selection:text-white pb-32 md:pb-0">
+
+<header class="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-4 md:px-8 h-16 shadow-sm">
+    <div class="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform" onclick="window.location.href='index.html'">
+        <img alt="Prajcraft Logo" class="h-8 w-auto object-contain" src="assets/images/logo.png"/>
+        <span class="font-headline-md text-headline-md font-bold text-primary tracking-tighter">PRAJCRAFT</span>
+    </div>
+    <div class="flex items-center gap-6">
+        <span class="material-symbols-outlined text-primary cursor-pointer active:scale-95" onclick="window.location.href='profile.html'">person</span>
+    </div>
+</header>
+
+<main class="pt-24 pb-12 px-4 md:px-8 max-w-6xl mx-auto">
+    <div class="flex flex-col items-center text-center mb-12">
+        <h1 class="font-display-lg text-4xl uppercase tracking-tight mb-2">Track Acquisitions</h1>
+        <p class="font-body-lg text-on-surface-variant tracking-wide">VIEW THE STATUS OF YOUR PRIVATE COLLECTION ITEMS</p>
+    </div>
+
+    <!-- Track Container populated by auth.js -->
+    <div id="trackContainer" class="max-w-4xl mx-auto">
+        <div style="text-align: center; padding: 40px; color: var(--on-surface-variant);">
+            Loading tracking info...
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-surface py-6 border-t border-outline-variant">
+    <div class="max-w-md mx-auto px-4 text-center">
+        <h4 class="font-headline-md text-primary font-bold text-lg tracking-widest mb-4">PRAJCRAFT</h4>
+        <div class="flex justify-center gap-6 font-label-md text-xs text-on-surface-variant uppercase tracking-widest mb-4">
+            <a href="policies.html#terms" class="hover:text-primary transition-colors">Terms</a>
+            <a href="policies.html#privacy" class="hover:text-primary transition-colors">Privacy</a>
+            <a href="policies.html#contact" class="hover:text-primary transition-colors">Contact</a>
+        </div>
+        <p class="text-xs text-outline-variant uppercase tracking-widest">© 2026 PRAJCRAFT. All rights reserved.</p>
+        <div class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-outline-variant uppercase tracking-[0.2em] font-medium">
+            <span class="text-lg">🇮🇳</span> Proudly Made in India
+        </div>
+    </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+</body></html>
+

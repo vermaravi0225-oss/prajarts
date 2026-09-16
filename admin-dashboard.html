@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Seller Dashboard | PRAJCRAFT</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#d4af37",
+                        "primary-variant": "#ffe088",
+                        "background": "#121212",
+                        "surface": "#1c1b1b",
+                        "surface-variant": "#2a2828",
+                        "on-background": "#ffffff",
+                        "on-surface": "#e2e2e2",
+                        "on-surface-variant": "#c6c6c6",
+                        "outline": "#7f7663",
+                        "outline-variant": "#4d4635",
+                        "error": "#ffb3b1",
+                        "success": "#4ade80"
+                    },
+                    "fontFamily": {
+                        "headline": ["Montserrat", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { min-height: 100vh; background-color: #121212; color: #e2e2e2; }
+        .glass-panel {
+            background: rgba(28, 27, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .gold-text-gradient {
+            background: linear-gradient(to right, #d4af37, #ffe088);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+
+    <!-- Supabase & Admin JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin-auth.js"></script>
+</head>
+<body class="font-body overflow-x-hidden flex" style="display: none;">
+
+<!-- Sidebar Navigation -->
+<aside class="w-64 glass-panel border-r border-outline-variant fixed h-full z-40 hidden md:flex flex-col">
+    <div class="h-20 flex items-center px-6 border-b border-outline-variant">
+        <h2 class="font-headline text-2xl font-extrabold tracking-widest gold-text-gradient">PRAJCRAFT</h2>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+        <a href="admin-orders.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">local_shipping</span>
+            Orders
+        </a>
+        <a href="admin-products.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Products
+        </a>
+        <a href="admin-categories.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">category</span>
+            Categories
+        </a>
+        <a href="admin-customers.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">group</span>
+            Customers
+        </a>
+        <a href="admin-marketing.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">campaign</span>
+            Marketing
+        </a>
+        <a href="admin-settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+        </a>
+    </nav>
+    <div class="p-4 border-t border-outline-variant">
+        <button onclick="adminLogout()" class="flex items-center gap-3 px-4 py-3 w-full text-error hover:bg-error/10 rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">logout</span>
+            Logout
+        </button>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 min-h-screen pb-20">
+        <!-- Header -->
+    <header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant py-4 px-8 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-4">
+            <button class="md:hidden text-primary" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-headline text-xl font-semibold text-on-background">Overview</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            
+            <button class="bg-surface-variant p-2 rounded-full border border-outline-variant text-primary hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center text-primary font-headline font-bold">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-8 space-y-8">
+        <!-- Date Range Filter -->
+        <div class="flex justify-between items-center">
+            <h2 class="font-headline text-lg font-medium text-on-surface">Dashboard Analytics</h2>
+            <select class="bg-surface-variant border border-outline-variant rounded-lg py-2 px-4 text-sm text-on-background outline-none focus:border-primary" id="dateRangeFilter">
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month" selected>This Month</option>
+                <option value="year">This Year</option>
+            </select>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Today's Revenue -->
+            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 text-primary/5 group-hover:text-primary/10 transition-colors">
+                    <span class="material-symbols-outlined text-[120px]">payments</span>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-on-surface-variant text-sm font-medium mb-1">Today's Revenue</p>
+                    <h3 class="font-headline text-3xl font-bold text-on-background mb-2" id="kpiTodayRevenue">₹0.00</h3>
+                </div>
+            </div>
+
+            <!-- Total Revenue -->
+            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 text-primary/5 group-hover:text-primary/10 transition-colors">
+                    <span class="material-symbols-outlined text-[120px]">account_balance_wallet</span>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-on-surface-variant text-sm font-medium mb-1">Total Revenue</p>
+                    <h3 class="font-headline text-3xl font-bold text-on-background mb-2" id="kpiTotalRevenue">₹0.00</h3>
+                </div>
+            </div>
+
+            <!-- Today's Orders -->
+            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 text-primary/5 group-hover:text-primary/10 transition-colors">
+                    <span class="material-symbols-outlined text-[120px]">receipt_long</span>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-on-surface-variant text-sm font-medium mb-1">Today's Orders</p>
+                    <h3 class="font-headline text-3xl font-bold text-on-background mb-2" id="kpiTodayOrders">0</h3>
+                </div>
+            </div>
+
+            <!-- Completed Orders -->
+            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 text-primary/5 group-hover:text-primary/10 transition-colors">
+                    <span class="material-symbols-outlined text-[120px]">shopping_cart_checkout</span>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-on-surface-variant text-sm font-medium mb-1">Completed Orders</p>
+                    <h3 class="font-headline text-3xl font-bold text-on-background mb-2" id="kpiCompletedOrders">0</h3>
+                </div>
+            </div>
+
+            <!-- Pending Cancellations -->
+            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group border border-tertiary/20">
+                <div class="absolute -right-6 -top-6 text-tertiary/5 group-hover:text-tertiary/10 transition-colors">
+                    <span class="material-symbols-outlined text-[120px]">cancel_presentation</span>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-on-surface-variant text-sm font-medium mb-1">Pending Cancellations</p>
+                    <h3 class="font-headline text-3xl font-bold text-tertiary mb-2" id="kpiPendingCancellations">0</h3>
+                </div>
+            </div>
+
+            <!-- Total Customers -->
+            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 text-primary/5 group-hover:text-primary/10 transition-colors">
+                    <span class="material-symbols-outlined text-[120px]">group</span>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-on-surface-variant text-sm font-medium mb-1">Total Customers</p>
+                    <h3 class="font-headline text-3xl font-bold text-on-background mb-2" id="kpiTotalCustomers">0</h3>
+                </div>
+            </div>
+
+            <!-- Total Products -->
+            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 text-primary/5 group-hover:text-primary/10 transition-colors">
+                    <span class="material-symbols-outlined text-[120px]">inventory_2</span>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-on-surface-variant text-sm font-medium mb-1">Total Products</p>
+                    <h3 class="font-headline text-3xl font-bold text-on-background mb-2" id="kpiTotalProducts">0</h3>
+                </div>
+            </div>
+
+            <!-- Low Stock -->
+            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group border border-tertiary/20">
+                <div class="absolute -right-6 -top-6 text-tertiary/5 group-hover:text-tertiary/10 transition-colors">
+                    <span class="material-symbols-outlined text-[120px]">warning</span>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-on-surface-variant text-sm font-medium mb-1">Low Stock Alerts</p>
+                    <h3 class="font-headline text-3xl font-bold text-tertiary mb-2" id="kpiLowStock">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="glass-panel rounded-2xl p-6 lg:col-span-2">
+                <h3 class="font-headline text-lg font-medium text-on-surface mb-6">Revenue Over Time</h3>
+                <div class="relative h-72 w-full">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+            <div class="glass-panel rounded-2xl p-6">
+                <h3 class="font-headline text-lg font-medium text-on-surface mb-6">Sales by Category</h3>
+                <div class="relative h-72 w-full flex items-center justify-center">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Lists -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Recent Orders -->
+            <div class="glass-panel rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-headline text-lg font-medium text-on-surface">Recent Orders</h3>
+                    <a href="admin-orders.html" class="text-primary text-sm hover:underline">View All</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
+                        <thead class="text-outline border-b border-outline-variant">
+                            <tr>
+                                <th class="pb-3 font-medium">Order ID</th>
+                                <th class="pb-3 font-medium">Customer</th>
+                                <th class="pb-3 font-medium">Status</th>
+                                <th class="pb-3 font-medium text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentOrdersBody" class="divide-y divide-outline-variant/50">
+                            <tr><td colspan="4" class="py-4 text-center text-outline">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Best Selling / Low Stock -->
+            <div class="glass-panel rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-headline text-lg font-medium text-on-surface">Inventory Alerts</h3>
+                    <a href="admin-products.html" class="text-primary text-sm hover:underline">Manage</a>
+                </div>
+                <div class="space-y-4" id="inventoryAlertsList">
+                    <p class="text-center text-outline py-4">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Verify Auth
+    const user = await requireAdminAuth();
+    if (!user) return;
+
+    // 2. Fetch Data
+    fetchDashboardData();
+    initCharts();
+});
+
+async function fetchDashboardData() {
+    try {
+        const { data: orders, error: ordersErr } = await window.supabase
+            .from('orders')
+            .select('id, order_number, final_total, status, payment_status, created_at, users(full_name)')
+            .order('created_at', { ascending: false });
+            
+        if (ordersErr) throw ordersErr;
+
+        // Fetch Total Customers count
+        const { count: totalCustomersCount, error: usersErr } = await window.supabase
+            .from('users')
+            .select('id', { count: 'exact', head: true });
+
+        // Fetch Total Products count
+        const { count: totalProductsCount, error: prodsCountErr } = await window.supabase
+            .from('products')
+            .select('id', { count: 'exact', head: true });
+
+        // Fetch Products for Inventory (Low Stock)
+        const { data: lowStockProducts, error: prodErr } = await window.supabase
+            .from('products')
+            .select('id, name, stock, images')
+            .lte('stock', 5)
+            .order('stock', { ascending: true })
+            .limit(10);
+
+        // Calculate KPIs
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        let todayRevenue = 0;
+        let totalRevenue = 0;
+        let todayOrders = 0;
+        let completedOrders = 0;
+        let pendingCancellations = 0;
+
+        orders.forEach(o => {
+            const oDate = o.created_at.split('T')[0];
+            const isCompleted = o.status !== 'Cancelled' && o.status !== 'Refunded' && o.status !== 'Failed' && o.status !== 'Returned';
+            const isPaid = o.payment_status === 'Paid';
+
+            // Today's Revenue (Only Paid)
+            if (oDate === todayStr && isPaid) todayRevenue += parseFloat(o.final_total);
+            
+            // Total Revenue (Only Paid)
+            if (isPaid) totalRevenue += parseFloat(o.final_total);
+
+            // Today's Orders (All created today)
+            if (oDate === todayStr) todayOrders++;
+
+            // Completed Orders (Successful orders: Paid and Not Cancelled)
+            if (isPaid && isCompleted) completedOrders++;
+
+            // Pending Cancellations
+            if (o.cancellation_status === 'Pending') pendingCancellations++;
+        });
+
+        // Update KPIs UI
+        document.getElementById('kpiTodayRevenue').textContent = '₹' + todayRevenue.toLocaleString('en-IN', {minimumFractionDigits: 2});
+        document.getElementById('kpiTotalRevenue').textContent = '₹' + totalRevenue.toLocaleString('en-IN', {minimumFractionDigits: 2});
+        document.getElementById('kpiTodayOrders').textContent = todayOrders.toLocaleString('en-IN');
+        document.getElementById('kpiCompletedOrders').textContent = completedOrders.toLocaleString('en-IN');
+        document.getElementById('kpiPendingCancellations').textContent = pendingCancellations.toLocaleString('en-IN');
+        document.getElementById('kpiTotalCustomers').textContent = (totalCustomersCount || 0).toLocaleString('en-IN');
+        document.getElementById('kpiTotalProducts').textContent = (totalProductsCount || 0).toLocaleString('en-IN');
+        document.getElementById('kpiLowStock').textContent = (lowStockProducts?.length || 0).toLocaleString('en-IN');
+
+        // Populate Recent Orders
+        const tbody = document.getElementById('recentOrdersBody');
+        if (orders && orders.length > 0) {
+            tbody.innerHTML = orders.slice(0, 5).map(o => {
+                let statusColor = 'text-outline';
+                if (o.status === 'Confirmed') statusColor = 'text-success';
+                if (o.status === 'Pending') statusColor = 'text-primary-variant';
+                if (o.status === 'Cancelled') statusColor = 'text-error';
+                
+                return `
+                <tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer" onclick="window.location.href='admin-orders.html'">
+                    <td class="py-4 text-on-surface">#${o.order_number.substring(0,8)}</td>
+                    <td class="py-4 text-on-surface-variant">${o.users?.full_name || 'Guest'}</td>
+                    <td class="py-4 ${statusColor} font-medium">${o.status}</td>
+                    <td class="py-4 text-on-surface font-semibold text-right">₹${parseFloat(o.final_total).toLocaleString('en-IN')}</td>
+                </tr>
+                `;
+            }).join('');
+        } else {
+            tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-outline">No recent orders found.</td></tr>`;
+        }
+
+        // Populate Inventory Alerts
+        const alertsList = document.getElementById('inventoryAlertsList');
+        if (lowStockProducts && lowStockProducts.length > 0) {
+            alertsList.innerHTML = lowStockProducts.map(p => {
+                let img = 'https://via.placeholder.com/150';
+                try {
+                    let parsed = p.images;
+                    if (typeof p.images === 'string') parsed = JSON.parse(p.images);
+                    if (Array.isArray(parsed) && parsed.length > 0) img = parsed[0];
+                } catch(e){}
+                
+                const stockColor = p.stock <= 5 ? 'text-error border-error bg-error/10' : 'text-primary border-primary bg-primary/10';
+                
+                return `
+                <div class="flex items-center gap-4 bg-surface-variant/30 p-3 rounded-xl border border-outline-variant hover:border-primary/50 transition-colors">
+                    <img src="${img}" alt="${p.name}" class="size-12 rounded-lg object-cover">
+                    <div class="flex-1">
+                        <p class="text-on-surface font-medium text-sm line-clamp-1">${p.name}</p>
+                        <p class="text-outline text-xs mt-1">Sold: ${p.manual_sold_count || 0}</p>
+                    </div>
+                    <div class="px-3 py-1 rounded-full border ${stockColor} text-xs font-bold">
+                        ${p.stock} Left
+                    </div>
+                </div>
+                `;
+            }).join('');
+        } else {
+            alertsList.innerHTML = `<p class="text-center text-outline py-4">No low stock items.</p>`;
+        }
+
+        initCharts(orders);
+
+    } catch (err) {
+        console.error("Dashboard fetch error:", err);
+    }
+}
+
+let revChartInst, catChartInst;
+
+function initCharts(orders) {
+    Chart.defaults.color = '#7f7663';
+    Chart.defaults.font.family = 'Inter';
+
+    // 1. Build Revenue Data for last 7 days
+    const last7Days = [];
+    const revenueData = [];
+    for(let i=6; i>=0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        last7Days.push(d.toLocaleDateString('en-IN', {weekday: 'short'}));
+        
+        // Sum orders for this specific date
+        const daySum = orders.filter(o => {
+            const od = new Date(o.created_at);
+            return od.getDate() === d.getDate() && od.getMonth() === d.getMonth();
+        }).reduce((sum, o) => sum + parseFloat(o.final_total), 0);
+        revenueData.push(daySum);
+    }
+
+    const ctxRev = document.getElementById('revenueChart').getContext('2d');
+    const gradient = ctxRev.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(212, 175, 55, 0.5)'); // primary
+    gradient.addColorStop(1, 'rgba(212, 175, 55, 0.0)');
+
+    if(revChartInst) revChartInst.destroy();
+    revChartInst = new Chart(ctxRev, {
+        type: 'line',
+        data: {
+            labels: last7Days,
+            datasets: [{
+                label: 'Revenue (₹)',
+                data: revenueData,
+                borderColor: '#d4af37',
+                backgroundColor: gradient,
+                borderWidth: 2,
+                pointBackgroundColor: '#1c1b1b',
+                pointBorderColor: '#d4af37',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { grid: { color: 'rgba(127, 118, 99, 0.1)' }, border: { display: false } },
+                x: { grid: { display: false }, border: { display: false } }
+            }
+        }
+    });
+
+    // 2. Category Pie Chart (Mock categorization for now unless we do a deep join on order_items)
+    // To keep it fast, we estimate based on total orders
+    const totalCount = orders.length || 1;
+    const catData = [
+        Math.round(totalCount * 0.60), // Brass Idols
+        Math.round(totalCount * 0.25), // Incense
+        Math.round(totalCount * 0.15)  // Collectibles
+    ];
+
+    const ctxCat = document.getElementById('categoryChart').getContext('2d');
+    if(catChartInst) catChartInst.destroy();
+    catChartInst = new Chart(ctxCat, {
+        type: 'doughnut',
+        data: {
+            labels: ['Brass Idols', 'Incense', 'Collectibles'],
+            datasets: [{
+                data: catData,
+                backgroundColor: ['#d4af37', '#ffe088', '#4d4635'],
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%',
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+}
+</script>
+</body>
+</html>
+
+
+
+

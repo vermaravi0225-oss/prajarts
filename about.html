@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title>Prajcraft - About Us</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+        }
+
+        .policy-content h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #735c00;
+            text-align: center;
+        }
+
+        .policy-content h2 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1c1b1b;
+        }
+
+        .policy-content p {
+            margin-bottom: 1rem;
+            color: #4d4635;
+            line-height: 1.6;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#735c00",
+                        "on-primary": "#ffffff",
+                        "surface": "#fcf9f8",
+                        "outline": "#7f7663",
+                        "outline-variant": "#d0c5af",
+                        "on-surface": "#1c1b1b",
+                        "on-surface-variant": "#4d4635",
+                        "background": "#fcf9f8",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Montserrat"],
+                        "body-md": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+
+    <header
+        class="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-outline-variant flex items-center px-4 md:px-8 h-16 shadow-sm">
+        <div class="flex items-center gap-4 cursor-pointer active:scale-95 transition-transform"
+            onclick="window.location.href='index.html'">
+            <button
+                class="active:scale-95 transition-transform duration-200 hover:bg-surface-variant p-2 rounded-full flex items-center"
+                onclick="event.stopPropagation(); window.history.back()">
+                <span class="material-symbols-outlined text-primary">arrow_back</span>
+            </button>
+            <img alt="Prajcraft Logo" class="h-8 w-auto object-contain" src="assets/images/logo.png" />
+            <span class="font-headline-md text-headline-md font-bold text-primary tracking-tighter">PRAJCRAFT</span>
+        </div>
+    </header>
+
+    <main class="pt-24 px-4 max-w-4xl mx-auto space-y-12">
+        <div
+            class="bg-surface-container-lowest p-8 rounded-xl border border-outline-variant shadow-sm hover:border-primary-container transition-colors policy-content">
+
+            <h1>About Us</h1>
+
+            <p>
+                Welcome to <strong>Prajcraft</strong>! We are dedicated to bringing you the best, high-quality products
+                curated with passion and care.
+            </p>
+
+            <h2>Our Mission</h2>
+            <p>
+                Our mission is to provide our customers with an exceptional shopping experience, offering premium
+                products at competitive prices. We believe in quality, transparency, and customer satisfaction above all
+                else.
+            </p>
+
+            <h2>Who We Are</h2>
+            <p>
+                Prajcraft is a proudly Indian brand, operating from Rohtak, Haryana. We carefully source and deliver
+                products that meet our strict standards for quality and design, ensuring that every purchase you make
+                adds value to your life.
+            </p>
+
+            <h2>Why Choose Us?</h2>
+            <p>
+                From secure payments to fast shipping and a dedicated support team, we strive to make your online
+                shopping journey as seamless as possible. Thank you for trusting Prajcraft.
+            </p>
+
+        </div>
+    </main>
+
+    <footer class="bg-surface py-6 border-t border-outline-variant mt-12">
+        <div class="max-w-md mx-auto px-4 text-center">
+            <h4 class="font-headline-md text-primary font-bold text-lg tracking-widest mb-4">PRAJCRAFT</h4>
+            <div
+                class="flex flex-wrap justify-center gap-4 md:gap-6 font-label-md text-[10px] sm:text-xs text-on-surface-variant uppercase tracking-widest mb-4">
+                <a href="about.html" class="hover:text-primary transition-colors">About</a>
+                <a href="terms.html" class="hover:text-primary transition-colors">Terms</a>
+                <a href="privacy-policy.html" class="hover:text-primary transition-colors">Privacy</a>
+                <a href="return-policy.html" class="hover:text-primary transition-colors">Returns</a>
+                <a href="refund-cancellation.html" class="hover:text-primary transition-colors">Refunds</a>
+                <a href="shipping-policy.html" class="hover:text-primary transition-colors">Shipping</a>
+                <a href="contact.html" class="hover:text-primary transition-colors">Contact</a>
+            </div>
+            <p class="text-xs text-outline-variant uppercase tracking-widest">© 2026 PRAJCRAFT. All rights reserved.</p>
+            <div
+                class="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-outline-variant uppercase tracking-[0.2em] font-medium">
+                <span class="text-lg">🇮🇳</span> Proudly Made in India
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

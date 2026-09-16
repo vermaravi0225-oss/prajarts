@@ -1,0 +1,9 @@
+{
+  "name": "prajcraft",
+  "version": "1.0.0",
+  "description": "Prajcraft E-commerce Backend",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "cors": "^2.8.5"
+  }
+}

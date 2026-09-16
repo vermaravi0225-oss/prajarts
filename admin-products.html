@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Products | PRAJCRAFT Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#d4af37",
+                        "primary-variant": "#ffe088",
+                        "background": "#121212",
+                        "surface": "#1c1b1b",
+                        "surface-variant": "#2a2828",
+                        "on-background": "#ffffff",
+                        "on-surface": "#e2e2e2",
+                        "on-surface-variant": "#c6c6c6",
+                        "outline": "#7f7663",
+                        "outline-variant": "#4d4635",
+                        "error": "#ffb3b1",
+                        "success": "#4ade80"
+                    },
+                    "fontFamily": {
+                        "headline": ["Montserrat", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { min-height: 100vh; background-color: #121212; color: #e2e2e2; }
+        .glass-panel {
+            background: rgba(28, 27, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .gold-text-gradient {
+            background: linear-gradient(to right, #d4af37, #ffe088);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin-auth.js"></script>
+</head>
+<body class="font-body overflow-x-hidden flex" style="display: none;">
+
+<!-- Sidebar -->
+<aside class="w-64 glass-panel border-r border-outline-variant fixed h-full z-40 hidden md:flex flex-col">
+    <div class="h-20 flex items-center px-6 border-b border-outline-variant">
+        <h2 class="font-headline text-2xl font-extrabold tracking-widest gold-text-gradient">PRAJCRAFT</h2>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+        <a href="admin-orders.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">local_shipping</span>
+            Orders
+        </a>
+        <a href="admin-products.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Products
+        </a>
+        <a href="admin-categories.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">category</span>
+            Categories
+        </a>
+        <a href="admin-customers.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">group</span>
+            Customers
+        </a>
+        <a href="admin-marketing.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">campaign</span>
+            Marketing
+        </a>
+        <a href="admin-settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+        </a>
+    </nav>
+    <div class="p-4 border-t border-outline-variant">
+        <button onclick="adminLogout()" class="flex items-center gap-3 px-4 py-3 w-full text-error hover:bg-error/10 rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">logout</span>
+            Logout
+        </button>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 min-h-screen pb-20">
+        <!-- Header -->
+    <header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant py-4 px-8 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-4">
+            <button class="md:hidden text-primary" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-headline text-xl font-semibold text-on-background">Products</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="admin-product-edit.html" class="bg-primary hover:bg-primary-variant text-background px-4 py-2 rounded-lg font-bold transition-colors flex items-center gap-2"><span class="material-symbols-outlined">add</span> Add Product</a>
+            <button class="bg-surface-variant p-2 rounded-full border border-outline-variant text-primary hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center text-primary font-headline font-bold">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-8 space-y-8">
+        <!-- Controls -->
+        <div class="glass-panel rounded-2xl p-6 flex flex-wrap gap-4 items-center justify-between">
+            <div class="flex gap-4 flex-1 min-w-[300px]">
+                <div class="relative flex-1">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+                    <input type="text" id="searchInput" placeholder="Search products, SKU..." class="w-full bg-surface border border-outline-variant rounded-lg py-2 pl-10 pr-4 text-sm focus:border-primary outline-none text-on-background placeholder:text-outline transition-colors">
+                </div>
+                <select id="statusFilter" class="bg-surface border border-outline-variant rounded-lg py-2 px-4 text-sm text-on-background outline-none focus:border-primary w-40 transition-colors">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Draft">Draft</option>
+                    <option value="Hidden">Hidden</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="bulkAction('Active')" class="text-xs bg-surface-variant hover:bg-primary/20 text-on-surface px-3 py-1.5 rounded border border-outline-variant transition-colors disabled:opacity-50" id="btnPublishSelected" disabled>Publish</button>
+                <button onclick="bulkAction('Hidden')" class="text-xs bg-surface-variant hover:bg-primary/20 text-on-surface px-3 py-1.5 rounded border border-outline-variant transition-colors disabled:opacity-50" id="btnHideSelected" disabled>Hide</button>
+                <button onclick="bulkAction('Delete')" class="text-xs bg-error/10 hover:bg-error/30 text-error px-3 py-1.5 rounded border border-error/50 transition-colors disabled:opacity-50" id="btnDeleteSelected" disabled>Delete</button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="glass-panel rounded-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-surface-variant/50 text-outline border-b border-outline-variant">
+                        <tr>
+                            <th class="p-4 w-10">
+                                <input type="checkbox" id="selectAll" class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-4 w-4">
+                            </th>
+                            <th class="p-4 font-medium">Product</th>
+                            <th class="p-4 font-medium">Status</th>
+                            <th class="p-4 font-medium">Inventory</th>
+                            <th class="p-4 font-medium">Price</th>
+                            <th class="p-4 font-medium text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsBody" class="divide-y divide-outline-variant/50">
+                        <tr><td colspan="6" class="p-8 text-center text-outline">Loading products...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+let allProducts = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const user = await requireAdminAuth();
+    if (!user) return;
+    fetchProducts();
+
+    document.getElementById('searchInput').addEventListener('input', renderProducts);
+    document.getElementById('statusFilter').addEventListener('change', renderProducts);
+    document.getElementById('selectAll').addEventListener('change', (e) => {
+        document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = e.target.checked);
+        updateBulkButtons();
+    });
+});
+
+async function fetchProducts() {
+    try {
+        const { data, error } = await supabase
+            .from('products')
+            .select('id, name, sku, stock, price, status, images')
+            .order('created_at', { ascending: false });
+            
+        if (error) throw error;
+        allProducts = data || [];
+        renderProducts();
+    } catch (err) {
+        console.error("Error fetching products", err);
+        alert("Failed to load products");
+    }
+}
+
+function renderProducts() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const status = document.getElementById('statusFilter').value;
+    
+    let filtered = allProducts;
+    if (search) {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(search) || (p.sku && p.sku.toLowerCase().includes(search)));
+    }
+    if (status) {
+        filtered = filtered.filter(p => p.status === status);
+    }
+
+    const tbody = document.getElementById('productsBody');
+    if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-outline">No products found.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(p => {
+        let img = 'https://via.placeholder.com/150';
+        try {
+            let parsed = p.images;
+            if (typeof p.images === 'string') parsed = JSON.parse(p.images);
+            if (Array.isArray(parsed) && parsed.length > 0) img = parsed[0];
+        } catch(e){}
+
+        let statusBadge = '';
+        if (p.status === 'Active') statusBadge = `<span class="px-2 py-1 rounded text-[10px] font-bold bg-success/10 text-success border border-success/20 uppercase tracking-widest">Active</span>`;
+        else if (p.status === 'Draft') statusBadge = `<span class="px-2 py-1 rounded text-[10px] font-bold bg-outline-variant/20 text-on-surface-variant border border-outline-variant uppercase tracking-widest">Draft</span>`;
+        else statusBadge = `<span class="px-2 py-1 rounded text-[10px] font-bold bg-error/10 text-error border border-error/20 uppercase tracking-widest">${p.status}</span>`;
+
+        return `
+        <tr class="hover:bg-surface-variant/30 transition-colors">
+            <td class="p-4">
+                <input type="checkbox" value="${p.id}" class="row-checkbox rounded border-outline-variant bg-surface text-primary focus:ring-primary h-4 w-4" onchange="updateBulkButtons()">
+            </td>
+            <td class="p-4">
+                <div class="flex items-center gap-4">
+                    <img src="${img}" onerror="this.src='https://via.placeholder.com/150'" alt="${p.name}" class="size-12 rounded bg-surface object-cover border border-outline-variant">
+                    <div>
+                        <p class="text-on-surface font-medium">${p.name}</p>
+                        <p class="text-outline text-xs mt-0.5">SKU: ${p.sku || 'N/A'}</p>
+                    </div>
+                </div>
+            </td>
+            <td class="p-4">${statusBadge}</td>
+            <td class="p-4 text-on-surface">${p.stock}</td>
+            <td class="p-4 text-on-surface">â‚¹${parseFloat(p.price).toLocaleString('en-IN')}</td>
+            <td class="p-4 text-right">
+                <button onclick="duplicateProduct('${p.id}')" class="text-outline hover:text-primary transition-colors p-2" title="Duplicate">
+                    <span class="material-symbols-outlined text-sm">content_copy</span>
+                </button>
+                <a href="admin-product-edit.html?id=${p.id}" class="text-outline hover:text-primary transition-colors p-2 inline-block" title="Edit">
+                    <span class="material-symbols-outlined text-sm">edit</span>
+                </a>
+            </td>
+        </tr>
+        `;
+    }).join('');
+    
+    document.getElementById('selectAll').checked = false;
+    updateBulkButtons();
+}
+
+function updateBulkButtons() {
+    const checked = document.querySelectorAll('.row-checkbox:checked').length;
+    const btns = ['btnPublishSelected', 'btnHideSelected', 'btnDeleteSelected'];
+    btns.forEach(id => {
+        document.getElementById(id).disabled = checked === 0;
+    });
+}
+
+async function bulkAction(action) {
+    const checked = Array.from(document.querySelectorAll('.row-checkbox:checked')).map(cb => cb.value);
+    if (checked.length === 0) return;
+
+    if (action === 'Delete') {
+        if (!confirm(`Are you sure you want to delete ${checked.length} products?`)) return;
+        try {
+            const { error } = await window.supabase.from('products').delete().in('id', checked);
+            if (error) {
+                if (error.code === '23503') {
+                    alert("Cannot delete these products because they are tied to existing orders or reviews. Please archive/hide them instead.");
+                    return;
+                }
+                throw error;
+            }
+            fetchProducts();
+        } catch (err) {
+            console.error(err);
+            alert("Delete failed: " + (err.message || "Unknown error"));
+        }
+    } else {
+        // Publish or Hide
+        try {
+            const { error } = await window.supabase.from('products').update({ status: action }).in('id', checked);
+            if (error) throw error;
+            fetchProducts();
+        } catch (err) {
+            console.error(err);
+            alert("Update failed.");
+        }
+    }
+}
+
+async function duplicateProduct(id) {
+    try {
+        const prod = allProducts.find(p => p.id === id);
+        if (!prod) return;
+
+        // Fetch full product details before duplicating
+        const { data: fullProd, error: fetchErr } = await window.supabase.from('products').select('*').eq('id', id).single();
+        if (fetchErr) throw fetchErr;
+
+        const newProd = { ...fullProd };
+        delete newProd.id;
+        delete newProd.created_at;
+        delete newProd.updated_at;
+        newProd.name = newProd.name + " (Copy)";
+        newProd.slug = newProd.slug + "-copy-" + Date.now();
+        if(newProd.sku) newProd.sku = newProd.sku + "-COPY";
+        newProd.status = 'Draft';
+
+        const { error: insertErr } = await window.supabase.from('products').insert([newProd]);
+        if (insertErr) throw insertErr;
+        
+        fetchProducts();
+    } catch (err) {
+        console.error("Duplicate error:", err);
+        alert("Failed to duplicate product.");
+    }
+}
+</script>
+</body>
+</html>
+
+
+
+

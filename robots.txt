@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin-*.html
+Disallow: /api/
+Disallow: /checkout.html
+Disallow: /cart.html
+Disallow: /profile.html
+Allow: /
+
+Sitemap: https://prajcraft.in/sitemap.xml

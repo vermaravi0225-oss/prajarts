@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Orders | PRAJCRAFT Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#d4af37",
+                        "primary-variant": "#ffe088",
+                        "background": "#121212",
+                        "surface": "#1c1b1b",
+                        "surface-variant": "#2a2828",
+                        "on-background": "#ffffff",
+                        "on-surface": "#e2e2e2",
+                        "on-surface-variant": "#c6c6c6",
+                        "outline": "#7f7663",
+                        "outline-variant": "#4d4635",
+                        "error": "#ffb3b1",
+                        "success": "#4ade80"
+                    },
+                    "fontFamily": {
+                        "headline": ["Montserrat", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { min-height: 100vh; background-color: #121212; color: #e2e2e2; }
+        .glass-panel {
+            background: rgba(28, 27, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin-auth.js"></script>
+</head>
+<body class="font-body overflow-x-hidden flex" style="display: none;">
+
+<aside class="w-64 glass-panel border-r border-outline-variant fixed h-full z-40 hidden md:flex flex-col">
+    <div class="h-20 flex items-center px-6 border-b border-outline-variant">
+        <h2 class="font-headline text-2xl font-extrabold tracking-widest gold-text-gradient">PRAJCRAFT</h2>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+        <a href="admin-orders.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">local_shipping</span>
+            Orders
+        </a>
+        <a href="admin-products.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Products
+        </a>
+        <a href="admin-categories.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">category</span>
+            Categories
+        </a>
+        <a href="admin-customers.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">group</span>
+            Customers
+        </a>
+        <a href="admin-marketing.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">campaign</span>
+            Marketing
+        </a>
+        <a href="admin-settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+        </a>
+    </nav>
+    <div class="p-4 border-t border-outline-variant">
+        <button onclick="adminLogout()" class="flex items-center gap-3 px-4 py-3 w-full text-error hover:bg-error/10 rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">logout</span>
+            Logout
+        </button>
+    </div>
+</aside>
+
+<main class="flex-1 md:ml-64 min-h-screen flex flex-col pb-20">
+        <!-- Header -->
+    <header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant py-4 px-8 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-4">
+            <button class="md:hidden text-primary" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-headline text-xl font-semibold text-on-background">Orders</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            
+            <button class="bg-surface-variant p-2 rounded-full border border-outline-variant text-primary hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center text-primary font-headline font-bold">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-8 space-y-8">
+        <!-- Controls -->
+        <div class="glass-panel rounded-2xl p-6 flex flex-wrap gap-4 items-center justify-between">
+            <div class="flex gap-4 flex-1 min-w-[300px]">
+                <div class="relative flex-1">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+                    <input type="text" id="searchInput" placeholder="Search order ID, Name, Phone..." class="w-full bg-surface border border-outline-variant rounded-lg py-2 pl-10 pr-4 text-sm focus:border-primary outline-none text-on-background placeholder:text-outline transition-colors">
+                </div>
+                <select id="statusFilter" class="bg-surface border border-outline-variant rounded-lg py-2 px-4 text-sm text-on-background outline-none focus:border-primary w-48 transition-colors">
+                    <option value="">All Statuses</option>
+                    <option value="Verification Pending">Verification Pending</option>
+                    <option value="Payment Failed">Payment Failed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Packed">Packed</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Out For Delivery">Out For Delivery</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+                <label class="flex items-center gap-2 text-sm text-on-surface cursor-pointer bg-surface border border-outline-variant rounded-lg px-4 py-2 hover:bg-surface-variant transition-colors">
+                    <input type="checkbox" id="cancellationFilter" class="rounded text-primary focus:ring-primary bg-surface-variant border-outline-variant">
+                    Pending Cancellations
+                </label>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="glass-panel rounded-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-surface-variant/50 text-outline border-b border-outline-variant">
+                        <tr>
+                            <th class="p-4 font-medium">Order ID</th>
+                            <th class="p-4 font-medium">Date</th>
+                            <th class="p-4 font-medium">Customer</th>
+                            <th class="p-4 font-medium">Total</th>
+                            <th class="p-4 font-medium">Payment</th>
+                            <th class="p-4 font-medium">Status</th>
+                            <th class="p-4 font-medium text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersBody" class="divide-y divide-outline-variant/50">
+                        <tr><td colspan="7" class="p-8 text-center text-outline">Loading orders...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Order Details Modal -->
+<div id="orderModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-4xl rounded-2xl flex flex-col max-h-[90vh] shadow-2xl">
+        <div class="flex items-center justify-between p-6 border-b border-outline-variant">
+            <h2 class="font-headline text-xl font-bold text-on-surface flex items-center gap-2">
+                Order <span id="modalOrderId" class="text-primary font-mono text-lg"></span>
+            </h2>
+            <button onclick="closeModal()" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-6 flex flex-col md:flex-row gap-6">
+            <!-- Left Col: Details & Shipping -->
+            <div class="flex-1 space-y-6">
+                <!-- Cancellation Alert (Hidden by default) -->
+                <div id="mCancellationAlert" class="hidden bg-error/10 border border-error/20 p-4 rounded-xl">
+                    <h3 class="font-bold text-error flex items-center gap-2 mb-2"><span class="material-symbols-outlined">warning</span> Cancellation Requested</h3>
+                    <p class="text-sm text-on-surface-variant mb-4"><strong class="text-on-surface">Reason:</strong> <span id="mCancellationReason"></span></p>
+                    <div class="flex gap-2">
+                        <button onclick="approveCancellation()" class="bg-success text-background px-4 py-2 rounded font-bold text-xs hover:brightness-110">Approve Cancellation</button>
+                        <button onclick="rejectCancellation()" class="bg-surface border border-outline-variant text-on-surface px-4 py-2 rounded font-bold text-xs hover:bg-surface-variant">Reject</button>
+                    </div>
+                </div>
+                
+                <!-- Payment Verification Alert -->
+                <div id="mVerificationAlert" class="hidden bg-primary/10 border border-primary/20 p-4 rounded-xl">
+                    <h3 class="font-bold text-primary flex items-center gap-2 mb-2"><span class="material-symbols-outlined">payments</span> Verification Pending</h3>
+                    <p class="text-sm text-on-surface-variant mb-4">Customer submitted a manual UPI payment. Please verify the UTR in your bank app.</p>
+                    <div class="flex gap-2">
+                        <button onclick="approvePayment(event)" class="bg-primary text-background px-4 py-2 rounded font-bold text-xs hover:brightness-110">Approve Payment</button>
+                        <button onclick="rejectPayment(event)" class="bg-surface border border-error text-error px-4 py-2 rounded font-bold text-xs hover:bg-error/10">Reject</button>
+                    </div>
+                </div>
+
+                <!-- Customer Details -->
+                <div class="bg-surface p-4 rounded-xl border border-outline-variant">
+                    <h3 class="font-medium text-on-surface mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-sm">person</span> Customer Info</h3>
+                    <div class="text-sm text-on-surface-variant space-y-1">
+                        <p><strong class="text-on-surface">Name:</strong> <span id="mName"></span></p>
+                        <p><strong class="text-on-surface">Phone:</strong> <span id="mPhone"></span></p>
+                        <p><strong class="text-on-surface">Email:</strong> <span id="mEmail"></span></p>
+                        <p><strong class="text-on-surface">Address:</strong> <span id="mAddress"></span></p>
+                        <hr class="my-2 border-outline-variant/30">
+                        <p><strong class="text-on-surface">Order Date:</strong> <span id="mOrderDate"></span></p>
+                        <p><strong class="text-on-surface">Payment Method:</strong> <span id="mPaymentMethod"></span></p>
+                        <p><strong class="text-on-surface">Payment Status:</strong> <span id="mPaymentStatus"></span></p>
+                        <p id="mUtrContainer" class="hidden mt-1"><strong class="text-on-surface text-primary">UTR:</strong> <span id="mUtr" class="font-mono bg-surface-variant px-2 py-0.5 rounded text-primary"></span></p>
+                        <p id="mScreenshotContainer" class="hidden mt-2"><a id="mScreenshot" href="#" target="_blank" class="text-primary hover:underline text-xs flex items-center gap-1"><span class="material-symbols-outlined text-sm">image</span> View Payment Screenshot</a></p>
+                    </div>
+                </div>
+
+                <!-- Items -->
+                <div class="bg-surface p-4 rounded-xl border border-outline-variant">
+                    <h3 class="font-medium text-on-surface mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-sm">shopping_bag</span> Order Items</h3>
+                    <ul id="mItems" class="space-y-2 text-sm text-on-surface-variant"></ul>
+                    <div class="mt-4 pt-2 border-t border-outline-variant flex justify-between font-bold text-on-surface">
+                        <span>Total Paid</span>
+                        <span id="mTotal" class="text-primary text-lg"></span>
+                    </div>
+                </div>
+
+                <!-- Admin Notes -->
+                <div class="bg-surface p-4 rounded-xl border border-outline-variant">
+                    <h3 class="font-medium text-on-surface mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-sm">edit_note</span> Admin Notes</h3>
+                    <textarea id="mAdminNotes" rows="3" placeholder="Private notes for staff..." class="w-full bg-surface-variant border border-outline-variant rounded-lg p-2 text-sm text-on-background focus:border-primary outline-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Right Col: Timeline & Actions -->
+            <div class="w-full md:w-80 space-y-6">
+                <!-- Status Update -->
+                <div class="bg-surface p-4 rounded-xl border border-outline-variant">
+                    <h3 class="font-medium text-on-surface mb-3 flex items-center gap-2"><span class="material-symbols-outlined text-sm">update</span> Update Status</h3>
+                    <select id="mStatusUpdate" class="w-full bg-surface-variant border border-outline-variant rounded-lg p-2 text-sm text-on-background mb-3 focus:border-primary outline-none">
+                        <option value="Verification Pending">Verification Pending</option>
+                        <option value="Payment Failed">Payment Failed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Packed">Packed</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Out For Delivery">Out For Delivery</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Refunded">Refunded</option>
+                    </select>
+                    
+                    <div class="space-y-3 mb-4">
+                        <input type="text" id="mCourier" placeholder="Courier Name" class="w-full bg-surface-variant border border-outline-variant rounded-lg p-2 text-sm text-on-background focus:border-primary outline-none">
+                        <input type="text" id="mTrackingNum" placeholder="Tracking Number" class="w-full bg-surface-variant border border-outline-variant rounded-lg p-2 text-sm text-on-background focus:border-primary outline-none">
+                        <input type="url" id="mTrackingUrl" placeholder="Tracking URL" class="w-full bg-surface-variant border border-outline-variant rounded-lg p-2 text-sm text-on-background focus:border-primary outline-none">
+                        <input type="text" id="mTimelineNote" placeholder="Timeline Note to Customer" class="w-full bg-surface-variant border border-outline-variant rounded-lg p-2 text-sm text-on-background focus:border-primary outline-none">
+                    </div>
+                    
+                    <button onclick="saveOrderUpdates()" class="w-full bg-primary hover:bg-primary-variant text-background py-2 rounded-lg font-bold transition-colors">Apply Updates</button>
+                </div>
+
+                <!-- Timeline History -->
+                <div class="bg-surface p-4 rounded-xl border border-outline-variant max-h-64 overflow-y-auto">
+                    <h3 class="font-medium text-on-surface mb-3 flex items-center gap-2"><span class="material-symbols-outlined text-sm">history</span> Live Timeline</h3>
+                    <div id="mTimeline" class="space-y-4 relative before:absolute before:inset-0 before:ml-1.5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-outline-variant before:to-transparent">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let allOrders = [];
+let currentOrder = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const user = await requireAdminAuth();
+    if (!user) return;
+    
+    fetchOrders();
+
+    document.getElementById('searchInput').addEventListener('input', renderOrders);
+    document.getElementById('statusFilter').addEventListener('change', renderOrders);
+    document.getElementById('cancellationFilter').addEventListener('change', renderOrders);
+});
+
+async function fetchOrders() {
+    try {
+        const { data, error } = await supabase
+            .from('orders')
+            .select(`
+                *,
+                order_items (
+                    quantity, price_at_time,
+                    products (name)
+                ),
+                users (full_name, phone),
+                addresses (full_address, city, state, pincode)
+            `)
+            .order('created_at', { ascending: false });
+            
+        if (error) throw error;
+        allOrders = data || [];
+        renderOrders();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load orders");
+    }
+}
+
+function renderOrders() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const status = document.getElementById('statusFilter').value;
+    const isCancellationPending = document.getElementById('cancellationFilter').checked;
+    
+    let filtered = allOrders;
+    if (search) {
+        filtered = filtered.filter(o => 
+            (o.order_number && o.order_number.toLowerCase().includes(search)) || 
+            (o.users?.full_name && o.users.full_name.toLowerCase().includes(search)) ||
+            (o.users?.phone && o.users.phone.toLowerCase().includes(search))
+        );
+    }
+    if (status) {
+        filtered = filtered.filter(o => o.status === status);
+    }
+    if (isCancellationPending) {
+        filtered = filtered.filter(o => o.cancellation_status === 'Pending');
+    }
+
+    const tbody = document.getElementById('ordersBody');
+    if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-outline">No orders found.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(o => {
+        let statusColor = 'text-outline-variant bg-surface-variant';
+        if (o.status === 'Confirmed') statusColor = 'text-info bg-info/10 border border-info/20';
+        else if (o.status === 'Delivered') statusColor = 'text-success bg-success/10 border border-success/20';
+        else if (o.status === 'Cancelled' || o.status === 'Refunded' || o.status === 'Payment Failed') statusColor = 'text-error bg-error/10 border border-error/20';
+        else if (o.status === 'Verification Pending') statusColor = 'text-primary bg-primary/10 border border-primary/20';
+        else if (o.status !== 'Pending') statusColor = 'text-primary bg-primary/10 border border-primary/20';
+
+        let payColor = o.payment_status === 'Paid' ? 'text-success' : 'text-primary-variant';
+
+        const date = new Date(o.created_at).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'});
+
+        return `
+        <tr class="hover:bg-surface-variant/30 transition-colors">
+            <td class="p-4 font-mono text-on-surface">#${o.order_number.substring(0,8)}</td>
+            <td class="p-4 text-on-surface-variant">${date}</td>
+            <td class="p-4">
+                <p class="text-on-surface font-medium">${o.users?.full_name || 'Guest'}</p>
+                <p class="text-outline text-xs mt-0.5">${o.users?.phone || ''}</p>
+            </td>
+            <td class="p-4 text-on-surface font-semibold">₹${parseFloat(o.final_total).toLocaleString('en-IN')}</td>
+            <td class="p-4 font-medium ${payColor}">${o.payment_status || 'Pending'}</td>
+            <td class="p-4"><span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest ${statusColor}">${o.status}</span></td>
+            <td class="p-4 text-right">
+                <button onclick="openModal('${o.id}')" class="bg-surface hover:bg-primary/20 border border-outline-variant text-primary px-3 py-1.5 rounded transition-colors text-xs font-bold">Manage</button>
+            </td>
+        </tr>
+        `;
+    }).join('');
+}
+
+function openModal(id) {
+    currentOrder = allOrders.find(o => o.id === id);
+    if (!currentOrder) return;
+
+    document.getElementById('modalOrderId').textContent = '#' + currentOrder.order_number.substring(0,8);
+    document.getElementById('mName').textContent = currentOrder.users?.full_name || 'N/A';
+    document.getElementById('mPhone').textContent = currentOrder.users?.phone || 'N/A';
+    document.getElementById('mEmail').textContent = currentOrder.users?.email || 'N/A';
+    document.getElementById('mAddress').textContent = currentOrder.addresses ? `${currentOrder.addresses.full_address || ''}, ${currentOrder.addresses.city || ''}, ${currentOrder.addresses.state || ''} - ${currentOrder.addresses.pincode || ''}` : 'N/A';
+    document.getElementById('mOrderDate').textContent = new Date(currentOrder.created_at).toLocaleString('en-IN');
+    document.getElementById('mPaymentMethod').textContent = currentOrder.payment_method || (currentOrder.razorpay_payment_id ? 'Razorpay' : 'COD');
+    document.getElementById('mPaymentStatus').textContent = currentOrder.payment_status || 'Pending';
+    
+    if (currentOrder.utr) {
+        document.getElementById('mUtrContainer').classList.remove('hidden');
+        document.getElementById('mUtr').textContent = currentOrder.utr;
+    } else {
+        document.getElementById('mUtrContainer').classList.add('hidden');
+    }
+    
+    if (currentOrder.screenshot_url) {
+        document.getElementById('mScreenshotContainer').classList.remove('hidden');
+        document.getElementById('mScreenshot').href = currentOrder.screenshot_url;
+    } else {
+        document.getElementById('mScreenshotContainer').classList.add('hidden');
+    }
+    
+    const verifyAlert = document.getElementById('mVerificationAlert');
+    if (currentOrder.status === 'Verification Pending' || currentOrder.payment_status === 'Verification Pending') {
+        verifyAlert.classList.remove('hidden');
+    } else {
+        verifyAlert.classList.add('hidden');
+    }
+    
+    document.getElementById('mTotal').textContent = '₹' + parseFloat(currentOrder.final_total).toLocaleString('en-IN');
+    
+    // Items
+    const itemsUl = document.getElementById('mItems');
+    if (currentOrder.order_items && currentOrder.order_items.length > 0) {
+        itemsUl.innerHTML = currentOrder.order_items.map(i => `
+            <li class="flex justify-between border-b border-outline-variant/30 pb-2">
+                <span>${i.quantity}x ${i.products?.name || 'Item'}</span>
+                <span>₹${(i.price_at_time * i.quantity).toLocaleString('en-IN')}</span>
+            </li>
+        `).join('');
+    } else {
+        itemsUl.innerHTML = '<li>No items recorded</li>';
+    }
+
+    // Editable fields
+    document.getElementById('mAdminNotes').value = currentOrder.admin_notes || '';
+    document.getElementById('mStatusUpdate').value = currentOrder.status;
+    document.getElementById('mCourier').value = currentOrder.courier_name || '';
+    document.getElementById('mTrackingNum').value = currentOrder.tracking_number || '';
+    document.getElementById('mTrackingUrl').value = currentOrder.tracking_url || '';
+    document.getElementById('mTimelineNote').value = '';
+
+    const alertEl = document.getElementById('mCancellationAlert');
+    if (currentOrder.cancellation_status === 'Pending') {
+        alertEl.classList.remove('hidden');
+        document.getElementById('mCancellationReason').textContent = currentOrder.cancellation_reason || 'No reason provided';
+    } else {
+        alertEl.classList.add('hidden');
+    }
+
+    renderTimeline();
+
+    document.getElementById('orderModal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('orderModal').classList.add('hidden');
+    currentOrder = null;
+}
+
+function renderTimeline() {
+    const tlContainer = document.getElementById('mTimeline');
+    let timeline = [];
+    try {
+        if(typeof currentOrder.timeline === 'string') timeline = JSON.parse(currentOrder.timeline);
+        else if (Array.isArray(currentOrder.timeline)) timeline = currentOrder.timeline;
+    } catch(e){}
+
+    if (timeline.length === 0) {
+        tlContainer.innerHTML = '<p class="text-xs text-outline italic">No timeline events.</p>';
+        return;
+    }
+
+    // Reverse to show newest first
+    const reversed = [...timeline].reverse();
+
+    tlContainer.innerHTML = reversed.map((t, idx) => {
+        const date = new Date(t.date).toLocaleString('en-IN', {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
+        return `
+        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+            <div class="flex items-center justify-center w-6 h-6 rounded-full border-2 border-primary bg-background shrink-0 text-primary shadow absolute left-0 -translate-x-1/2 md:translate-x-0 z-10 md:left-1/2 md:-translate-x-1/2">
+                <span class="material-symbols-outlined text-[12px]">${idx === 0 ? 'check_circle' : 'circle'}</span>
+            </div>
+            <div class="w-[calc(100%-2.5rem)] md:w-[calc(50%-2rem)] p-3 rounded-lg bg-surface-variant border border-outline-variant shadow">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-primary text-xs uppercase">${t.status}</span>
+                    <span class="text-[10px] text-outline">${date}</span>
+                </div>
+                <p class="text-xs text-on-surface-variant">${t.note || ''}</p>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+async function saveOrderUpdates() {
+    if(!currentOrder) return;
+    
+    const newStatus = document.getElementById('mStatusUpdate').value;
+    const courier = document.getElementById('mCourier').value;
+    const tracking_num = document.getElementById('mTrackingNum').value;
+    const tracking_url = document.getElementById('mTrackingUrl').value;
+    const admin_notes = document.getElementById('mAdminNotes').value;
+    const tNote = document.getElementById('mTimelineNote').value;
+
+    let timeline = [];
+    try {
+        if(typeof currentOrder.timeline === 'string') timeline = JSON.parse(currentOrder.timeline);
+        else if (Array.isArray(currentOrder.timeline)) timeline = currentOrder.timeline;
+    } catch(e){}
+
+    // If status changed or note added, push to timeline
+    if (newStatus !== currentOrder.status || tNote) {
+        timeline.push({
+            status: newStatus,
+            date: new Date().toISOString(),
+            note: tNote || `Order marked as ${newStatus}`
+        });
+    }
+
+    const payload = {
+        status: newStatus,
+        tracking_number: tracking_num,
+        timeline: timeline,
+        updated_at: new Date().toISOString()
+    };
+    
+    // Cancellation approval logic
+    if (currentOrder.cancellation_status === 'Pending') {
+        if (newStatus === 'Cancelled') {
+            payload.cancellation_status = 'Approved';
+        } else if (newStatus !== 'Pending') {
+            payload.cancellation_status = 'Rejected';
+        }
+    }
+
+    try {
+        // Reduce stock for COD orders when confirmed manually
+        if (currentOrder.status === 'Pending' && newStatus === 'Confirmed' && currentOrder.payment_method !== 'Manual UPI') {
+            if (currentOrder.order_items && currentOrder.order_items.length > 0) {
+                for (const item of currentOrder.order_items) {
+                    const { data: pData } = await supabase.from('products').select('stock').eq('id', item.product_id).single();
+                    if (pData) {
+                        await supabase.from('products').update({ stock: Math.max(0, pData.stock - item.quantity) }).eq('id', item.product_id);
+                    }
+                }
+            }
+        }
+
+        const { error } = await supabase.from('orders').update(payload).eq('id', currentOrder.id);
+        if (error) throw error;
+        
+        // Create notification
+        if (newStatus !== currentOrder.status || tNote) {
+            await supabase.from('notifications').insert({
+                user_id: currentOrder.user_id,
+                title: 'Order Status Update',
+                message: tNote || `Your order #${currentOrder.order_number.substring(0,8)} is now ${newStatus}.`,
+                type: 'Order'
+            });
+        }
+        
+        closeModal();
+        fetchOrders();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to update order: " + (err.message || err.details || JSON.stringify(err)));
+    }
+}
+
+async function approveCancellation() {
+    if(!currentOrder) return;
+    if(!confirm("Are you sure you want to approve this cancellation? The order will be cancelled and stock will be restored.")) return;
+
+    try {
+        // Restore stock
+        if (currentOrder.order_items && currentOrder.order_items.length > 0) {
+            for (const item of currentOrder.order_items) {
+                // Fetch current stock
+                const { data: pData } = await supabase.from('products').select('stock').eq('id', item.product_id).single();
+                if (pData) {
+                    await supabase.from('products').update({ stock: pData.stock + item.quantity }).eq('id', item.product_id);
+                }
+            }
+        }
+
+        let timeline = [];
+        try {
+            if(typeof currentOrder.timeline === 'string') timeline = JSON.parse(currentOrder.timeline);
+            else if (Array.isArray(currentOrder.timeline)) timeline = currentOrder.timeline;
+        } catch(e){}
+        
+        timeline.push({
+            status: 'Cancelled',
+            date: new Date().toISOString(),
+            note: 'Cancellation request approved by admin.'
+        });
+
+        const { error } = await supabase.from('orders').update({
+            status: 'Cancelled',
+            cancellation_status: 'Approved',
+            timeline: timeline,
+            updated_at: new Date().toISOString()
+        }).eq('id', currentOrder.id);
+
+        if (error) throw error;
+        
+        await supabase.from('notifications').insert({
+            user_id: currentOrder.user_id,
+            title: 'Order Cancelled',
+            message: `Your cancellation request for order #${currentOrder.order_number.substring(0,8)} has been approved.`,
+            type: 'Order'
+        });
+        
+        alert("Cancellation approved.");
+        closeModal();
+        fetchOrders();
+    } catch(err) {
+        console.error(err);
+        alert("Failed to approve cancellation.");
+    }
+}
+
+async function rejectCancellation() {
+    if(!currentOrder) return;
+    if(!confirm("Are you sure you want to reject this cancellation?")) return;
+
+    try {
+        let timeline = [];
+        try {
+            if(typeof currentOrder.timeline === 'string') timeline = JSON.parse(currentOrder.timeline);
+            else if (Array.isArray(currentOrder.timeline)) timeline = currentOrder.timeline;
+        } catch(e){}
+
+        timeline.push({
+            status: currentOrder.status,
+            date: new Date().toISOString(),
+            note: 'Cancellation request rejected by admin.'
+        });
+
+        const { error } = await supabase.from('orders').update({
+            cancellation_status: 'Rejected',
+            timeline: timeline,
+            updated_at: new Date().toISOString()
+        }).eq('id', currentOrder.id);
+
+        if (error) throw error;
+        
+        await supabase.from('notifications').insert({
+            user_id: currentOrder.user_id,
+            title: 'Cancellation Rejected',
+            message: `Your cancellation request for order #${currentOrder.order_number.substring(0,8)} was rejected.`,
+            type: 'Order'
+        });
+        
+        alert("Cancellation rejected.");
+        closeModal();
+        fetchOrders();
+    } catch(err) {
+        console.error(err);
+        alert("Failed to reject cancellation.");
+    }
+}
+
+async function approvePayment(event) {
+    if(!currentOrder) return;
+    if(!confirm("Are you sure you want to approve this payment? The order will be confirmed and stock will be reduced.")) return;
+
+    const btn = event.target;
+    const oldText = btn.innerHTML;
+    btn.innerHTML = 'Approving...';
+    btn.disabled = true;
+
+    try {
+        // Reduce stock
+        if (currentOrder.order_items && currentOrder.order_items.length > 0) {
+            for (const item of currentOrder.order_items) {
+                const { data: pData } = await supabase.from('products').select('stock').eq('id', item.product_id).single();
+                if (pData) {
+                    await supabase.from('products').update({ stock: Math.max(0, pData.stock - item.quantity) }).eq('id', item.product_id);
+                }
+            }
+        }
+
+        const { error } = await supabase.from('orders').update({
+            status: 'Confirmed',
+            payment_status: 'Paid',
+            updated_at: new Date().toISOString()
+        }).eq('id', currentOrder.id);
+
+        if (error) throw error;
+        
+        await supabase.from('notifications').insert({
+            user_id: currentOrder.user_id,
+            title: 'Payment Approved',
+            message: `Your payment for order #${currentOrder.order_number.substring(0,8)} has been verified! Order is now confirmed.`,
+            type: 'Order'
+        });
+        
+        alert("Payment approved and stock reduced.");
+        closeModal();
+        fetchOrders();
+    } catch(err) {
+        console.error(err);
+        alert("Failed to approve payment.");
+    } finally {
+        btn.innerHTML = oldText;
+        btn.disabled = false;
+    }
+}
+
+async function rejectPayment(event) {
+    if(!currentOrder) return;
+    const reason = prompt("Enter reason for rejection (e.g. Invalid UTR, Amount mismatch):");
+    if(reason === null) return;
+
+    const btn = event.target;
+    const oldText = btn.innerHTML;
+    btn.innerHTML = 'Rejecting...';
+    btn.disabled = true;
+
+    try {
+        const { error } = await supabase.from('orders').update({
+            status: 'Payment Failed',
+            payment_status: 'Rejected',
+            updated_at: new Date().toISOString()
+        }).eq('id', currentOrder.id);
+
+        if (error) throw error;
+        
+        await supabase.from('notifications').insert({
+            user_id: currentOrder.user_id,
+            title: 'Payment Rejected',
+            message: `Your payment for order #${currentOrder.order_number.substring(0,8)} was rejected. Reason: ${reason}. Please contact support.`,
+            type: 'Order'
+        });
+        
+        alert("Payment rejected.");
+        closeModal();
+        fetchOrders();
+    } catch(err) {
+        console.error(err);
+        alert("Failed to reject payment.");
+    } finally {
+        btn.innerHTML = oldText;
+        btn.disabled = false;
+    }
+}
+</script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Edit Product | PRAJCRAFT Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Quill.js for Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#d4af37",
+                        "primary-variant": "#ffe088",
+                        "background": "#121212",
+                        "surface": "#1c1b1b",
+                        "surface-variant": "#2a2828",
+                        "on-background": "#ffffff",
+                        "on-surface": "#e2e2e2",
+                        "on-surface-variant": "#c6c6c6",
+                        "outline": "#7f7663",
+                        "outline-variant": "#4d4635",
+                        "error": "#ffb3b1",
+                        "success": "#4ade80"
+                    },
+                    "fontFamily": {
+                        "headline": ["Montserrat", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { min-height: 100vh; background-color: #121212; color: #e2e2e2; }
+        .glass-panel {
+            background: rgba(28, 27, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        .tab-btn.active {
+            border-bottom-color: #d4af37;
+            color: #d4af37;
+        }
+        
+        /* Quill Dark Mode Overrides */
+        .ql-toolbar.ql-snow { border-color: #4d4635; border-radius: 0.5rem 0.5rem 0 0; }
+        .ql-container.ql-snow { border-color: #4d4635; border-radius: 0 0 0.5rem 0.5rem; min-height: 200px; color: #e2e2e2; }
+        .ql-snow .ql-stroke { stroke: #c6c6c6; }
+        .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill { fill: #c6c6c6; }
+        .ql-snow .ql-picker { color: #c6c6c6; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/admin-auth.js"></script>
+</head>
+<body class="font-body overflow-x-hidden flex flex-col md:flex-row" style="display:none;">
+
+<!-- Sidebar Navigation -->
+<aside class="w-64 glass-panel border-r border-outline-variant fixed h-full z-40 hidden md:flex flex-col">
+    <div class="h-20 flex items-center px-6 border-b border-outline-variant">
+        <h2 class="font-headline text-2xl font-extrabold tracking-widest gold-text-gradient">PRAJCRAFT</h2>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+        </a>
+        <a href="admin-orders.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">local_shipping</span>
+            Orders
+        </a>
+        <a href="admin-products.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Products
+        </a>
+        <a href="admin-categories.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">category</span>
+            Categories
+        </a>
+        <a href="admin-customers.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">group</span>
+            Customers
+        </a>
+        <a href="admin-marketing.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">campaign</span>
+            Marketing
+        </a>
+        <a href="admin-settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+        </a>
+    </nav>
+    <div class="p-4 border-t border-outline-variant">
+        <button onclick="adminLogout()" class="flex items-center gap-3 px-4 py-3 w-full text-error hover:bg-error/10 rounded-xl font-medium transition-colors">
+            <span class="material-symbols-outlined">logout</span>
+            Logout
+        </button>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 min-h-screen flex flex-col">
+        <!-- Header -->
+    <header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant py-4 px-8 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-4">
+            <button class="md:hidden text-primary" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 id="pageTitle" class="font-headline text-xl font-semibold text-on-background">Edit Product</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <span id="saveStatus" class="hidden text-sm font-medium text-primary"></span>
+            <button class="bg-primary hover:bg-primary-variant text-background px-6 py-2 rounded-lg font-bold transition-colors flex items-center gap-2 shadow-lg shadow-primary/20" onclick="saveProduct()" id="saveBtn"><span class="material-symbols-outlined">save</span> Save Product</button>
+            <button class="bg-surface-variant p-2 rounded-full border border-outline-variant text-primary hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary flex items-center justify-center text-primary font-headline font-bold">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-8 space-y-8">
+        <form id="productForm" class="max-w-6xl mx-auto space-y-8" onsubmit="event.preventDefault()">
+            
+            <!-- Tabs -->
+            <div class="flex border-b border-outline-variant mb-6 overflow-x-auto no-scrollbar">
+                <button type="button" class="tab-btn active px-6 py-3 font-medium text-sm text-on-surface-variant border-b-2 border-transparent hover:text-primary whitespace-nowrap" onclick="switchTab('general')">General Info</button>
+                <button type="button" class="tab-btn px-6 py-3 font-medium text-sm text-on-surface-variant border-b-2 border-transparent hover:text-primary whitespace-nowrap" onclick="switchTab('media')">Media</button>
+                <button type="button" class="tab-btn px-6 py-3 font-medium text-sm text-on-surface-variant border-b-2 border-transparent hover:text-primary whitespace-nowrap" onclick="switchTab('inventory')">Inventory & Variants</button>
+                <button type="button" class="tab-btn px-6 py-3 font-medium text-sm text-on-surface-variant border-b-2 border-transparent hover:text-primary whitespace-nowrap" onclick="switchTab('shipping')">Shipping</button>
+                <button type="button" class="tab-btn px-6 py-3 font-medium text-sm text-on-surface-variant border-b-2 border-transparent hover:text-primary whitespace-nowrap" onclick="switchTab('marketing')">Marketing & SEO</button>
+            </div>
+
+            <!-- TAB: GENERAL -->
+            <div id="tab-general" class="tab-content block space-y-6">
+                <div class="glass-panel rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Product Title *</label>
+                        <input type="text" id="name" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Category *</label>
+                        <select id="category_id" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Status</label>
+                        <select id="status" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                            <option value="Draft">Draft</option>
+                            <option value="Active">Active</option>
+                            <option value="Hidden">Hidden</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Short Description</label>
+                        <textarea id="short_description" rows="2" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none" placeholder="Brief summary for catalog view..."></textarea>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Highlights (One per line)</label>
+                        <textarea id="highlights" rows="4" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none" placeholder="Premium Articulation & Quality&#10;High Realistic Face Sculpt"></textarea>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Full Description</label>
+                        <!-- Quill Editor Container -->
+                        <div id="editor-container" class="bg-surface"></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <h3 class="col-span-2 font-headline text-lg font-medium text-on-surface border-b border-outline-variant pb-2">Specifications</h3>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Brand</label>
+                        <input type="text" id="brand" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Character Name</label>
+                        <input type="text" id="character_name" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Material</label>
+                        <input type="text" id="material" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <!-- Dimensions removed as requested -->
+                </div>
+            </div>
+
+            <!-- TAB: MEDIA -->
+            <div id="tab-media" class="tab-content hidden space-y-6">
+                <div class="glass-panel rounded-2xl p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-headline text-lg font-medium text-on-surface">Product Images</h3>
+                        <input type="file" id="images_upload" accept="image/*" multiple class="text-sm w-full max-w-xs">
+                    </div>
+                    <p class="text-sm text-outline mb-4">Upload files directly above, OR manually paste image URLs below (one per line). The first image will be the main image.</p>
+                    <div id="image_previews" class="flex flex-wrap gap-2 mb-4"></div>
+                    <textarea id="images_input" rows="4" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none font-mono text-sm"></textarea>
+                </div>
+                <div class="glass-panel rounded-2xl p-6">
+                    <h3 class="font-headline text-lg font-medium text-on-surface mb-4">Product Video</h3>
+                    <input type="file" id="video_upload" accept="video/mp4,video/webm" class="mb-4 text-sm w-full">
+                    <p class="text-sm text-outline mb-2">Or paste a URL:</p>
+                    <input type="url" id="video_url" placeholder="https://youtube.com/..." class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                </div>
+            </div>
+
+            <!-- TAB: INVENTORY & VARIANTS -->
+            <div id="tab-inventory" class="tab-content hidden space-y-6">
+                <div class="glass-panel rounded-2xl p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <h3 class="col-span-3 font-headline text-lg font-medium text-on-surface border-b border-outline-variant pb-2">Base Pricing & Inventory</h3>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Regular Price (MRP) *</label>
+                        <input type="number" step="0.01" id="price" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Selling Price</label>
+                        <input type="number" step="0.01" id="discount_price" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Stock Quantity</label>
+                        <input type="number" id="stock" value="0" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">SKU</label>
+                        <input type="text" id="sku" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Barcode (ISBN, UPC, GTIN)</label>
+                        <input type="text" id="barcode" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Out of Stock Behavior</label>
+                        <select id="out_of_stock_behavior" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                            <option value="show_badge">Show "Out of Stock" Badge</option>
+                            <option value="hide">Hide Product Automatically</option>
+                            <option value="allow_backorder">Allow Backorders</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-headline text-lg font-medium text-on-surface">Variants (Sizes, Colors)</h3>
+                        <button type="button" onclick="addVariantRow()" class="text-sm bg-surface hover:bg-surface-variant border border-outline-variant px-3 py-1.5 rounded-lg text-primary transition-colors">+ Add Variant</button>
+                    </div>
+                    <p class="text-sm text-outline mb-4">If variants are provided, customers must select one before purchasing. The base price will be overwritten by variant prices.</p>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap" id="variantsTable">
+                            <thead class="bg-surface border-b border-outline-variant text-outline">
+                                <tr>
+                                    <th class="p-3 font-medium">Variant Name (e.g. 4 inch)</th>
+                                    <th class="p-3 font-medium">SKU</th>
+                                    <th class="p-3 font-medium">MRP (Regular Price)</th>
+                                    <th class="p-3 font-medium">Offer Price</th>
+                                    <th class="p-3 font-medium">Stock</th>
+                                    <th class="p-3 font-medium">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="variantsBody" class="divide-y divide-outline-variant/50">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: SHIPPING -->
+            <div id="tab-shipping" class="tab-content hidden space-y-6">
+                <div class="glass-panel rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Weight removed as requested -->
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Packaging Type</label>
+                        <input type="text" id="shipping_packaging_type" placeholder="e.g. Bubble wrap, Wooden Box" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Estimated Delivery Days</label>
+                        <input type="number" id="shipping_delivery_days" value="7" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Dispatch Time</label>
+                        <input type="text" id="shipping_dispatch_time" placeholder="e.g. Ships within 24 hours" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Ships From</label>
+                        <input type="text" id="shipping_ships_from" placeholder="e.g. Vaikuntha Warehouse" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    
+                    <h3 class="col-span-1 md:col-span-2 font-headline text-lg font-medium text-on-surface border-b border-outline-variant pb-2 mt-4">Returns & Refunds</h3>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Return Condition / Policy</label>
+                        <select id="return_policy" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                            <option value="Replacement Only">Replacement Only</option>
+                            <option value="Refund or Replacement">Refund or Replacement</option>
+                            <option value="Non-Returnable">Non-Returnable</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Return Window (Days)</label>
+                        <input type="number" id="return_days" value="7" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex items-center gap-2 pt-4">
+                        <input type="checkbox" id="shipping_is_free" checked class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-5 w-5">
+                        <label for="shipping_is_free" class="text-sm font-medium text-on-surface-variant">Free Shipping</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: MARKETING & SEO -->
+            <div id="tab-marketing" class="tab-content hidden space-y-6">
+                <div class="glass-panel rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <h3 class="col-span-2 font-headline text-lg font-medium text-on-surface border-b border-outline-variant pb-2">Marketing Labels</h3>
+                    
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="is_trending" class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-5 w-5">
+                        <label for="is_trending" class="text-sm font-medium text-on-surface-variant">Trending</label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="is_bestseller" class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-5 w-5">
+                        <label for="is_bestseller" class="text-sm font-medium text-on-surface-variant">Best Seller</label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="is_limited_edition" class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-5 w-5">
+                        <label for="is_limited_edition" class="text-sm font-medium text-on-surface-variant">Limited Edition</label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="is_new_arrival" class="rounded border-outline-variant bg-surface text-primary focus:ring-primary h-5 w-5">
+                        <label for="is_new_arrival" class="text-sm font-medium text-on-surface-variant">New Arrival</label>
+                    </div>
+
+                    <div class="col-span-2 pt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface-variant mb-1">Manual Sold Count</label>
+                            <input type="number" id="manual_sold_count" value="0" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface-variant mb-1">Manual Rating (e.g. 4.8)</label>
+                            <input type="number" step="0.1" id="manual_rating" value="0" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface-variant mb-1">Manual Reviews Count</label>
+                            <input type="number" id="manual_reviews_count" value="0" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                        </div>
+                        <p class="col-span-full text-xs text-outline italic">Leave at 0 to use auto-generated or real data.</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-6 grid grid-cols-1 gap-6">
+                    <h3 class="font-headline text-lg font-medium text-on-surface border-b border-outline-variant pb-2">Search Engine Optimization (SEO)</h3>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">SEO Title</label>
+                        <input type="text" id="seo_title" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Meta Description</label>
+                        <textarea id="seo_description" rows="3" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Keywords (Comma separated)</label>
+                        <input type="text" id="seo_keywords" class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-on-surface-variant mb-1">URL Slug (e.g. my-product-name)</label>
+                        <input type="text" id="slug" required class="w-full bg-surface border border-outline-variant rounded-lg p-3 text-on-background focus:border-primary outline-none font-mono">
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</main>
+
+<script>
+let quill;
+let currentProductId = null;
+let variantsData = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const user = await requireAdminAuth();
+    if (!user) return;
+
+    // Init Quill Rich Text
+    quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link', 'image', 'video'],
+                ['clean']
+            ]
+        }
+    });
+
+    // Auto-generate slug from title
+    document.getElementById('name').addEventListener('blur', (e) => {
+        const slugField = document.getElementById('slug');
+        if(!slugField.value && e.target.value) {
+            slugField.value = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+        }
+    });
+
+    await loadCategories();
+
+    // Check if Editing existing
+    const urlParams = new URLSearchParams(window.location.search);
+    currentProductId = urlParams.get('id');
+
+    if (currentProductId) {
+        document.getElementById('pageTitle').textContent = "Edit Product";
+        await fetchProductDetails();
+    } else {
+        document.getElementById('pageTitle').textContent = "Add New Product";
+        // Setup initial blank variant row just in case
+    }
+});
+
+function renderImagePreviews() {
+    const previewContainer = document.getElementById('image_previews');
+    previewContainer.innerHTML = '';
+    const imgUrls = document.getElementById('images_input').value.split('\n').map(u => u.trim()).filter(u => u);
+    
+    // Process URLs from textarea
+    imgUrls.forEach((url, i) => {
+        const div = document.createElement('div');
+        div.className = 'w-24 h-24 bg-surface border border-outline-variant rounded-lg overflow-hidden relative shrink-0 group';
+        div.innerHTML = `<img src="${url}" class="w-full h-full object-cover">
+                         <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-[10px] text-white text-center">${i === 0 ? 'Main' : `Img ${i+1}`}</div>
+                         <button type="button" onclick="removeImageUrl(${i})" class="absolute top-1 right-1 bg-error text-white rounded-full p-1 opacity-100 flex items-center justify-center shadow-lg">
+                            <span class="material-symbols-outlined text-[14px]">close</span>
+                         </button>`;
+        previewContainer.appendChild(div);
+    });
+
+    // Process files from file input
+    const fileInput = document.getElementById('images_upload');
+    if (fileInput && fileInput.files) {
+        Array.from(fileInput.files).forEach((file, i) => {
+            const div = document.createElement('div');
+            div.className = 'w-24 h-24 bg-surface border border-outline-variant rounded-lg overflow-hidden relative shrink-0 group';
+            const url = URL.createObjectURL(file);
+            div.innerHTML = `<img src="${url}" class="w-full h-full object-cover">
+                             <div class="absolute bottom-0 left-0 right-0 bg-primary text-[10px] text-white text-center">New Upload</div>
+                             <button type="button" onclick="removeImageUpload(${i})" class="absolute top-1 right-1 bg-error text-white rounded-full p-1 opacity-100 flex items-center justify-center shadow-lg">
+                                <span class="material-symbols-outlined text-[14px]">close</span>
+                             </button>`;
+            previewContainer.appendChild(div);
+        });
+    }
+}
+
+function removeImageUrl(index) {
+    const input = document.getElementById('images_input');
+    const imgUrls = input.value.split('\n').map(u => u.trim()).filter(u => u);
+    imgUrls.splice(index, 1);
+    input.value = imgUrls.join('\n');
+    renderImagePreviews();
+}
+
+function removeImageUpload(index) {
+    const fileInput = document.getElementById('images_upload');
+    const dt = new DataTransfer();
+    const files = fileInput.files;
+    for (let i = 0; i < files.length; i++) {
+        if (i !== index) {
+            dt.items.add(files[i]);
+        }
+    }
+    fileInput.files = dt.files;
+    renderImagePreviews();
+}
+
+// Add event listeners to trigger previews on change
+document.addEventListener('DOMContentLoaded', () => {
+    const imagesInput = document.getElementById('images_input');
+    const imagesUpload = document.getElementById('images_upload');
+    if(imagesInput) imagesInput.addEventListener('input', renderImagePreviews);
+    if(imagesUpload) imagesUpload.addEventListener('change', renderImagePreviews);
+});
+
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+    
+    event.currentTarget.classList.add('active');
+    document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+}
+
+async function loadCategories() {
+    const { data, error } = await window.supabase.from('categories').select('id, name').order('name');
+    if (data) {
+        const select = document.getElementById('category_id');
+        data.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.name;
+            select.appendChild(opt);
+        });
+    }
+}
+
+async function fetchProductDetails() {
+    try {
+        const { data, error } = await window.supabase.from('products').select('*').eq('id', currentProductId).single();
+        if (error) throw error;
+
+        // General
+        document.getElementById('name').value = data.name || '';
+        document.getElementById('category_id').value = data.category_id || '';
+        document.getElementById('status').value = data.status || 'Draft';
+        document.getElementById('short_description').value = data.short_description || '';
+        
+        let desc = data.description || '';
+        // Extract variants JSON from legacy format if present
+        const variantsMatch = desc.match(/<div id="product-variants-data"[^>]*>(.*?)<\/div>/);
+        if (variantsMatch) {
+            try {
+                variantsData = JSON.parse(variantsMatch[1]);
+                desc = desc.replace(variantsMatch[0], '');
+            } catch(e){}
+        }
+
+        // Extract highlights JSON if present
+        const highlightsMatch = desc.match(/<div id="product-highlights-data"[^>]*>(.*?)<\/div>/);
+        if (highlightsMatch) {
+            try {
+                const highlightsData = JSON.parse(highlightsMatch[1]);
+                document.getElementById('highlights').value = highlightsData.join('\n');
+                desc = desc.replace(highlightsMatch[0], '');
+            } catch(e){}
+        }
+
+        // Extract return policy JSON if present
+        const returnsMatch = desc.match(/<div id="product-returns-data"[^>]*>(.*?)<\/div>/);
+        if (returnsMatch) {
+            try {
+                const returnsData = JSON.parse(returnsMatch[1]);
+                if (returnsData.policy) document.getElementById('return_policy').value = returnsData.policy;
+                if (returnsData.days !== undefined) document.getElementById('return_days').value = returnsData.days;
+                desc = desc.replace(returnsMatch[0], '');
+            } catch(e){}
+        }
+
+        // Extract product meta data JSON if present
+        const metaMatch = desc.match(/<div id="product-meta-data"[^>]*>(.*?)<\/div>/);
+        if (metaMatch) {
+            try {
+                const metaData = JSON.parse(metaMatch[1]);
+                document.getElementById('short_description').value = metaData.short_description || '';
+                document.getElementById('brand').value = metaData.brand || '';
+                document.getElementById('character_name').value = metaData.character_name || '';
+                document.getElementById('material').value = metaData.material || '';
+                document.getElementById('barcode').value = metaData.barcode || '';
+                document.getElementById('out_of_stock_behavior').value = metaData.out_of_stock_behavior || 'show_badge';
+                document.getElementById('shipping_packaging_type').value = metaData.shipping_packaging_type || '';
+                document.getElementById('shipping_delivery_days').value = metaData.shipping_delivery_days || 7;
+                document.getElementById('shipping_dispatch_time').value = metaData.shipping_dispatch_time || '';
+                document.getElementById('shipping_ships_from').value = metaData.shipping_ships_from || '';
+                document.getElementById('shipping_is_free').checked = metaData.shipping_is_free ?? true;
+                document.getElementById('is_trending').checked = metaData.is_trending || false;
+                document.getElementById('is_limited_edition').checked = metaData.is_limited_edition || false;
+                document.getElementById('manual_sold_count').value = metaData.manual_sold_count || 0;
+                document.getElementById('manual_rating').value = metaData.manual_rating || 0;
+                document.getElementById('manual_reviews_count').value = metaData.manual_reviews_count || 0;
+                document.getElementById('seo_title').value = metaData.seo_title || '';
+                document.getElementById('seo_description').value = metaData.seo_description || '';
+                document.getElementById('seo_keywords').value = metaData.seo_keywords || '';
+                desc = desc.replace(metaMatch[0], '');
+            } catch(e){}
+        }
+
+        quill.root.innerHTML = desc;
+
+        // Media
+        if (data.images && data.images.length > 0) {
+            document.getElementById('images_input').value = data.images.join('\n');
+            renderImagePreviews();
+        }
+        if (data.videos && data.videos.length > 0) {
+            document.getElementById('video_url').value = data.videos[0];
+        }
+
+        // Inventory
+        document.getElementById('price').value = data.price || '';
+        document.getElementById('discount_price').value = data.discount_price || '';
+        document.getElementById('stock').value = data.stock || '0';
+        document.getElementById('sku').value = data.sku || '';
+
+        // Render variants
+        if(variantsData.length > 0) {
+            variantsData.forEach(v => addVariantRow(v));
+        }
+
+        // Marketing
+        document.getElementById('is_bestseller').checked = data.is_bestseller || false;
+        document.getElementById('is_new_arrival').checked = data.is_new_arrival || false;
+        document.getElementById('slug').value = data.slug || '';
+
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load product.");
+    }
+}
+
+function addVariantRow(v = null) {
+    const tbody = document.getElementById('variantsBody');
+    const tr = document.createElement('tr');
+    tr.className = "variant-row";
+    tr.innerHTML = `
+        <td class="p-2"><input type="text" class="v-size w-full bg-surface border border-outline-variant rounded p-2 focus:border-primary outline-none" placeholder="e.g. 6 inch" value="${v ? v.size : ''}"></td>
+        <td class="p-2"><input type="text" class="v-sku w-full bg-surface border border-outline-variant rounded p-2 focus:border-primary outline-none" value="${v && v.sku ? v.sku : ''}"></td>
+        <td class="p-2"><input type="number" step="0.01" class="v-mrp w-full bg-surface border border-outline-variant rounded p-2 focus:border-primary outline-none" placeholder="MRP" value="${v && v.mrp ? v.mrp : (v ? v.price : '')}"></td>
+        <td class="p-2"><input type="number" step="0.01" class="v-price w-full bg-surface border border-outline-variant rounded p-2 focus:border-primary outline-none" placeholder="Selling" value="${v ? v.price : ''}"></td>
+        <td class="p-2"><input type="number" class="v-stock w-full bg-surface border border-outline-variant rounded p-2 focus:border-primary outline-none" value="${v && v.stock ? v.stock : 0}"></td>
+        <td class="p-2"><button type="button" onclick="this.closest('tr').remove()" class="text-error hover:text-error/80"><span class="material-symbols-outlined">delete</span></button></td>
+    `;
+    tbody.appendChild(tr);
+}
+
+function gatherVariants() {
+    const rows = document.querySelectorAll('.variant-row');
+    const out = [];
+    rows.forEach(r => {
+        const size = r.querySelector('.v-size').value.trim();
+        const mrp = r.querySelector('.v-mrp').value;
+        const price = r.querySelector('.v-price').value;
+        const stock = r.querySelector('.v-stock').value;
+        const sku = r.querySelector('.v-sku').value;
+        if(size && price) {
+            out.push({ size, mrp: parseFloat(mrp) || parseFloat(price), price: parseFloat(price), stock: parseInt(stock), sku });
+        }
+    });
+    return out;
+}
+
+async function saveProduct() {
+    const btnStatus = document.getElementById('saveStatus');
+    btnStatus.classList.remove('hidden');
+    btnStatus.textContent = "Saving...";
+    
+    try {
+        const form = document.getElementById('productForm');
+        // Validation removed to allow saving whatever the admin fills
+        
+        // Process Images
+        const imgRaw = document.getElementById('images_input').value;
+        const images = imgRaw.split('\n').map(l => l.trim()).filter(l => l);
+        
+        const imageFiles = document.getElementById('images_upload').files;
+        if (imageFiles.length > 0) {
+            btnStatus.textContent = "Uploading images...";
+            for (let i = 0; i < imageFiles.length; i++) {
+                const url = await uploadMedia(imageFiles[i]);
+                if (url) images.push(url);
+            }
+        }
+        
+        // Process Videos
+        let vidUrl = document.getElementById('video_url').value;
+        const videoFile = document.getElementById('video_upload').files[0];
+        if (videoFile) {
+            btnStatus.textContent = "Uploading video...";
+            vidUrl = await uploadMedia(videoFile);
+        }
+        const videos = vidUrl ? [vidUrl] : [];
+
+        // Build Variants JSON embed for description (legacy support until fully migrated to product_variants table)
+        const vs = gatherVariants();
+        let finalDesc = quill.root.innerHTML;
+        if (vs.length > 0) {
+            finalDesc += `<div id="product-variants-data" style="display:none;">${JSON.stringify(vs)}</div>`;
+        }
+        
+        // Build Highlights JSON embed
+        const highlightsText = document.getElementById('highlights').value.trim();
+        if (highlightsText) {
+            const h_list = highlightsText.split('\n').map(h => h.trim()).filter(h => h);
+            if (h_list.length > 0) {
+                finalDesc += `<div id="product-highlights-data" style="display:none;">${JSON.stringify(h_list)}</div>`;
+            }
+        }
+        
+        // Build Returns JSON embed
+        const returnPolicy = document.getElementById('return_policy').value;
+        const returnDays = parseInt(document.getElementById('return_days').value) || 0;
+        finalDesc += `<div id="product-returns-data" style="display:none;">${JSON.stringify({policy: returnPolicy, days: returnDays})}</div>`;
+
+        const metaData = {
+            short_description: document.getElementById('short_description').value,
+            brand: document.getElementById('brand').value,
+            character_name: document.getElementById('character_name').value,
+            material: document.getElementById('material').value,
+            barcode: document.getElementById('barcode').value,
+            out_of_stock_behavior: document.getElementById('out_of_stock_behavior').value,
+            shipping_packaging_type: document.getElementById('shipping_packaging_type').value,
+            shipping_delivery_days: parseInt(document.getElementById('shipping_delivery_days').value) || 7,
+            shipping_dispatch_time: document.getElementById('shipping_dispatch_time').value,
+            shipping_ships_from: document.getElementById('shipping_ships_from').value,
+            shipping_is_free: document.getElementById('shipping_is_free').checked,
+            is_trending: document.getElementById('is_trending').checked,
+            is_limited_edition: document.getElementById('is_limited_edition').checked,
+            manual_sold_count: parseInt(document.getElementById('manual_sold_count').value) || 0,
+            manual_rating: parseFloat(document.getElementById('manual_rating').value) || 0,
+            manual_reviews_count: parseInt(document.getElementById('manual_reviews_count').value) || 0,
+            seo_title: document.getElementById('seo_title').value,
+            seo_description: document.getElementById('seo_description').value,
+            seo_keywords: document.getElementById('seo_keywords').value
+        };
+        finalDesc += `<div id="product-meta-data" style="display:none;">${JSON.stringify(metaData)}</div>`;
+
+        const payload = {
+            name: document.getElementById('name').value,
+            slug: document.getElementById('slug').value,
+            category_id: document.getElementById('category_id').value,
+            status: document.getElementById('status').value,
+            description: finalDesc,
+            price: parseFloat(document.getElementById('price').value) || 0,
+            discount_price: document.getElementById('discount_price').value ? parseFloat(document.getElementById('discount_price').value) : null,
+            stock: parseInt(document.getElementById('stock').value) || 0,
+            sku: document.getElementById('sku').value,
+            images: images,
+            videos: videos,
+            is_bestseller: document.getElementById('is_bestseller').checked,
+            is_new_arrival: document.getElementById('is_new_arrival').checked
+        };
+
+        let result;
+        if (currentProductId) {
+            result = await window.supabase.from('products').update(payload).eq('id', currentProductId);
+        } else {
+            result = await window.supabase.from('products').insert([payload]);
+        }
+
+        if (result.error) throw result.error;
+
+        btnStatus.textContent = "Saved successfully!";
+        setTimeout(() => btnStatus.classList.add('hidden'), 3000);
+        
+        if (!currentProductId) {
+            window.location.href = "admin-products.html";
+        }
+
+    } catch (err) {
+        console.error(err);
+        btnStatus.textContent = "Error saving product!";
+        btnStatus.classList.add('text-error');
+        alert(err.message || "An error occurred");
+    }
+}
+</script>
+</body>
+</html>
+
+
+
+
