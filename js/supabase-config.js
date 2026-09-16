@@ -1,4 +1,4 @@
-const SUPABASE_URL = 'https://sbhgubonxoogtjiuslk.supabase.co';
+const SUPABASE_URL = 'https://sbhgubonxoogtjtiuslk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiaGd1Ym9ueG9vZ3RqdGl1c2xrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1MzU5ODksImV4cCI6MjEwNTExMTk4OX0.cewT0RcWI95207kvsXtgjqSUN4lssYr4hCAfVY6wG3k';
 
 // Environment Variables
