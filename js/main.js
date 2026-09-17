@@ -1,13 +1,13 @@
 // Global configuration and utilities
 // Utility to generate consistent fake stats for products lacking real data
-window.getConsistentProductStats = function(product, realReviews = []) {
+window.getConsistentProductStats = function (product, realReviews = []) {
     let hash = 0;
     const strId = product.id || '';
     for (let i = 0; i < strId.length; i++) {
         hash = strId.charCodeAt(i) + ((hash << 5) - hash);
     }
     hash = Math.abs(hash);
-    
+
     const fakeRating = (4.5 + (hash % 5) * 0.1).toFixed(1);
     const fakeReviews = 15 + (hash % 85);
     const fakeSold = 50 + (hash % 450);
@@ -38,10 +38,10 @@ window.getConsistentProductStats = function(product, realReviews = []) {
                 if (meta.manual_sold_count > 0) finalSoldCount = meta.manual_sold_count;
                 if (meta.manual_rating > 0) finalRating = meta.manual_rating;
                 if (meta.manual_reviews_count > 0) finalReviewsCount = meta.manual_reviews_count;
-            } catch(e) {}
+            } catch (e) { }
         }
     }
-    
+
     if (product.sold_count > 0) finalSoldCount = product.sold_count;
 
     return { rating: finalRating, reviewsCount: finalReviewsCount, soldCount: finalSoldCount };
@@ -53,7 +53,7 @@ try {
     const saved = localStorage.getItem('prajcraft_cart');
     cart = saved ? JSON.parse(saved) : [];
     if (!Array.isArray(cart)) cart = [];
-} catch(e) {
+} catch (e) {
     cart = [];
 }
 
@@ -61,19 +61,19 @@ function updateCartBadge() {
     try {
         const counts = document.querySelectorAll('.badge');
         const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        
+
         counts.forEach(c => {
             if (c.id === 'bottomNavCartBadge' || c.id === 'topNavCartBadge' || c.parentElement.classList.contains('cart-btn')) {
                 c.textContent = totalItems;
                 c.style.display = totalItems > 0 ? 'inline-block' : 'none';
             }
         });
-    } catch(err) {
+    } catch (err) {
         console.error("Cart badge error:", err);
     }
 }
 
-window.addToCart = function(product) {
+window.addToCart = function (product) {
     const existing = cart.find(i => i.id === product.id);
     if (existing) {
         existing.quantity += 1;
@@ -82,7 +82,7 @@ window.addToCart = function(product) {
     }
     localStorage.setItem('prajcraft_cart', JSON.stringify(cart));
     updateCartBadge();
-    
+
     // Simple visual feedback
     const btn = event.currentTarget;
     if (btn) {
@@ -99,22 +99,22 @@ window.addToCart = function(product) {
 }
 
 // Format Currency
-window.formatPrice = function(amount) {
+window.formatPrice = function (amount) {
     return '₹' + parseFloat(amount).toLocaleString('en-IN');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     updateCartBadge();
-    
+
     // Link header cart button
     const cartBtns = document.querySelectorAll('.cart-btn');
     cartBtns.forEach(btn => btn.addEventListener('click', () => window.location.href = 'cart.html'));
-    
+
     // If on index.html
     if (document.getElementById('heroBannerContainer')) {
         loadHomeData();
     }
-    
+
     // If on product.html
     if (document.getElementById('productTitle')) {
         loadProductData();
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('categoryProductsGrid')) {
         loadCategoryData();
     }
-    
+
     // If on cart.html
     if (document.getElementById('cartItemsContainer')) {
         loadCartData();
@@ -136,7 +136,7 @@ let cachedHomeProducts = [];
 async function loadHomeData() {
     try {
         console.log("[DEBUG] loadHomeData started");
-        
+
         // Fetch all data in parallel
         const results = await Promise.all([
             window.supabase.from('banners').select('*').eq('is_active', true).eq('position', 'Hero').order('sort_order'),
@@ -144,7 +144,7 @@ async function loadHomeData() {
             window.supabase.from('products').select('*, categories(name), reviews(rating, status)').eq('status', 'Active').eq('is_bestseller', true).limit(4),
             window.supabase.from('products').select('*, categories(name), reviews(rating, status)').eq('status', 'Active').order('created_at', { ascending: false })
         ]);
-        
+
         const [bannersRes, categoriesRes, hotDealsRes, allProductsRes] = results;
 
         console.log("[DEBUG] loadHomeData - Banners Query:", bannersRes);
@@ -166,11 +166,11 @@ async function loadHomeData() {
                     ${c.name}
                 </button>
             `).join('');
-            
+
             const allBtn = `<button onclick="filterHomeProducts('all')" id="cat-btn-all" class="cat-filter-btn active flex-shrink-0 px-5 py-2 rounded-full border border-primary bg-primary text-on-primary font-label-md text-sm transition-colors">All</button>`;
             filterGrid.innerHTML = allBtn + catHtml;
         }
-            
+
         if (hotDeals) {
             const grid = document.getElementById('bestsellersGrid');
             grid.innerHTML = hotDeals.map(p => {
@@ -182,13 +182,13 @@ async function loadHomeData() {
                             const parsed = JSON.parse(p.images);
                             if (Array.isArray(parsed) && parsed.length > 0) img = parsed[0];
                             else img = p.images;
-                        } catch(e) { img = p.images; }
+                        } catch (e) { img = p.images; }
                     }
                 }
-                
-                const pObj = JSON.stringify({id: p.id, name: p.name, price: p.discount_price || p.price, image: img}).replace(/"/g, '&quot;');
+
+                const pObj = JSON.stringify({ id: p.id, name: p.name, price: p.discount_price || p.price, image: img }).replace(/"/g, '&quot;');
                 const categoryName = p.categories ? p.categories.name : 'COLLECTIBLE';
-                
+
                 return `
                 <div class="min-w-[160px] w-40 bg-white rounded-lg overflow-hidden border border-outline-variant shadow-sm flex flex-col relative" onclick="window.location.href='product.html?id=${p.id}'" style="cursor:pointer;">
                     <div class="h-44 w-full relative">
@@ -220,13 +220,13 @@ async function loadHomeData() {
     }
 }
 
-window.filterHomeProducts = function(categoryId) {
+window.filterHomeProducts = function (categoryId) {
     // Update active class on buttons
     document.querySelectorAll('.cat-filter-btn').forEach(btn => {
         btn.classList.remove('active', 'bg-primary', 'text-on-primary', 'border-primary');
         btn.classList.add('bg-surface', 'text-on-surface-variant', 'border-outline-variant');
     });
-    
+
     const activeBtn = document.getElementById(`cat-btn-${categoryId}`);
     if (activeBtn) {
         activeBtn.classList.remove('bg-surface', 'text-on-surface-variant', 'border-outline-variant');
@@ -248,7 +248,7 @@ function renderHomeProductsGrid(products) {
         grid.innerHTML = '<div class="col-span-2 text-center py-8 text-sm text-outline-variant">No products found for this category.</div>';
         return;
     }
-    
+
     grid.innerHTML = products.map(p => {
         let img = 'https://via.placeholder.com/300';
         if (p.images) {
@@ -258,22 +258,22 @@ function renderHomeProductsGrid(products) {
                     const parsed = JSON.parse(p.images);
                     if (Array.isArray(parsed) && parsed.length > 0) img = parsed[0];
                     else img = p.images;
-                } catch(e) { img = p.images; }
+                } catch (e) { img = p.images; }
             }
         }
-        
-        const pObj = JSON.stringify({id: p.id, name: p.name, price: p.discount_price || p.price, image: img}).replace(/"/g, '&quot;');
+
+        const pObj = JSON.stringify({ id: p.id, name: p.name, price: p.discount_price || p.price, image: img }).replace(/"/g, '&quot;');
         const categoryName = p.categories ? p.categories.name : 'COLLECTIBLE';
-        
+
         const stats = window.getConsistentProductStats(p);
-        
+
         const ratingHtml = `
         <div class="flex items-center gap-1 mt-0.5 text-[10px] text-on-surface-variant">
             <span class="material-symbols-outlined text-[#d4af37] text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
             <span class="font-bold">${stats.rating}</span>
             <span>(${stats.reviewsCount})</span>
         </div>`;
-        
+
         return `
         <div class="bg-white rounded-lg overflow-hidden border border-outline-variant shadow-sm flex flex-col relative" onclick="window.location.href='product.html?id=${p.id}'" style="cursor:pointer;">
             <div class="h-44 w-full relative">
@@ -306,7 +306,7 @@ async function loadCategoryData() {
         const title = document.getElementById('catTitle');
 
         let query = window.supabase.from('products').select('*, categories(name), reviews(rating, status)').eq('status', 'Active');
-        
+
         if (categoryId) {
             query = query.eq('category_id', categoryId);
             // Fetch category name for title
@@ -320,7 +320,7 @@ async function loadCategoryData() {
         }
 
         const { data: products } = await query;
-        
+
         if (!products || products.length === 0) {
             grid.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-muted); grid-column: 1 / -1;">No products found.</div>';
             return;
@@ -335,14 +335,14 @@ async function loadCategoryData() {
                         const parsed = JSON.parse(p.images);
                         if (Array.isArray(parsed) && parsed.length > 0) img = parsed[0];
                         else img = p.images;
-                    } catch(e) { img = p.images; }
+                    } catch (e) { img = p.images; }
                 }
             }
 
-            const pObj = JSON.stringify({id: p.id, name: p.name, price: p.discount_price || p.price, image: img}).replace(/"/g, '&quot;');
-            
+            const pObj = JSON.stringify({ id: p.id, name: p.name, price: p.discount_price || p.price, image: img }).replace(/"/g, '&quot;');
+
             const stats = window.getConsistentProductStats(p);
-            
+
             return `
             <div class="bg-white rounded-[24px] overflow-hidden shadow-[0_8px_30px_rgba(255,46,147,0.08)] group cursor-pointer" onclick="window.location.href='product.html?id=${p.id}'">
                 <div class="relative aspect-square">
@@ -390,12 +390,12 @@ async function loadProductData() {
             .single();
 
         console.log("[DEBUG] loadProductData - Product Query:", productRes);
-        
+
         const p = productRes ? productRes.data : null;
         const pErr = productRes ? productRes.error : null;
 
         if (pErr) console.error("Product fetch error:", pErr);
-        
+
         if (!p) {
             document.getElementById('productTitle').textContent = "Product Not Found";
             document.getElementById('productDescription').innerHTML = "This product may have been removed or is currently unavailable.";
@@ -416,32 +416,32 @@ async function loadProductData() {
                 .eq('product_id', productId)
                 .eq('status', 'Approved')
                 .order('created_at', { ascending: false });
-                
+
             if (rErr) console.error("Reviews fetch error:", rErr);
             if (rData) reviews = rData;
-        } catch(e) {
+        } catch (e) {
             console.error("Reviews exception:", e);
         }
 
         document.getElementById('productTitle').textContent = p.name;
         document.title = p.name + ' - PRAJCRAFT';
         document.getElementById('productCategory').textContent = 'Product SKU: ' + (p.sku || 'N/A');
-        
-        const priceHtml = p.discount_price 
+
+        const priceHtml = p.discount_price
             ? `<span class="text-3xl font-extrabold text-primary">${formatPrice(p.discount_price)}</span> <span class="text-on-surface-variant line-through text-body-md" style="margin-left: 12px;">${formatPrice(p.price)}</span> <span class="bg-tertiary-container text-on-tertiary-container text-label-md px-2 py-1 rounded-full font-bold" style="margin-left: 12px;">SALE</span>`
             : `<span class="font-extrabold text-title-md text-primary">${formatPrice(p.price)}</span>`;
         document.getElementById('productPrice').innerHTML = priceHtml;
 
         let descriptionHTML = p.description || 'No description available.';
         let variants = null;
-        
+
         // Extract variants JSON if exists
         const variantsMatch = descriptionHTML.match(/<div id="product-variants-data"[^>]*>(.*?)<\/div>/);
         if (variantsMatch) {
             try {
                 variants = JSON.parse(variantsMatch[1]);
                 descriptionHTML = descriptionHTML.replace(variantsMatch[0], '');
-            } catch(e) { console.error("Error parsing variants", e); }
+            } catch (e) { console.error("Error parsing variants", e); }
         }
 
         let highlightsHTML = '<li>Premium craftsmanship.</li>';
@@ -473,7 +473,7 @@ async function loadProductData() {
                 descriptionHTML = descriptionHTML.replace(returnsMatch[0], '');
             } catch (e) { console.error("Error parsing returns", e); }
         }
-        
+
         const returnsSection = document.getElementById('returnsSection');
         const returnsPolicyEl = document.getElementById('productReturnPolicy');
         if (returnsSection && returnsPolicyEl && returnPolicyHTML) {
@@ -484,7 +484,7 @@ async function loadProductData() {
         }
 
         document.getElementById('productDescription').innerHTML = descriptionHTML;
-        
+
         let mainImg = 'https://via.placeholder.com/600';
         let imagesArr = [];
         if (p.images) {
@@ -494,18 +494,18 @@ async function loadProductData() {
                     const parsed = JSON.parse(p.images);
                     if (Array.isArray(parsed)) imagesArr = parsed;
                     else imagesArr = [p.images];
-                } catch(e) { imagesArr = [p.images]; }
+                } catch (e) { imagesArr = [p.images]; }
             }
         }
-        
+
         if (imagesArr.length > 0) {
             mainImg = imagesArr[0];
             document.getElementById('productMainImage').src = mainImg;
-            
+
             const gallery = document.getElementById('productGallery');
             if (gallery && imagesArr.length > 1) {
                 gallery.innerHTML = imagesArr.map((imgUrl, i) => `
-                    <div class="shrink-0 w-20 h-20 ${i===0 ? 'gold-border-gradient rounded-lg border-2 border-primary opacity-100' : 'rounded-lg opacity-60 hover:opacity-100 transition-opacity'} overflow-hidden cursor-pointer" onclick="document.getElementById('productMainImage').src='${imgUrl}'; Array.from(this.parentElement.children).forEach(b=>{b.className='shrink-0 w-20 h-20 rounded-lg overflow-hidden cursor-pointer opacity-60 hover:opacity-100 transition-opacity';}); this.className='shrink-0 w-20 h-20 gold-border-gradient rounded-lg border-2 border-primary opacity-100 overflow-hidden cursor-pointer';">
+                    <div class="shrink-0 w-20 h-20 ${i === 0 ? 'gold-border-gradient rounded-lg border-2 border-primary opacity-100' : 'rounded-lg opacity-60 hover:opacity-100 transition-opacity'} overflow-hidden cursor-pointer" onclick="document.getElementById('productMainImage').src='${imgUrl}'; Array.from(this.parentElement.children).forEach(b=>{b.className='shrink-0 w-20 h-20 rounded-lg overflow-hidden cursor-pointer opacity-60 hover:opacity-100 transition-opacity';}); this.className='shrink-0 w-20 h-20 gold-border-gradient rounded-lg border-2 border-primary opacity-100 overflow-hidden cursor-pointer';">
                         <img class="w-full h-full object-cover" src="${imgUrl}">
                     </div>
                 `).join('');
@@ -515,7 +515,7 @@ async function loadProductData() {
         let currentPrice = p.discount_price || p.price;
         let currentMrp = p.price;
         let currentVariant = '';
-        
+
         const updateCartButtons = () => {
             const item = {
                 id: currentVariant ? `${p.id}-${currentVariant}` : p.id,
@@ -523,7 +523,7 @@ async function loadProductData() {
                 price: currentPrice,
                 image: mainImg
             };
-            
+
             const btnCart = document.getElementById('addToCartBtn');
             const btnBuy = document.getElementById('buyNowBtn');
             if (btnCart) {
@@ -548,11 +548,11 @@ async function loadProductData() {
             if (sizeOptionsContainer) {
                 const activeClasses = "px-4 py-2 border-2 border-primary text-primary font-bold text-sm bg-primary-fixed cursor-pointer";
                 const inactiveClasses = "px-4 py-2 border border-outline-variant text-on-surface-variant text-sm cursor-pointer hover:border-primary";
-                
-                sizeOptionsContainer.innerHTML = variants.map((v, idx) => 
+
+                sizeOptionsContainer.innerHTML = variants.map((v, idx) =>
                     `<button class="size-btn ${idx === 0 ? activeClasses : inactiveClasses}" data-size="${v.size}" data-price="${v.price}" data-mrp="${v.mrp || v.price}">${v.size}</button>`
                 ).join('');
-                
+
                 // Initialize first variant
                 currentPrice = variants[0].price;
                 currentMrp = variants[0].mrp || variants[0].price;
@@ -570,7 +570,7 @@ async function loadProductData() {
                 };
 
                 document.getElementById('productPrice').innerHTML = renderPrice(currentPrice, currentMrp);
-                
+
                 // Attach click listeners
                 sizeOptionsContainer.querySelectorAll('.size-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
@@ -582,7 +582,7 @@ async function loadProductData() {
                         currentPrice = parseFloat(e.target.dataset.price);
                         currentMrp = parseFloat(e.target.dataset.mrp) || currentPrice;
                         if (currentMrp < currentPrice) currentMrp = currentPrice;
-                        
+
                         document.getElementById('productPrice').innerHTML = renderPrice(currentPrice, currentMrp);
                         updateCartButtons();
                     });
@@ -608,7 +608,7 @@ async function loadProductData() {
         if (typeof window.trackRecentlyViewed === 'function') {
             window.trackRecentlyViewed(p);
         }
-        
+
         document.querySelectorAll('[data-rec-type]').forEach(section => {
             section.setAttribute('data-rec-context-id', p.id);
             if (p.category_id) section.setAttribute('data-rec-context-cat', p.category_id);
@@ -620,22 +620,22 @@ async function loadProductData() {
         }
 
         // Reviews already loaded via Promise.all
-        
+
         const revContainer = document.getElementById('reviewsContainer');
-        
+
         const stats = window.getConsistentProductStats(p, reviews);
-        
+
         const rcb = document.getElementById('reviewCountBadge');
         if (rcb) rcb.textContent = `(${stats.reviewsCount} Reviews)`;
-        
+
         const rcbt = document.getElementById('reviewCountBadgeTop');
         if (rcbt) rcbt.textContent = `(${stats.reviewsCount} Reviews)`;
-        
+
         const topRatingBadge = document.getElementById('topRatingBadge');
         if (topRatingBadge) {
             topRatingBadge.innerHTML = `${stats.rating} <span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>`;
         }
-        
+
         const soldCountBadge = document.getElementById('soldCountBadge');
         if (soldCountBadge && stats.soldCount > 0) {
             document.getElementById('soldCountText').textContent = `${stats.soldCount.toLocaleString()}+ Sold`;
@@ -647,7 +647,7 @@ async function loadProductData() {
                 const author = r.author_name || r.users?.full_name || 'Guest';
                 const initial = author.charAt(0).toUpperCase();
                 const date = new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                
+
                 let imageHtml = '';
                 if (r.images && r.images.length > 0) {
                     imageHtml = `<div style="margin-top: 12px; margin-bottom: 8px;"><img src="${r.images[0]}" alt="Customer Image" style="max-width: 120px; height: auto; border-radius: 8px; border: 1px solid var(--outline-variant); object-fit: cover;"></div>`;
@@ -680,11 +680,11 @@ async function loadProductData() {
 }
 
 // Cart Page Functions
-window.loadCartData = function() {
+window.loadCartData = function () {
     const container = document.getElementById('cartItemsContainer');
     const title = document.getElementById('cartTitle');
     const summarySection = document.getElementById('orderSummarySection');
-    
+
     if (!container) return;
 
     if (cart.length === 0) {
@@ -693,9 +693,9 @@ window.loadCartData = function() {
         if (summarySection) summarySection.style.display = 'none';
         return;
     }
-    
+
     if (summarySection) summarySection.style.display = 'block';
-    
+
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     if (title) title.textContent = `Shopping Bag (${totalItems} Items)`;
 
@@ -724,7 +724,7 @@ window.loadCartData = function() {
     updateCartSummary();
 }
 
-window.updateQuantity = function(id, change) {
+window.updateQuantity = function (id, change) {
     const item = cart.find(i => i.id === id);
     if (item) {
         item.quantity += change;
@@ -737,16 +737,16 @@ window.updateQuantity = function(id, change) {
     }
 }
 
-window.removeFromCart = function(id) {
+window.removeFromCart = function (id) {
     cart = cart.filter(i => i.id !== id);
     localStorage.setItem('prajcraft_cart', JSON.stringify(cart));
     updateCartBadge();
     loadCartData();
 }
 
-window.clearCart = function(event) {
-    if(event) event.preventDefault();
-    if(confirm('Are you sure you want to clear your cart?')) {
+window.clearCart = function (event) {
+    if (event) event.preventDefault();
+    if (confirm('Are you sure you want to clear your cart?')) {
         cart = [];
         localStorage.setItem('prajcraft_cart', JSON.stringify(cart));
         updateCartBadge();
@@ -761,25 +761,25 @@ function updateCartSummary() {
     const total = subtotal;
 
     const cartHeaderCount = document.getElementById('cartHeaderCount');
-    if(cartHeaderCount) cartHeaderCount.textContent = `(${totalItems} Items)`;
-    
+    if (cartHeaderCount) cartHeaderCount.textContent = `(${totalItems} Items)`;
+
     const elSubtotal = document.getElementById('summarySubtotal');
-    if(elSubtotal) elSubtotal.textContent = formatPrice(subtotal);
-    
+    if (elSubtotal) elSubtotal.textContent = formatPrice(subtotal);
+
     const elTotal = document.getElementById('summaryTotal');
-    if(elTotal) elTotal.textContent = formatPrice(total);
+    if (elTotal) elTotal.textContent = formatPrice(total);
 }
 
-window.toggleAddressForm = function() {
+window.toggleAddressForm = function () {
     document.getElementById('savedAddressContainer').classList.add('hidden');
     document.getElementById('addressFormContainer').classList.remove('hidden');
     document.getElementById('editAddressBtn').classList.add('hidden');
 };
 
-window.loadSavedAddressOnCheckout = async function() {
+window.loadSavedAddressOnCheckout = async function () {
     const { data: { session } } = await window.supabase.auth.getSession();
     if (!session) return;
-    
+
     try {
         const { data: address } = await window.supabase
             .from('addresses')
@@ -788,10 +788,10 @@ window.loadSavedAddressOnCheckout = async function() {
             .order('created_at', { ascending: false })
             .limit(1)
             .single();
-            
+
         if (address) {
             document.getElementById('savedAddressId').value = address.id;
-            
+
             // Also fetch user name and phone if missing
             const { data: user } = await window.supabase.from('users').select('full_name, phone').eq('id', session.user.id).single();
             const name = user?.full_name || session.user.email;
@@ -800,12 +800,12 @@ window.loadSavedAddressOnCheckout = async function() {
             document.getElementById('savedName').textContent = name;
             document.getElementById('savedPhone').textContent = `Phone: ${phone}`;
             document.getElementById('savedAddressText').textContent = `${address.full_address}, ${address.city}, ${address.state} - ${address.pincode}`;
-            
+
             document.getElementById('savedAddressContainer').classList.remove('hidden');
             document.getElementById('addressFormContainer').classList.add('hidden');
             document.getElementById('editAddressBtn').classList.remove('hidden');
         }
-    } catch(err) {
+    } catch (err) {
         console.error("Error fetching saved address:", err);
     }
 }
@@ -816,7 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-window.proceedToCheckout = async function() {
+window.proceedToCheckout = async function () {
     const { data: { session } } = await window.supabase.auth.getSession();
     if (!session) {
         window.location.href = 'profile.html';
@@ -825,7 +825,7 @@ window.proceedToCheckout = async function() {
     }
 }
 
-window.prepareOrderPayload = async function() {
+window.prepareOrderPayload = async function () {
     const { data: { session } } = await window.supabase.auth.getSession();
     if (!session) {
         window.showToast ? window.showToast("Please login to place an order.", 'error') : alert("Please login to place an order.");
@@ -834,7 +834,7 @@ window.prepareOrderPayload = async function() {
     }
 
     let { data: user } = await window.supabase.from('users').select('*').eq('id', session.user.id).maybeSingle();
-    
+
     if (!user) {
         window.showToast ? window.showToast("Critical Error: Your user profile is missing. Please log out and log in again.", 'error') : alert("Critical Error: User profile missing.");
         return null;
@@ -861,7 +861,7 @@ window.prepareOrderPayload = async function() {
         }
         shipCity = document.getElementById('shipCity')?.value || 'City';
         shipZip = document.getElementById('shipZip')?.value || '000000';
-        
+
         if (!shipName || !shipPhone || shipAddress === 'Not Provided') {
             window.showToast ? window.showToast("Please fill in all shipping address fields.", 'error') : alert("Please fill in all shipping address fields.");
             return null;
@@ -885,7 +885,7 @@ window.prepareOrderPayload = async function() {
 
 async function placeOrder() {
     const btn = document.getElementById('checkoutBtn');
-    if(btn) {
+    if (btn) {
         btn.innerHTML = '<span class="material-symbols-outlined animate-spin align-middle mr-2">autorenew</span> PROCESSING...';
         btn.disabled = true;
     }
@@ -893,7 +893,7 @@ async function placeOrder() {
     try {
         const payload = await window.prepareOrderPayload();
         if (!payload) {
-            if(btn) {
+            if (btn) {
                 btn.innerHTML = 'Place Order';
                 btn.disabled = false;
             }
@@ -903,35 +903,35 @@ async function placeOrder() {
         if (window.selectedPaymentMethod === 'upi') {
             // Setup UPI Overlay
             window.pendingOrderPayload = payload;
-            
+
             // Calculate total again or get from DOM
             const totalText = document.getElementById('summaryTotal').textContent.replace(/[^\d.]/g, '');
             const totalAmount = parseFloat(totalText);
-            
+
             document.getElementById('qrAmountDisplay').textContent = '₹' + totalAmount;
-            
+
             // Generate Order ID (temp)
             const orderNum = 'PRJ-' + Math.floor(100000 + Math.random() * 900000);
             window.pendingOrderPayload.order_number = orderNum;
             window.pendingOrderPayload.total_amount = totalAmount;
-            
-            const upiUri = `upi://pay?pa=98964845@jio&pn=PrajCraft&am=${totalAmount}&cu=INR&tn=${orderNum}`;
+
+            const upiUri = `upi://pay?pa=prajcraft@upi&pn=PrajCraft&am=${totalAmount}&cu=INR&tn=${orderNum}`;
             window.currentUpiUri = upiUri;
-            
+
             const qrContainer = document.getElementById('qrcode');
             qrContainer.innerHTML = ''; // clear previous
             new QRCode(qrContainer, {
                 text: upiUri,
                 width: 200,
                 height: 200,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
             });
-            
+
             document.getElementById('upiPaymentOverlay').classList.remove('hidden');
             document.getElementById('upiPaymentOverlay').classList.add('flex');
-            
+
             btn.innerHTML = 'Place Order';
             btn.disabled = false;
         } else {
@@ -953,34 +953,34 @@ function closeUpiOverlay() {
     document.getElementById('upiPaymentOverlay').classList.remove('flex');
 }
 
-window.payWithUpiApps = function() {
+window.payWithUpiApps = function () {
     const btn = document.getElementById('payWithUpiAppsBtn');
     const msg = document.getElementById('upiAppFallbackMsg');
-    
+
     if (!window.currentUpiUri || btn.disabled) return;
-    
+
     // Disable button to prevent duplicate taps
     btn.disabled = true;
     const originalContent = btn.innerHTML;
     btn.innerHTML = '<span class="text-lg animate-pulse">Opening UPI App...</span>';
-    
+
     const ua = navigator.userAgent || navigator.vendor || window.opera;
     const isSocialApp = (ua.indexOf("Instagram") > -1) || (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1);
-    
+
     if (isSocialApp) {
         msg.classList.remove('hidden');
     }
-    
+
     // Attempt deep link
     window.location.href = window.currentUpiUri;
-    
+
     // Fallback: Re-enable after timeout and show message
     const fallbackTimeout = setTimeout(() => {
         btn.innerHTML = originalContent;
         btn.disabled = false;
         msg.classList.remove('hidden');
     }, 2000);
-    
+
     // Clear timeout and reset if user successfully switched apps and comes back
     const handleVisibilityChange = () => {
         if (document.visibilityState === 'hidden') {
@@ -991,11 +991,11 @@ window.payWithUpiApps = function() {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
         }
     };
-    
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
 };
 
-window.showToast = function(message, type = 'error') {
+window.showToast = function (message, type = 'error') {
     let container = document.getElementById('toast-container');
     if (!container) {
         container = document.createElement('div');
@@ -1003,19 +1003,19 @@ window.showToast = function(message, type = 'error') {
         container.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-2 pointer-events-none';
         document.body.appendChild(container);
     }
-    
+
     const toast = document.createElement('div');
     const bgColor = type === 'error' ? 'bg-error text-on-error' : 'bg-primary text-on-primary';
     toast.className = `${bgColor} px-4 py-2 rounded shadow-lg font-bold text-sm transform transition-all translate-y-full opacity-0`;
     toast.textContent = message;
-    
+
     container.appendChild(toast);
-    
+
     // Animate in
     requestAnimationFrame(() => {
         toast.classList.remove('translate-y-full', 'opacity-0');
     });
-    
+
     // Animate out
     setTimeout(() => {
         toast.classList.add('translate-y-full', 'opacity-0');
@@ -1029,11 +1029,11 @@ async function submitUpiPayment() {
         window.showToast("Please enter a valid Transaction ID (UTR) between 12 and 22 characters.", 'error');
         return;
     }
-    
+
     const btn = document.getElementById('submitUpiBtn');
     btn.innerHTML = '<span class="material-symbols-outlined animate-spin align-middle mr-2">autorenew</span> Processing...';
     btn.disabled = true;
-    
+
     try {
         // Client-side duplicate UTR check removed. We let the order generate directly.
         let screenshotUrl = null;
@@ -1042,11 +1042,11 @@ async function submitUpiPayment() {
             const file = fileInput.files[0];
             const fileExt = file.name.split('.').pop();
             const fileName = `upi_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-            
+
             const { data: uploadData, error: uploadError } = await window.supabase.storage
                 .from('payment_screenshots')
                 .upload(fileName, file);
-                
+
             if (uploadError) {
                 console.error("Screenshot upload failed", uploadError);
                 // Non-blocking error, we can still proceed
@@ -1057,10 +1057,10 @@ async function submitUpiPayment() {
                 screenshotUrl = publicUrlData.publicUrl;
             }
         }
-        
+
         await createSupabaseOrder(window.pendingOrderPayload, 'Verification Pending', 'Verification Pending', utr, screenshotUrl);
         closeUpiOverlay();
-    } catch(err) {
+    } catch (err) {
         if (err.message === "UNIQUE_UTR") {
             window.showToast("This transaction ID has already been submitted.", 'error');
         } else {
@@ -1073,28 +1073,28 @@ async function submitUpiPayment() {
 
 async function createSupabaseOrder(payload, orderStatus, paymentStatus, utr, screenshotUrl) {
     const orderNum = payload.order_number || 'PRJ-' + Math.floor(100000 + Math.random() * 900000);
-    
+
     // Calculate accurate prices
     const productIds = payload.cart.map(item => String(item.id).substring(0, 36));
     const { data: realProducts, error: prodErr } = await window.supabase
         .from('products')
         .select('id, price, discount_price, description')
         .in('id', productIds);
-        
+
     if (prodErr) throw new Error("Failed to fetch product details.");
-    
+
     let subtotal = 0;
     let totalQuantity = 0;
     let itemsToInsert = [];
-    
+
     for (const item of payload.cart) {
         const baseId = String(item.id).substring(0, 36);
         const realProduct = realProducts?.find(p => p.id === baseId);
         if (!realProduct) continue;
-        
+
         let priceToCharge = realProduct.discount_price || realProduct.price;
         let variant_id = null;
-        
+
         // Handle variant
         const variantName = String(item.id).length > 36 ? String(item.id).substring(37) : null;
         if (variantName && realProduct.description) {
@@ -1108,26 +1108,26 @@ async function createSupabaseOrder(payload, orderStatus, paymentStatus, utr, scr
                         variant_id = v.id; // if we had actual uuid variants, but this is a string mostly.
                         // We will ignore variant_id insertion if it fails
                     }
-                } catch(e) {}
+                } catch (e) { }
             }
         }
-        
+
         subtotal += priceToCharge * item.quantity;
         totalQuantity += parseInt(item.quantity) || 1;
-        
+
         itemsToInsert.push({
             product_id: baseId,
             quantity: parseInt(item.quantity) || 1,
             price_at_time: priceToCharge
         });
     }
-    
+
     let discountAmount = 0;
-    if (totalQuantity > 1) discountAmount = 1000;
-    
+    if (totalQuantity > 1) discountAmount = 100;
+
     let finalTotal = subtotal - discountAmount;
     if (finalTotal < 0) finalTotal = 0;
-    
+
     // Save address if it's new
     let addressId = payload.shipping.address_id;
     if (!addressId) {
@@ -1140,10 +1140,10 @@ async function createSupabaseOrder(payload, orderStatus, paymentStatus, utr, scr
                 city: payload.shipping.city,
                 pincode: payload.shipping.zip
             }]).select().single();
-            
+
         if (!addrErr && newAddr) addressId = newAddr.id;
     }
-     // Create order
+    // Create order
     const { data: order, error: orderErr } = await window.supabase
         .from('orders')
         .insert([{
@@ -1161,23 +1161,23 @@ async function createSupabaseOrder(payload, orderStatus, paymentStatus, utr, scr
             utr: utr,
             screenshot_url: screenshotUrl
         }]).select().single();
-        
+
     if (orderErr) {
         if (orderErr.code === '23505' && orderErr.message.includes('utr')) {
             throw new Error("UNIQUE_UTR");
         }
         throw new Error("Order creation failed: " + orderErr.message);
     }
-    
+
     // Attach order_id to items
-    const finalItems = itemsToInsert.map(i => ({...i, order_id: order.id}));
-    
+    const finalItems = itemsToInsert.map(i => ({ ...i, order_id: order.id }));
+
     const { error: itemsErr } = await window.supabase
         .from('order_items')
         .insert(finalItems);
-        
+
     if (itemsErr) throw new Error("Failed to add items to order.");
-    
+
     // Notify admin & user
     await window.supabase.from('notifications').insert([
         {
@@ -1187,7 +1187,7 @@ async function createSupabaseOrder(payload, orderStatus, paymentStatus, utr, scr
             type: 'Order'
         }
     ]);
-    
+
     // Success! Clear cart
     cart = [];
     localStorage.setItem('prajcraft_cart', JSON.stringify(cart));
@@ -1206,7 +1206,7 @@ async function loadSimilarProducts(categoryId, currentProductId) {
 
         const section = document.getElementById('similarProductsSection');
         const grid = document.getElementById('similarProductsGrid');
-        
+
         if (!section || !grid) return;
 
         if (!products || products.length === 0) {
@@ -1224,14 +1224,14 @@ async function loadSimilarProducts(categoryId, currentProductId) {
                         const parsed = JSON.parse(p.images);
                         if (Array.isArray(parsed) && parsed.length > 0) img = parsed[0];
                         else img = p.images;
-                    } catch(e) { img = p.images; }
+                    } catch (e) { img = p.images; }
                 }
             }
-            
-            const pObj = JSON.stringify({id: p.id, name: p.name, price: p.discount_price || p.price, image: img}).replace(/"/g, '&quot;');
+
+            const pObj = JSON.stringify({ id: p.id, name: p.name, price: p.discount_price || p.price, image: img }).replace(/"/g, '&quot;');
             const categoryName = p.categories ? p.categories.name : 'COLLECTIBLE';
             const price = p.discount_price || p.price;
-            
+
             let mrpLine = '';
             if (p.discount_price && p.discount_price < p.price) {
                 mrpLine = `<span class="text-xs text-on-surface-variant line-through">${formatPrice(p.price)}</span>`;
@@ -1256,45 +1256,45 @@ async function loadSimilarProducts(categoryId, currentProductId) {
             </div>
             `;
         }).join('');
-    } catch(err) {
+    } catch (err) {
         console.error("Error loading similar products:", err);
     }
 }
 
 // --- International Payment (PayPal) Logic ---
-window.handleCountryChange = function() {
+window.handleCountryChange = function () {
     const countryEl = document.getElementById('shipCountry');
     if (!countryEl) return;
     const country = countryEl.value;
-    
+
     const upiWrapper = document.getElementById('upiOptionWrapper');
     const codWrapper = document.getElementById('codOptionWrapper');
     const shippingLabel = document.getElementById('shippingLabel');
     const summaryShipping = document.getElementById('summaryShipping');
-    
+
     let isInternational = country !== 'India';
-    
+
     if (isInternational) {
-        if(upiWrapper) upiWrapper.classList.add('hidden');
-        if(codWrapper) codWrapper.classList.add('hidden');
-        
+        if (upiWrapper) upiWrapper.classList.add('hidden');
+        if (codWrapper) codWrapper.classList.add('hidden');
+
         if (shippingLabel) shippingLabel.textContent = 'International Shipping';
         if (summaryShipping) summaryShipping.textContent = '₹1,499';
-        
+
         // Update total
         let finalTotal = (window.baseFinalTotal || 0) + 1499;
         document.getElementById('summaryTotal').textContent = window.formatPrice ? window.formatPrice(finalTotal) : '₹' + finalTotal;
         document.getElementById('bottomTotal').textContent = window.formatPrice ? window.formatPrice(finalTotal) : '₹' + finalTotal;
     } else {
-        if(upiWrapper) upiWrapper.classList.remove('hidden');
-        if(codWrapper) codWrapper.classList.remove('hidden');
-        
+        if (upiWrapper) upiWrapper.classList.remove('hidden');
+        if (codWrapper) codWrapper.classList.remove('hidden');
+
         if (shippingLabel) shippingLabel.textContent = 'Domestic Shipping';
         if (summaryShipping) summaryShipping.textContent = 'FREE';
-        
+
         // Ensure UPI or COD is selected
         if (typeof selectPayment === 'function') selectPayment('upi');
-        
+
         // Update total
         let finalTotal = (window.baseFinalTotal || 0);
         document.getElementById('summaryTotal').textContent = window.formatPrice ? window.formatPrice(finalTotal) : '₹' + finalTotal;

@@ -391,7 +391,7 @@
                                 </div>
                                 <div id="discountMessage"
                                     class="hidden text-xs text-green-600 bg-green-50 p-2 rounded text-center">
-                                    🎉 Congratulations! You unlocked the ₹1000 Multi-Product Discount!
+                                    🎉 Congratulations! You unlocked the ₹100 Multi-Product Discount!
                                 </div>
                                 <div class="flex justify-between text-label-sm">
                                     <span class="text-on-surface-variant" id="shippingLabel">Domestic Shipping</span>
@@ -559,7 +559,7 @@
             const discMsg = document.getElementById('discountMessage');
 
             if (totalQuantity > 1) {
-                discountAmount = 1000;
+                discountAmount = 100;
                 if (discContainer) discContainer.classList.remove('hidden');
                 if (discMsg) discMsg.classList.remove('hidden');
             } else {

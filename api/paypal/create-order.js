@@ -61,7 +61,7 @@ export default async function handler(req, res) {
             totalQuantity += parseInt(item.quantity) || 1;
         });
 
-        let discount = totalQuantity > 1 ? 1000 : 0;
+        let discount = totalQuantity > 1 ? 100 : 0;
         let shipping = payload.shipping.country && payload.shipping.country !== 'India' ? 1499 : 0;
         let finalTotal = subtotal - discount + shipping;
         if (finalTotal < 0) finalTotal = 0;
